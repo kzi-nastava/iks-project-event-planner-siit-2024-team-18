@@ -11,21 +11,21 @@
     width: 25%;
     height: auto;
     background-color: #2c3e50;
-    border-radius: 30px;
-    padding: 20px;
+    border-radius: 1.875rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2), 0 0.375rem 1.25rem 0 rgba(0, 0, 0, 0.19);
     font-family: 'Raleway';
     font-weight: 400;
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
 img {
-    width: 100px;
-    height: 100px;
+    width: 6.25rem;
+    height: 6.25rem;
 }
 
 h1 {
@@ -33,7 +33,7 @@ h1 {
     color: #ebebeb;
     font-family: 'Merriweather';
     font-weight: 700;
-    font-size: 45px;
+    font-size: 2.8125rem;
 }
 
 form {
@@ -43,9 +43,10 @@ form {
     align-items: center;
 }
 
-app-email, app-password {
+app-email,
+app-password {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
 }
 
 .remember-forgot {
@@ -53,7 +54,7 @@ app-email, app-password {
     justify-content: space-between;
     width: 100%;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 0.9375rem;
 }
 
 .remember-forgot label {
@@ -63,12 +64,12 @@ app-email, app-password {
 }
 
 .custom-checkbox {
-    width: 15px;
-    height: 15px;
-    margin-right: 10px;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    margin-right: 0.625rem;
     appearance: none;
-    border: 2px solid #ebebeb;
-    border-radius: 2px;
+    border: 0.125rem solid #ebebeb;
+    border-radius: 0.125rem;
     background-color: transparent;
     cursor: pointer;
     position: relative;
@@ -81,7 +82,7 @@ app-email, app-password {
 .custom-checkbox:checked::before {
     content: '✔';
     color: #2c3e50;
-    font-size: 18px;
+    font-size: 1.125rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -100,15 +101,15 @@ app-email, app-password {
     background-color: #a29bfe;
     color: #ebebeb;
     border: none;
-    width: 140px;
-    height: 60px;
-    font-size: 20px;
-    border-radius: 30px;
+    width: 8.75rem;
+    height: 3.75rem;
+    font-size: 1.25rem;
+    border-radius: 1.875rem;
     cursor: pointer;
-    margin: 20px 0;
+    margin: 1.25rem 0;
     align-self: center;
     font-family: 'Raleway';
-    font-size: 25px;
+    font-size: 1.5625rem;
 }
 
 #submit:hover {
@@ -118,7 +119,7 @@ app-email, app-password {
 .signup-link {
     text-align: center;
     color: #ebebeb;
-    margin-top: 15px;
+    margin-top: 0.9375rem;
 }
 
 a {
