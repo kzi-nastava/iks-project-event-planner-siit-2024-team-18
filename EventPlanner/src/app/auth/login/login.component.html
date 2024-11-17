@@ -1,0 +1,20 @@
+<div class="background">
+    <div class="login">
+        <img src="../../../assets/favicon.ico"/>
+        <h1>Sign in</h1>
+        <form (ngSubmit)="onSubmit()">
+            <app-email></app-email>
+            <app-password></app-password>
+            <div class="remember-forgot">
+                <label>
+                    <input type="checkbox" class="custom-checkbox" /> Remember me
+                </label>
+                <a href="#">Forgot password?</a>
+            </div>
+            <input type="submit" value="Sign in" id="submit"/>
+        </form>
+        <div class="signup-link">
+            Don't have an account? <a href="#">Sign up</a>
+        </div>
+    </div>
+</div>
