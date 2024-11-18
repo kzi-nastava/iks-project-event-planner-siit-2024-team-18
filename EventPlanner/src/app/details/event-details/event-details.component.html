@@ -1,0 +1,16 @@
+<div class="event-details-container" *ngIf="eventDetails">
+    <div class="event-image">
+      <img [src]="eventDetails.image" alt="{{ eventDetails.title }}">
+    </div>
+    <div class="event-info">
+      <h2>{{ eventDetails.title }}</h2>
+      <p class="event-date">{{ eventDetails.date | date:'longDate' }}</p>
+      <p class="event-description">{{ eventDetails.description }}</p>
+    </div>
+    
+    <button (click)="goBack()">Back</button>
+  </div>
+
+  <div *ngIf="!eventDetails" class="loading">
+    <p>Loading event details...</p>
+  </div>
