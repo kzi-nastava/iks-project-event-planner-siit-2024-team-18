@@ -22,11 +22,7 @@ import { AuthModule } from './auth/auth.module';
     AppRoutingModule,
     DetailsModule,
     CardsModule,
-    HomePageModule
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
+    HomePageModule,
     AuthModule
   ],
   providers: [
