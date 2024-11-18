@@ -1,0 +1,18 @@
+<div class="example-container">
+    <mat-form-field>
+      <mat-label>
+        <mat-icon>email</mat-icon>
+        E-mail
+      </mat-label>
+      <input
+        matInput
+        [formControl]="email"
+        (blur)="updateErrorMessage()"
+        required
+      />
+      @if (email.invalid) {
+        <mat-error>{{errorMessage()}}</mat-error>
+      }
+    </mat-form-field>
+</div>
+  

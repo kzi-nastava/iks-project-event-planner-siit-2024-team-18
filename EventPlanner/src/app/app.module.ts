@@ -8,6 +8,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { DetailsModule } from './details/details.module';
 import { CardsModule } from './cards/cards.module';
 import { HomePageModule } from './homepage/homepage.module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -22,8 +24,14 @@ import { HomePageModule } from './homepage/homepage.module';
     CardsModule,
     HomePageModule
   ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AuthModule
+  ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })
