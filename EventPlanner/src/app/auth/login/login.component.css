@@ -43,10 +43,22 @@ form {
     align-items: center;
 }
 
-app-email,
-app-password {
+mat-form-field {
     width: 100%;
     margin-bottom: 0.625rem;
+}
+
+mat-form-field mat-label mat-icon {
+    margin-right: 0.5rem;
+}
+
+mat-form-field, mat-label, input {
+    font-family: 'Raleway';
+    font-size: 1.25rem;
+}
+
+mat-error {
+    font-size: 1rem;
 }
 
 .remember-forgot {
