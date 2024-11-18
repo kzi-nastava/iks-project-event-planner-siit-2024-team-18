@@ -1,6 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { EmailComponent } from '../email/email.component';
-import { PasswordComponent } from '../password/password.component';
+import { Component } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -8,11 +7,17 @@ import { PasswordComponent } from '../password/password.component';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  @ViewChild(EmailComponent) emailComponent!: EmailComponent;
-  @ViewChild(PasswordComponent) passwordComponent!: PasswordComponent;
+  email = new FormControl('', [Validators.required, Validators.email]);
+  password = new FormControl('', [Validators.required]);
 
-  onSubmit() {
-    this.emailComponent.validateOnSubmit();
-    this.passwordComponent.validateOnSubmit();
+  passwordHidden = true;
+
+  togglePasswordVisibility(): void {
+    this.passwordHidden = !this.passwordHidden;
+  }
+
+  submit() {
+    this.email.markAsTouched();
+    this.password.markAsTouched();
   }
 }

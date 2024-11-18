@@ -2,9 +2,48 @@
     <div class="login">
         <img src="../../../assets/favicon.ico"/>
         <h1>Sign in</h1>
-        <form (ngSubmit)="onSubmit()">
-            <app-email></app-email>
-            <app-password></app-password>
+        <form (ngSubmit)="submit()">
+            <mat-form-field>
+                <mat-label>
+                  <mat-icon>email</mat-icon>
+                  E-mail
+                </mat-label>
+                <input
+                  matInput
+                  [formControl]="email"
+                  required />
+                <mat-error *ngIf="email.touched && email.hasError('required')">
+                    Please enter e-mail address.
+                </mat-error>
+                <mat-error *ngIf="email.touched && email.hasError('email')">
+                    Please enter a valid e-mail address.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                  <mat-icon>lock</mat-icon>
+                  Password
+                </mat-label>
+                <input
+                  matInput
+                  [type]="passwordHidden ? 'password' : 'text'"
+                  [formControl]="password"
+                  required
+                />
+                <mat-error *ngIf="password.invalid && password.touched">Please enter password.</mat-error>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="!passwordHidden"
+                >
+                  <mat-icon>{{ passwordHidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+            </mat-form-field>
+            
             <div class="remember-forgot">
                 <label>
                     <input type="checkbox" class="custom-checkbox" /> Remember me
@@ -14,7 +53,7 @@
             <input type="submit" value="Sign in" id="submit"/>
         </form>
         <div class="signup-link">
-            Don't have an account? <a href="#">Sign up</a>
+            Don't have an account? <a [routerLink]="'/register'">Sign up</a>
         </div>
     </div>
 </div>

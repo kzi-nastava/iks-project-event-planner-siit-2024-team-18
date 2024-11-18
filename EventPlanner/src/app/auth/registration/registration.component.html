@@ -1,0 +1,229 @@
+<div class="background">
+    <div class="registration">
+        <h1>Sign up</h1>
+        <form (ngSubmit)="submit()">
+            <div class="role-section">
+                <mat-label id="roleLabel">
+                    <mat-icon id="roleIcon">assignment_ind</mat-icon> Role
+                </mat-label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" value="Event Organizer" name="role" [(ngModel)]="selectedRole" />
+                        Event Organizer
+                    </label>
+                    <label>
+                        <input type="radio" value="Service Product Provider" [(ngModel)]="selectedRole" name="role" />
+                        Service Product Provider
+                    </label>
+                </div>
+            </div>
+
+            <mat-form-field>
+                <mat-label>
+                  <mat-icon>email</mat-icon>
+                  E-mail
+                </mat-label>
+                <input
+                  matInput
+                  [formControl]="email"
+                  required />
+                <mat-error *ngIf="email.touched && email.hasError('required')">
+                    Please enter e-mail address.
+                </mat-error>
+                <mat-error *ngIf="email.touched && email.hasError('email')">
+                    Please enter a valid e-mail address.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                  <mat-icon>person</mat-icon>
+                  First Name
+                </mat-label>
+                <input
+                  matInput
+                  required
+                  [formControl]="firstName"
+                />
+                <mat-error *ngIf="firstName.invalid && firstName.touched">
+                  Please enter first name.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                    <mat-icon>person</mat-icon>
+                    Last Name
+                </mat-label>
+                <input
+                    matInput
+                    required
+                    [formControl]="lastName" />
+                <mat-error *ngIf="lastName.invalid && lastName.touched">
+                    Please enter last name.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+                <mat-label>
+                    <mat-icon>business</mat-icon>
+                    Company Name
+                </mat-label>
+                <input
+                    matInput
+                    required
+                    [formControl]="companyName" />
+                <mat-error *ngIf="companyName.invalid && companyName.touched">
+                    Please enter company name.
+                </mat-error>
+            </mat-form-field>
+
+            <div class="profile-photo-section">
+                <mat-label style="color:#ebebeb; display: inline-flex; align-items: center;">
+                  <mat-icon style="margin-right: 0.5rem;">photo_camera</mat-icon>
+                  Profile Photo
+                </mat-label>
+                <img
+                  class="profile-photo-placeholder"
+                  [src]="profilePhoto || 'assets/images/profile_photo_placeholder.png'"
+                  alt="Profile Photo"
+                />
+                <button class="button" type="button" (click)="onSelectPhoto()">Select Photo</button>
+                <button class="button" type="button" *ngIf="profilePhoto" style="background-color: #de4d3e;" (click)="removePhoto()">Remove Photo</button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="fileInput"
+                  hidden
+                  (change)="onFileSelected($event)"
+                />
+            </div>
+
+            <mat-form-field>
+                <mat-label>
+                    <mat-icon>location_on</mat-icon>
+                    Address
+                </mat-label>
+                <input
+                    matInput
+                    required
+                    [formControl]="address" />
+                <mat-error *ngIf="address.invalid && address.touched">
+                    Please enter address.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                    <mat-icon>phone</mat-icon>
+                    Phone Number
+                </mat-label>
+                <input
+                    matInput
+                    required
+                    [formControl]="phoneNumber" />
+                <mat-error *ngIf="phoneNumber.touched && phoneNumber.hasError('required')">
+                    Please enter phone number.
+                </mat-error>
+                <mat-error *ngIf="phoneNumber.touched && phoneNumber.hasError('pattern')">
+                    Please enter valid phone number (9 to 10 digits).
+                </mat-error>   
+            </mat-form-field>
+
+            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+                <mat-label>
+                    <mat-icon>description</mat-icon>
+                    Description
+                </mat-label>
+                <textarea
+                    matInput
+                    required
+                    [formControl]="description"></textarea>
+                <mat-error *ngIf="description.invalid && description.touched">
+                    Please enter description.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+                <mat-label>
+                    <mat-icon>category</mat-icon>
+                    Categories
+                </mat-label>
+                <mat-select [formControl]="categories" multiple required >
+                    <mat-option *ngFor="let category of categoriesList" [value]="category">{{ category }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="categories.invalid && categories.touched">
+                    Please select categories.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+                <mat-label>
+                    <mat-icon>event</mat-icon>
+                    Event Types
+                </mat-label>
+                <mat-select [formControl]="eventTypes" multiple required >
+                    <mat-option *ngFor="let eventType of eventTypesList" [value]="eventType">{{ eventType }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="eventTypes.invalid && eventTypes.touched">
+                    Please select event types.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                  <mat-icon>lock</mat-icon>
+                  Password
+                </mat-label>
+                <input
+                  matInput
+                  [type]="passwordHidden ? 'password' : 'text'"
+                  [formControl]="password"
+                  required
+                />
+                <mat-error *ngIf="password.invalid && password.touched">Please enter password.</mat-error>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="togglePasswordVisibility('password')"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="!passwordHidden"
+                >
+                  <mat-icon>{{ passwordHidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+            </mat-form-field>
+              
+            <mat-form-field>
+                <mat-label>
+                  <mat-icon>lock</mat-icon>
+                  Confirm Password
+                </mat-label>
+                <input
+                  matInput
+                  [type]="confirmPasswordHidden ? 'password' : 'text'"
+                  [formControl]="confirmPassword"
+                  required
+                />
+                <mat-error *ngIf="confirmPassword.hasError('required')">
+                    Please confirm password.
+                </mat-error>
+                <mat-error *ngIf="!confirmPassword.hasError('required') && confirmPassword.hasError('notMatching')">
+                    Not same as password.
+                </mat-error>
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="togglePasswordVisibility('confirmPassword')"
+                  [attr.aria-label]="'Hide confirm password'"
+                  [attr.aria-pressed]="!confirmPasswordHidden"
+                >
+                  <mat-icon>{{ confirmPasswordHidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <input type="submit" value="Sign up" id="submit"/>
+        </form>
+    </div>
+</div>
