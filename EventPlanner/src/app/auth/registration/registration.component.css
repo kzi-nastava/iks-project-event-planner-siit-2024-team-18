@@ -139,5 +139,6 @@ mat-form-field mat-label mat-icon {
 }
 
 mat-error {
+    font-family: 'Raleway';
     font-size: 1rem;
 }
