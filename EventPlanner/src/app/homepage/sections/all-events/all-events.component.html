@@ -1,0 +1,94 @@
+<div class="all-events-container">
+  <h2 class="section-title">All Events</h2>
+
+  <div class="controls-container">
+    <div class="search-container">
+      <span class="material-icons search-icon">search</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search events..."
+        [(ngModel)]="searchQuery"
+        (input)="applySearch()"
+      />
+    </div>
+
+    <div class="date-filter-container">
+      <label for="from-date" class="date-label">From</label>
+      <input
+        id="from-date"
+        type="date"
+        class="date-input"
+        [(ngModel)]="fromDate"
+        (change)="applyDateFilter()"
+      />
+      <label for="to-date" class="date-label">To</label>
+      <input
+        id="to-date"
+        type="date"
+        class="date-input"
+        [(ngModel)]="toDate"
+        (change)="applyDateFilter()"
+      />
+    </div>
+
+    <div class="sort-container">
+      <label for="sort-select" class="sort-label">Sort by</label>
+      <select
+        id="sort-select"
+        class="sort-select"
+        [(ngModel)]="selectedFilter"
+        (change)="applySort()"
+      >
+        <option value="title">Title</option>
+        <option value="description">Description</option>
+        <option value="location">Location</option>
+      </select>
+    </div>
+
+    <div class="sort-container">
+      <label for="sort-order" class="sort-label">Order</label>
+      <select
+        id="sort-order"
+        class="sort-select"
+        [(ngModel)]="sortOrder"
+        (change)="applySort()"
+      >
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="filteredEvents.length > 0 && !loading" class="events-grid">
+    <app-event-card
+      *ngFor="let event of paginatedEvents"
+      [event]="event"
+      (cardClick)="openEventDetails($event)"
+    ></app-event-card>
+  </div>
+
+  <div *ngIf="!filteredEvents?.length && !loading" class="no-events">
+    <p>No events available at the moment.</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Loading events...</p>
+  </div>
+
+  <div class="pagination">
+    <button 
+      class="previous" 
+      (click)="goToPreviousPage()" 
+      [disabled]="currentPage === 1"
+    >
+    </button>
+    <span class="current-page">{{ currentPage }}</span>
+    <button 
+      class="next" 
+      (click)="goToNextPage()" 
+      [disabled]="currentPage === totalPages"
+    >
+    </button>
+  </div>
+</div>
