@@ -24,13 +24,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { MatOptionModule } from '@angular/material/core';
 
-// @NgModule({
-//   declarations: [],
-// import { MatIconModule } from '@angular/material/icon';
-// import { MatCheckboxModule } from '@angular/material/checkbox';
-// import { MatOptionModule } from '@angular/material/core';
-// import { MatSelectModule } from '@angular/material/select';
-// import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [
@@ -95,12 +88,4 @@ import { MatOptionModule } from '@angular/material/core';
     MatRadioModule,
   ]
 })
-// export class MaterialModule { }
-//     MatIconModule,
-//     MatCheckboxModule,
-//     MatOptionModule,
-//     MatSelectModule,
-//     MatRadioModule,
-//   ],
-// })
 export class MaterialModule {}
