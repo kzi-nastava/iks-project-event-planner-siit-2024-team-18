@@ -1,0 +1,10 @@
+<div class="search-bar">
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Search Services</mat-label>
+        <input matInput (input)="onSearch($event)" placeholder="Type to search..." />
+        <button mat-icon-button matSuffix *ngIf="searchText" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-form-field>
+</div>
+  

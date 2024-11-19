@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Filter Services</h2>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Category</mat-label>
+    <mat-select [(ngModel)]="selectedCategory">
+      <mat-option *ngFor="let category of categories" [value]="category">
+        {{ category }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Event Type</mat-label>
+    <mat-select [(ngModel)]="selectedEventType">
+      <mat-option *ngFor="let type of eventTypes" [value]="type">
+        {{ type }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Minimum Price</mat-label>
+    <input matInput type="number" [(ngModel)]="minPrice" placeholder="e.g., 100" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Maximum Price</mat-label>
+    <input matInput type="number" [(ngModel)]="maxPrice" placeholder="e.g., 500" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Creator Name</mat-label>
+    <input matInput type="text" [(ngModel)]="creatorName" placeholder="e.g., John Doe" />
+  </mat-form-field>
+</div>
+
+<mat-slide-toggle [(ngModel)]="public" class="ms-4">Public</mat-slide-toggle>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="resetFilters()">Reset Filters</button>
+  <button mat-button color="primary" (click)="applyFilters()">Apply</button>
+</div>

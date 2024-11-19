@@ -7,11 +7,30 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatOptionModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
+import { MatOptionModule } from '@angular/material/core';
+
+// @NgModule({
+//   declarations: [],
+// import { MatIconModule } from '@angular/material/icon';
+// import { MatCheckboxModule } from '@angular/material/checkbox';
+// import { MatOptionModule } from '@angular/material/core';
+// import { MatSelectModule } from '@angular/material/select';
+// import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [
@@ -23,6 +42,22 @@ import { MatRadioModule } from '@angular/material/radio';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCardModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    NgxMatTimepickerModule,
+    MatCheckboxModule,
+    MatSliderModule,
+    MatRadioModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
     MatIconModule,
     MatCheckboxModule,
     MatOptionModule,
@@ -37,11 +72,35 @@ import { MatRadioModule } from '@angular/material/radio';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCardModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    NgxMatTimepickerModule,
+    MatCheckboxModule,
+    MatSliderModule,
+    MatRadioModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
     MatIconModule,
     MatCheckboxModule,
     MatOptionModule,
     MatSelectModule,
     MatRadioModule,
-  ],
+  ]
 })
+// export class MaterialModule { }
+//     MatIconModule,
+//     MatCheckboxModule,
+//     MatOptionModule,
+//     MatSelectModule,
+//     MatRadioModule,
+//   ],
+// })
 export class MaterialModule {}
