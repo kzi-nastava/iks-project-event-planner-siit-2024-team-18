@@ -1,5 +1,4 @@
 .all-events-container {
-  width: 90%;
   max-width: 1200px;
   margin: 20px auto;
   height: 70vh;
@@ -19,16 +18,48 @@ h2 {
   margin-bottom: 20px;
 }
 
+.search-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.search-container .search-input {
+  flex: 1;
+  padding: 10px 50px;
+  font-size: 1rem;
+  border: 1px solid #160b0b;
+  border-radius: 50px;
+  background-color: white;
+  color: #2c3e50;
+  font-family: 'Raleway', sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.search-container .search-input:focus {
+  outline: none;
+  border-color: #a29bfe;
+}
+
+.search-container .search-icon {
+  position: absolute;
+  left: 15px;
+  font-size: 1.5rem;
+  color: #555;
+}
+
 .controls-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   margin-bottom: 20px;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   font-family: 'Raleway', sans-serif;
+  flex-wrap: nowrap;
 }
 
 .controls-container label {
@@ -38,39 +69,10 @@ h2 {
   margin-left: 10px;
 }
 
-.controls-container input[type="text"] {
-  flex: 1;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 50px;
-  background-color: white;
-  color: #2c3e50;
-  font-family: 'Raleway', sans-serif;
-  transition: border-color 0.3s ease;
-  text-align: center;
-}
-
-.controls-container input[type="text"]:focus {
-  outline: none;
-  border-color: #a29bfe;
-}
-
-.search-container {
-  position: relative;
-}
-
-.search-icon {
-  position: absolute;
-  left: 15px;
-  font-size: 1.5rem;
-  margin-top: 10px;
-  color: #555;
-  pointer-events: none;
-}
-
-.controls-container select,
-.controls-container button {
+.controls-container input[type="date"],
+.controls-container select {
+  flex: 0 1 auto;
+  max-width: 150px;
   padding: 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -78,21 +80,6 @@ h2 {
   background-color: #ebebeb;
   color: #2c3e50;
   font-family: 'Raleway', sans-serif;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.controls-container input[type="date"] {
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 50px;
-  background-color: #ebebeb;
-  color: #2c3e50;
-  font-family: 'Raleway', sans-serif;
-  cursor: pointer;
-}
-
-.controls-container input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
