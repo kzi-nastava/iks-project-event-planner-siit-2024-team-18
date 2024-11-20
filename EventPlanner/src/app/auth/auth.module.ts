@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule
+    RouterModule,
   ],
   exports: [
     LoginComponent,
