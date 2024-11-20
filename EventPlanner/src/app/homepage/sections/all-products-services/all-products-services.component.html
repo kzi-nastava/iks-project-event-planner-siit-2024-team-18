@@ -1,17 +1,17 @@
 <div class="all-products-services-container">
   <h2>All Products/Services</h2>
 
-  <div class="controls-container">
-    <div class="search-container">
-      <span class="search-icon material-icons">search</span>
-      <input
-        type="text"
-        placeholder="Search products/services..."
-        [(ngModel)]="searchQuery"
-        (input)="applySearch()"
-      />
-    </div>
+  <div class="search-container">
+    <span class="search-icon material-icons">search</span>
+    <input
+      type="text"
+      placeholder="Search products/services..."
+      [(ngModel)]="searchQuery"
+      (input)="applySearch()"
+    />
+  </div>
 
+  <div class="controls-container">
     <div class="date-filter-container">
       <label for="from-date">From</label>
       <input
@@ -31,15 +31,6 @@
       />
     </div>
 
-    <div class="select-type-container">
-        <label for="service-type">Select Type:</label>
-        <input type="radio" id="service-type" name="type" value="service">
-        <label for="service-type">Service</label>
-        
-        <input type="radio" id="product-type" name="type" value="product">
-        <label for="product-type">Product</label>
-    </div>
-
     <div class="sort-container">
       <label for="sort-select">Sort by</label>
       <select [(ngModel)]="selectedFilter" (change)="applySort()">
@@ -56,6 +47,15 @@
         <option value="desc">Descending</option>
       </select>
     </div>
+  </div>
+
+  <div class="radio-container">
+    <label>Select Type</label>
+    <input type="radio" id="product-type" name="type" value="product" />
+    <label for="product-type">Product</label>
+
+    <input type="radio" id="service-type" name="type" value="service" />
+    <label for="service-type">Service</label>
   </div>
 
   <div class="products-services-grid">
