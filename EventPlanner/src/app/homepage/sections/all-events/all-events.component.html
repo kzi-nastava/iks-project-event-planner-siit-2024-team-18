@@ -1,18 +1,18 @@
 <div class="all-events-container">
   <h2 class="section-title">All Events</h2>
 
-  <div class="controls-container">
-    <div class="search-container">
-      <span class="material-icons search-icon">search</span>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search events..."
-        [(ngModel)]="searchQuery"
-        (input)="applySearch()"
-      />
-    </div>
+  <div class="search-container">
+    <span class="material-icons search-icon">search</span>
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search events..."
+      [(ngModel)]="searchQuery"
+      (input)="applySearch()"
+    />
+  </div>
 
+  <div class="controls-container">
     <div class="date-filter-container">
       <label for="from-date" class="date-label">From</label>
       <input

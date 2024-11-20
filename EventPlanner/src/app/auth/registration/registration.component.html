@@ -1,18 +1,18 @@
 <div class="background">
     <div class="registration">
         <h1>Sign up</h1>
-        <form (ngSubmit)="submit()">
+        <form [formGroup]="registrationForm" #formDirective="ngForm" (ngSubmit)="submit(formDirective)">
             <div class="role-section">
                 <mat-label id="roleLabel">
                     <mat-icon id="roleIcon">assignment_ind</mat-icon> Role
                 </mat-label>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" value="Event Organizer" name="role" [(ngModel)]="selectedRole" />
+                        <input type="radio" value="Event Organizer" name="role" formControlName="role" />
                         Event Organizer
                     </label>
                     <label>
-                        <input type="radio" value="Service Product Provider" [(ngModel)]="selectedRole" name="role" />
+                        <input type="radio" value="Service Product Provider" name="role" formControlName="role" />
                         Service Product Provider
                     </label>
                 </div>
@@ -25,12 +25,12 @@
                 </mat-label>
                 <input
                   matInput
-                  [formControl]="email"
+                  formControlName="email"
                   required />
-                <mat-error *ngIf="email.touched && email.hasError('required')">
+                <mat-error *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.hasError('required')">
                     Please enter e-mail address.
                 </mat-error>
-                <mat-error *ngIf="email.touched && email.hasError('email')">
+                <mat-error *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.hasError('email')">
                     Please enter a valid e-mail address.
                 </mat-error>
             </mat-form-field>
@@ -43,9 +43,9 @@
                 <input
                   matInput
                   required
-                  [formControl]="firstName"
+                  formControlName="firstName"
                 />
-                <mat-error *ngIf="firstName.invalid && firstName.touched">
+                <mat-error *ngIf="registrationForm.get('firstName')?.invalid && registrationForm.get('firstName')?.touched">
                   Please enter first name.
                 </mat-error>
             </mat-form-field>
@@ -58,13 +58,13 @@
                 <input
                     matInput
                     required
-                    [formControl]="lastName" />
-                <mat-error *ngIf="lastName.invalid && lastName.touched">
+                    formControlName="lastName" />
+                <mat-error *ngIf="registrationForm.get('lastName')?.invalid && registrationForm.get('lastName')?.touched">
                     Please enter last name.
                 </mat-error>
             </mat-form-field>
 
-            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+            <mat-form-field *ngIf="registrationForm.get('role')?.value !== 'Event Organizer'">
                 <mat-label>
                     <mat-icon>business</mat-icon>
                     Company Name
@@ -72,8 +72,8 @@
                 <input
                     matInput
                     required
-                    [formControl]="companyName" />
-                <mat-error *ngIf="companyName.invalid && companyName.touched">
+                    formControlName="companyName" />
+                <mat-error *ngIf="registrationForm.get('companyName')?.invalid && registrationForm.get('companyName')?.touched">
                     Please enter company name.
                 </mat-error>
             </mat-form-field>
@@ -107,8 +107,8 @@
                 <input
                     matInput
                     required
-                    [formControl]="address" />
-                <mat-error *ngIf="address.invalid && address.touched">
+                    formControlName="address" />
+                <mat-error *ngIf="registrationForm.get('address')?.invalid && registrationForm.get('address')?.touched">
                     Please enter address.
                 </mat-error>
             </mat-form-field>
@@ -121,16 +121,16 @@
                 <input
                     matInput
                     required
-                    [formControl]="phoneNumber" />
-                <mat-error *ngIf="phoneNumber.touched && phoneNumber.hasError('required')">
+                    formControlName="phoneNumber" />
+                <mat-error *ngIf="registrationForm.get('phoneNumber')?.touched && registrationForm.get('phoneNumber')?.hasError('required')">
                     Please enter phone number.
                 </mat-error>
-                <mat-error *ngIf="phoneNumber.touched && phoneNumber.hasError('pattern')">
+                <mat-error *ngIf="registrationForm.get('phoneNumber')?.touched && registrationForm.get('phoneNumber')?.hasError('pattern')">
                     Please enter valid phone number (9 to 10 digits).
                 </mat-error>   
             </mat-form-field>
 
-            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+            <mat-form-field *ngIf="registrationForm.get('role')?.value !== 'Event Organizer'">
                 <mat-label>
                     <mat-icon>description</mat-icon>
                     Description
@@ -138,34 +138,34 @@
                 <textarea
                     matInput
                     required
-                    [formControl]="description"></textarea>
-                <mat-error *ngIf="description.invalid && description.touched">
+                    formControlName="description"></textarea>
+                <mat-error *ngIf="registrationForm.get('description')?.invalid && registrationForm.get('description')?.touched">
                     Please enter description.
                 </mat-error>
             </mat-form-field>
 
-            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+            <mat-form-field *ngIf="registrationForm.get('role')?.value !== 'Event Organizer'">
                 <mat-label>
                     <mat-icon>category</mat-icon>
                     Categories
                 </mat-label>
-                <mat-select [formControl]="categories" multiple required >
+                <mat-select formControlName="categories" multiple required >
                     <mat-option *ngFor="let category of categoriesList" [value]="category">{{ category }}</mat-option>
                 </mat-select>
-                <mat-error *ngIf="categories.invalid && categories.touched">
+                <mat-error *ngIf="registrationForm.get('categories')?.invalid && registrationForm.get('categories')?.touched">
                     Please select categories.
                 </mat-error>
             </mat-form-field>
 
-            <mat-form-field *ngIf="selectedRole !== 'Event Organizer'">
+            <mat-form-field *ngIf="registrationForm.get('role')?.value !== 'Event Organizer'">
                 <mat-label>
                     <mat-icon>event</mat-icon>
                     Event Types
                 </mat-label>
-                <mat-select [formControl]="eventTypes" multiple required >
+                <mat-select formControlName="eventTypes" multiple required >
                     <mat-option *ngFor="let eventType of eventTypesList" [value]="eventType">{{ eventType }}</mat-option>
                 </mat-select>
-                <mat-error *ngIf="eventTypes.invalid && eventTypes.touched">
+                <mat-error *ngIf="registrationForm.get('eventTypes')?.invalid && registrationForm.get('eventTypes')?.touched">
                     Please select event types.
                 </mat-error>
             </mat-form-field>
@@ -178,10 +178,10 @@
                 <input
                   matInput
                   [type]="passwordHidden ? 'password' : 'text'"
-                  [formControl]="password"
+                  formControlName="password"
                   required
                 />
-                <mat-error *ngIf="password.invalid && password.touched">Please enter password.</mat-error>
+                <mat-error *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">Please enter password.</mat-error>
                 <button
                   mat-icon-button
                   matSuffix
@@ -202,13 +202,13 @@
                 <input
                   matInput
                   [type]="confirmPasswordHidden ? 'password' : 'text'"
-                  [formControl]="confirmPassword"
+                  formControlName="confirmPassword"
                   required
                 />
-                <mat-error *ngIf="confirmPassword.hasError('required')">
+                <mat-error *ngIf="registrationForm.get('confirmPassword')?.hasError('required')">
                     Please confirm password.
                 </mat-error>
-                <mat-error *ngIf="!confirmPassword.hasError('required') && confirmPassword.hasError('notMatching')">
+                <mat-error *ngIf="!registrationForm.get('confirmPassword')?.hasError('required') && registrationForm.get('confirmPassword')?.hasError('notMatching')">
                     Not same as password.
                 </mat-error>
                 <button

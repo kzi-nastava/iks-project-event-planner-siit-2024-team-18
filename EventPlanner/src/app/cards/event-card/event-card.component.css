@@ -6,6 +6,9 @@
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
     margin-bottom: 20px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
 }
 
 .event-card:hover {
@@ -29,7 +32,9 @@
 
 .event-info {
     padding: 10px;
-    min-height: 100px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .event-info h3 {
@@ -37,6 +42,9 @@
     color: #3f3f3f;
     font-size: 1.5em;
     margin: 10px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .event-info p {
@@ -44,4 +52,8 @@
     color: #555;
     font-size: 1em;
     line-height: 1.4;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

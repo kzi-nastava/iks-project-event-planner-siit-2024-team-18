@@ -2,7 +2,7 @@
     <div class="login">
         <img src="../../../assets/favicon.ico"/>
         <h1>Sign in</h1>
-        <form (ngSubmit)="submit()">
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
             <mat-form-field>
                 <mat-label>
                   <mat-icon>email</mat-icon>
@@ -10,12 +10,12 @@
                 </mat-label>
                 <input
                   matInput
-                  [formControl]="email"
+                  formControlName="email"
                   required />
-                <mat-error *ngIf="email.touched && email.hasError('required')">
+                <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')">
                     Please enter e-mail address.
                 </mat-error>
-                <mat-error *ngIf="email.touched && email.hasError('email')">
+                <mat-error *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')">
                     Please enter a valid e-mail address.
                 </mat-error>
             </mat-form-field>
@@ -28,10 +28,10 @@
                 <input
                   matInput
                   [type]="passwordHidden ? 'password' : 'text'"
-                  [formControl]="password"
+                  formControlName="password"
                   required
                 />
-                <mat-error *ngIf="password.invalid && password.touched">Please enter password.</mat-error>
+                <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">Please enter password.</mat-error>
                 <button
                   mat-icon-button
                   matSuffix

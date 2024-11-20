@@ -25,6 +25,7 @@ mat-drawer-content {
 .nav-header img {
     width: 30px;
     height: 30px;
+    object-fit: cover;
 }
   
 .nav-header h3 {
