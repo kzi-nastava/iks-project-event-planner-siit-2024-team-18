@@ -1,0 +1,90 @@
+<div class="all-products-services-container">
+  <h2>All Products/Services</h2>
+
+  <div class="controls-container">
+    <div class="search-container">
+      <span class="search-icon material-icons">search</span>
+      <input
+        type="text"
+        placeholder="Search products/services..."
+        [(ngModel)]="searchQuery"
+        (input)="applySearch()"
+      />
+    </div>
+
+    <div class="date-filter-container">
+      <label for="from-date">From</label>
+      <input
+        id="from-date"
+        type="date"
+        [(ngModel)]="fromDate"
+        (change)="applyDateFilter()"
+        placeholder="From Date"
+      />
+      <label for="to-date">To</label>
+      <input
+        id="to-date"
+        type="date"
+        [(ngModel)]="toDate"
+        (change)="applyDateFilter()"
+        placeholder="To Date"
+      />
+    </div>
+
+    <div class="select-type-container">
+        <label for="service-type">Select Type:</label>
+        <input type="radio" id="service-type" name="type" value="service">
+        <label for="service-type">Service</label>
+        
+        <input type="radio" id="product-type" name="type" value="product">
+        <label for="product-type">Product</label>
+    </div>
+
+    <div class="sort-container">
+      <label for="sort-select">Sort by</label>
+      <select [(ngModel)]="selectedFilter" (change)="applySort()">
+        <option value="title">Title</option>
+        <option value="description">Description</option>
+        <option value="price">Price</option>
+      </select>
+    </div>
+
+    <div class="sort-container">
+      <label for="sort-order">Sort Order</label>
+      <select [(ngModel)]="sortOrder" (change)="applySort()">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="products-services-grid">
+    <app-product-service-card
+      *ngFor="let product of paginatedProductsServices"
+      [productService]="product"
+      (cardClick)="openProductServiceDetails(product)"
+    ></app-product-service-card>
+  </div>
+
+  <div *ngIf="!filteredProductsServices?.length && !loading" class="no-products-services">
+    <p>No products or services available at the moment.</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Loading products/services...</p>
+  </div>
+
+  <div class="pagination">
+    <button
+      class="previous"
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 1"
+    ></button>
+    <span class="current-page">{{ currentPage }}</span>
+    <button
+      class="next"
+      (click)="goToNextPage()"
+      [disabled]="currentPage === totalPages"
+    ></button>
+  </div>
+</div>

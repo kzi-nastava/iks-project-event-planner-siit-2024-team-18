@@ -1,0 +1,51 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" position="end" opened>
+    <div class="nav-header">
+      <img src="../../../assets/favicon.ico" alt="Logo" />
+      <h3>Event Planner</h3>
+    </div>
+    <div class="nav-user">
+      <img src="../../../assets/images/johndoe.jpg" alt="User Image" />
+      <h4>John Doe</h4>
+      <span>johndoe&#64;gmail.com</span>
+    </div>
+    <a class="nav-login" routerLink="/login">
+      Sign in
+    </a>
+    <a class="nav-item top-border" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon>home</mat-icon>
+      Home
+    </a>
+    <a class="nav-item" routerLink="/chat" routerLinkActive="active">
+      <mat-icon>chat</mat-icon>
+      Chat
+    </a>
+    <a class="nav-item" routerLink="/notifications" routerLinkActive="active">
+      <mat-icon>notifications</mat-icon>
+      Notifications
+    </a>
+    <a class="nav-item" routerLink="/events" routerLinkActive="active">
+      <mat-icon>event</mat-icon>
+      Events
+    </a>
+    <a class="nav-item" routerLink="/services" routerLinkActive="active">
+      <mat-icon>build</mat-icon>
+      Services
+    </a>
+    <a class="nav-item" routerLink="/products" routerLinkActive="active">
+      <mat-icon>shopping_cart</mat-icon>
+      Products
+    </a>
+    <a class="nav-item" routerLink="/profile" routerLinkActive="active">
+      <mat-icon>person</mat-icon>
+      Profile
+    </a>
+    <a class="nav-item" routerLink="/logout" routerLinkActive="active">
+      <mat-icon>logout</mat-icon>
+      Sign Out
+    </a>
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

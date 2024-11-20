@@ -1,0 +1,120 @@
+.container {
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-inline: 5em;
+}
+
+.search > .search-bar {
+  width: calc(100% - 56px * 2 - 10px * 2);
+}
+
+.full-width {
+  flex: 1;
+}
+
+.filters, .create {
+  background-color: #a29bfebe;
+  border: 1px solid #7d7d7d;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 56px;
+  width: 56px;
+  margin-bottom: 20px;
+}
+
+.filters:hover, .create:hover {
+  background-color: #A29BFE;
+  border: 1px solid #000000;
+}
+
+.custom-add-icon {
+  width: 20px;
+  height: 20px;
+  background-image: url('../../../assets/images/add.png');
+  background-size: cover;
+  display: inline-block;
+}
+
+.custom-filter-icon {
+  width: 20px;
+  height: 20px;
+  background-image: url('../../../assets/images/filter.png');
+  background-size: cover;
+  display: inline-block;
+}
+
+.card {
+  width: 100%;
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
+}
+  
+.card:hover {
+    transform: translateY(-5px);
+    cursor: pointer;
+}
+
+.service-settings {
+  position: absolute;
+  display: flex;
+  right: 0;
+  gap: 1em;
+  margin: 1em 1em 0 1em;
+  z-index: 1;
+}
+
+.edit, .delete {
+  border-radius: 100%;
+  background-color: #e3e3e3c5;
+  border: 0;
+  padding: 0.5em;
+}
+
+.edit:hover {
+  background-color: #ffee8cad;
+}
+
+.delete:hover {
+  background-color: #ff8c8cad;
+}
+
+.custom-edit-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  background-image: url('../../../assets/images/edit.png');
+  background-size: cover;
+}
+
+.custom-delete-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  background-image: url('../../../assets/images/delete.png');
+  background-size: cover;
+}
+  
+.mat-card-image {
+  height: 15em;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+  

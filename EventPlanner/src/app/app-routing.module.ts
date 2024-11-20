@@ -1,10 +1,34 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ServicesComponent } from './service-manager/services/services.component';
+import { ServiceDetailComponent } from './service-manager/service-detail/service-detail.component';
+import { CreateServiceComponent } from './service-manager/create-service/create-service.component';
+import { EditServiceComponent } from './service-manager/edit-service/edit-service.component';
+import { HomeComponent } from './homepage/home/home.component';
+import { EventDetailsComponent } from './details/event-details/event-details.component';
+import { ProductServiceDetailsComponent } from './details/product-service-details/product-service-details.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegistrationComponent } from './auth/registration/registration.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'event-details/:id', component: EventDetailsComponent },
+  { path: 'product-service-details/:id', component: ProductServiceDetailsComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegistrationComponent },
+  { path: 'services', component: ServicesComponent },
+  { path: 'service/create', component: CreateServiceComponent },
+  { path: 'service/edit/:id', component: EditServiceComponent },
+  { path: 'service/:id', component: ServiceDetailComponent },
+  { path: '**', redirectTo: ''},
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
+  exports: [
+    RouterModule
+  ],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

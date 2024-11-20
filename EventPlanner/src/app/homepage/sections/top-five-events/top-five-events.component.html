@@ -1,0 +1,45 @@
+<div class="top-five-events">
+  <h2>Top 5 Events</h2>
+  
+  <!-- Swiper Container -->
+  <div 
+    class="swiper-container" 
+    [style.transform]="'translateX(' + swiperOffset + '%)'"
+  >
+    <ng-container *ngFor="let event of events; let i = index">
+      <div 
+        class="event-item" 
+        [ngClass]="{
+          'focused': i === currentIndex, 
+          'adjacent': i === currentIndex - 1 || i === currentIndex + 1
+        }"
+        (click)="openEventDetails(event)"
+      >
+        <img [src]="event.image" alt="Event Image" />
+        <h3>{{ event.title }}</h3>
+        <p>{{ event.description }}</p>
+      </div>
+    </ng-container>
+  </div>
+  
+  <!-- Navigation Buttons -->
+  <button 
+    class="swiper-button-prev" 
+    (click)="prevEvent()"
+    aria-label="Previous Event"
+  ></button>
+  <button 
+    class="swiper-button-next" 
+    (click)="nextEvent()"
+    aria-label="Next Event"
+  ></button>
+
+  <!-- Bullets -->
+  <div class="bullets">
+    <span 
+      *ngFor="let event of events; let i = index" 
+      [class.active]="i === currentIndex" 
+      (click)="goToEvent(i)"
+    ></span>
+  </div>
+</div>

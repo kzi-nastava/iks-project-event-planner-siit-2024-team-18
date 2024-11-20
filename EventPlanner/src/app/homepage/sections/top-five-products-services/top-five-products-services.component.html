@@ -1,0 +1,26 @@
+<div class="top-five-products-services">
+    <h2>Top 5 Products/Services</h2>
+    
+    <div class="swiper-container" [ngStyle]="{'transform': 'translateX(' + swiperOffset + '%)'}">
+        <div 
+            class="product-item" 
+            *ngFor="let product of products; let i = index" 
+            [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
+            (click)="openProductServiceDetails(product)">
+            
+            <img [src]="product.image" alt="Product/Service Image">
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.description }}</p>
+        </div>
+    </div>
+    
+    <button class="swiper-button-prev" (click)="prevProduct()"></button>
+    <button class="swiper-button-next" (click)="nextProduct()"></button>
+  
+    <div class="bullets">
+      <span *ngFor="let product of products; let i = index" 
+            [class.active]="i === currentIndex" 
+            (click)="goToProduct(i)">
+      </span>
+    </div>
+  </div>
