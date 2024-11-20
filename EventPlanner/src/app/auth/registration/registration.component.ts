@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormGroupDirective } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 
@@ -16,7 +17,7 @@ export class RegistrationComponent {
 
   profilePhoto: string | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
     this.registrationForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       firstName: new FormControl('', [Validators.required]),
@@ -100,7 +101,8 @@ export class RegistrationComponent {
       };
 
       this.userService.signup(user);
-      console.log('User successfully registered!', user);
+      alert('Successful registration');
+      this.router.navigate(['/login']);
       return true;
     }
     return false;
