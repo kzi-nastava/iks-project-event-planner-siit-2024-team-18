@@ -23,6 +23,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { MatOptionModule } from '@angular/material/core';
+import { MatSidenavModule } from '@angular/material/sidenav'
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatOptionModule,
     MatSelectModule,
     MatRadioModule,
+    MatSidenavModule
   ],
   exports: [
     MatToolbarModule,
@@ -86,6 +88,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatOptionModule,
     MatSelectModule,
     MatRadioModule,
+    MatSidenavModule
   ]
 })
 export class MaterialModule {}
