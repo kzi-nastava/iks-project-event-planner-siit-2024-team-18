@@ -34,6 +34,22 @@ const USERS = [
     password: 'securepass456',
     confirmPassword: 'securepass456',
   },
+  {
+    _id: 3,
+    email: 'alex.brown@example.com',
+    firstName: 'Alex',
+    lastName: 'Brown',
+    role: 'Authenticated User',
+    companyName: '',
+    profilePhoto: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+    address: '789 Pine Ave, Villagetown',
+    phoneNumber: '5551234567',
+    description: '',
+    categories: [],
+    eventTypes: [],
+    password: 'authuser789',
+    confirmPassword: 'authuser789',
+  },
 ];
 
 @Injectable({

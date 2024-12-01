@@ -10,11 +10,13 @@ import { ProductServiceDetailsComponent } from './details/product-service-detail
 import { LoginComponent } from './auth/login/login.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
+import { InvitedEventsComponent } from './invited-events/invited-events.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'event-details/:id', component: EventDetailsComponent },
   { path: 'event/create/invites', component: InviteScreenComponent },
+  { path: 'invited-events', component: InvitedEventsComponent },
   { path: 'product-service-details/:id', component: ProductServiceDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },

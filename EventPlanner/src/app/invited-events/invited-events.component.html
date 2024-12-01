@@ -1,0 +1,36 @@
+<div class="invited-events-container">
+    <h2 class="section-title">Invited Events</h2>
+  
+    <div *ngIf="filteredEvents.length > 0 && !loading" class="events-grid">
+      <app-event-card
+        *ngFor="let event of paginatedEvents"
+        [event]="event"
+        (cardClick)="openEventDetails($event)"
+      ></app-event-card>
+    </div>
+  
+    <div *ngIf="!filteredEvents?.length && !loading" class="no-events">
+      <p>No invited events available at the moment.</p>
+    </div>
+  
+    <div *ngIf="loading" class="loading">
+      <p>Loading invited events...</p>
+    </div>
+  
+    <div class="pagination">
+      <button 
+        class="previous" 
+        (click)="goToPreviousPage()" 
+        [disabled]="currentPage === 1"
+      >
+      </button>
+      <span class="current-page">{{ currentPage }}</span>
+      <button 
+        class="next" 
+        (click)="goToNextPage()" 
+        [disabled]="currentPage === totalPages"
+      >
+      </button>
+    </div>
+  </div>
+  
