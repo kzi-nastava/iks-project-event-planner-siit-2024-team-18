@@ -12,15 +12,18 @@
     <a class="nav-login" routerLink="/login" *ngIf="!isLoggedIn">
       Sign in
     </a>
+    <a class="nav-login" routerLink="/register" *ngIf="userRole === 'Authenticated User'">
+      Sign up
+    </a>
     <a class="nav-item top-border" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <mat-icon>home</mat-icon>
       Home
     </a>
-    <a class="nav-item" routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn">
+    <a class="nav-item" routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'Authenticated User'">
       <mat-icon>chat</mat-icon>
       Chat
     </a>
-    <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn">
+    <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'Authenticated User'">
       <mat-icon>notifications</mat-icon>
       Notifications
     </a>
@@ -35,6 +38,10 @@
     <a class="nav-item" routerLink="/products" routerLinkActive="active" *ngIf="userRole === 'Service Product Provider'">
       <mat-icon>shopping_cart</mat-icon>
       Products
+    </a>
+    <a class="nav-item" routerLink="/invited-events" routerLinkActive="active" *ngIf="isLoggedIn">
+      <mat-icon>event_note</mat-icon>
+      Invited Events
     </a>
     <a class="nav-item" routerLink="/profile" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>person</mat-icon>

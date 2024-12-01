@@ -11,11 +11,13 @@ import { CardsModule } from './cards/cards.module';
 import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
+import { InvitedEventsComponent } from './invited-events/invited-events.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InviteScreenComponent,
+    InvitedEventsComponent,
   ],
   imports: [
     BrowserModule,
