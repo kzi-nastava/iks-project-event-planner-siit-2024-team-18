@@ -1,0 +1,33 @@
+<div class="invite-screen">
+    <div class="invite-container">
+      <div class="invite-header">
+        <div class="logo">
+          <img src="../../assets/favicon.ico" alt="Logo" />
+        </div>
+        <h2>Invitations</h2>
+        <button class="close-btn" (click)="closeInviteScreen()">&#10005;</button>
+      </div>
+      <div class="invite-body">
+        <div class="email-input-container">
+          <input
+            type="email"
+            [(ngModel)]="email"
+            placeholder="Enter email"
+            class="email-input"
+          />
+          <button class="add-btn" (click)="addEmail()">Add Email</button>
+        </div>
+        <div class="email-list-container">
+          <ul class="email-list">
+            <li *ngFor="let email of emailList; let i = index">
+              {{ email }}
+              <button class="remove-btn" (click)="removeEmail(i)">&#10005;</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="invite-footer">
+        <button class="send-btn" (click)="sendInvites()">Send Invites</button>
+      </div>
+    </div>
+  </div>
