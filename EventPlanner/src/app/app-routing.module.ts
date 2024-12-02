@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ServicesComponent } from './service-manager/services/services.component';
-import { ServiceDetailComponent } from './service-manager/service-detail/service-detail.component';
+import { ServiceDetailComponent } from './details/service-detail/service-detail.component';
 import { CreateServiceComponent } from './service-manager/create-service/create-service.component';
 import { EditServiceComponent } from './service-manager/edit-service/edit-service.component';
 import { HomeComponent } from './homepage/home/home.component';
@@ -11,6 +11,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
 import { InvitedEventsComponent } from './invited-events/invited-events.component';
+import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'service/create', component: CreateServiceComponent },
   { path: 'service/edit/:id', component: EditServiceComponent },
   { path: 'service/:id', component: ServiceDetailComponent },
+  { path: 'service/:id/reserve', component: ServiceReservationComponent },
   { path: '**', redirectTo: ''},
 ];
 

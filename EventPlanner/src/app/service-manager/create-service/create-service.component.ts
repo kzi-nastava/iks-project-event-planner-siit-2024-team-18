@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ServiceManagerService } from '../service-manager.service';
+import { ServiceManagerService } from '../../services/service-manager.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Service } from './../models/service.model';
+import { Service } from '../../models/service.model';
 import { Router } from '@angular/router';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 

@@ -12,12 +12,14 @@ import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
 import { InvitedEventsComponent } from './invited-events/invited-events.component';
+import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InviteScreenComponent,
     InvitedEventsComponent,
+    ServiceReservationComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiceManagerService } from '../service-manager.service';
-import { Service } from '../models/service.model';
+import { ServiceManagerService } from '../../services/service-manager.service';
+import { Service } from '../../models/service.model';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ServiceFiltersComponent } from '../service-filters/service-filters.component';
 import { MatDialog } from '@angular/material/dialog';
