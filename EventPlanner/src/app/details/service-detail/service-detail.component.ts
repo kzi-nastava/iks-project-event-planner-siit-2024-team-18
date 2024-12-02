@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ServiceManagerService } from '../service-manager.service';
-import { Service } from '../models/service.model';
+import { ServiceManagerService } from '../../services/service-manager.service';
+import { Service } from '../../models/service.model';
 
 @Component({
   selector: 'app-service-detail',
