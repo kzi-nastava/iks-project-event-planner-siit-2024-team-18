@@ -12,37 +12,36 @@
   </div>
 
   <div class="controls-container">
-    <div class="date-filter-container">
-      <label for="from-date">From</label>
-      <input
-        id="from-date"
-        type="date"
-        [(ngModel)]="fromDate"
-        (change)="applyDateFilter()"
-        placeholder="From Date"
-      />
-      <label for="to-date">To</label>
-      <input
-        id="to-date"
-        type="date"
-        [(ngModel)]="toDate"
-        (change)="applyDateFilter()"
-        placeholder="To Date"
-      />
-    </div>
-
+      <div class="date-filter-container">
+        <label for="from-date">From</label>
+        <input
+          id="from-date"
+          type="date"
+          [(ngModel)]="fromDate"
+          (change)="applyDateFilter()"
+          placeholder="From Date"
+        />
+        <label for="to-date">To</label>
+        <input
+          id="to-date"
+          type="date"
+          [(ngModel)]="toDate"
+          (change)="applyDateFilter()"
+          placeholder="To Date"
+        />
+      </div>
+      
     <div class="sort-container">
       <label for="sort-select">Sort by</label>
-      <select [(ngModel)]="selectedFilter" (change)="applySort()">
+      <select [(ngModel)]="selectedFilter" (change)="applySearch()">
         <option value="title">Title</option>
         <option value="description">Description</option>
-        <option value="price">Price</option>
       </select>
     </div>
 
     <div class="sort-container">
       <label for="sort-order">Sort Order</label>
-      <select [(ngModel)]="sortOrder" (change)="applySort()">
+      <select [(ngModel)]="sortOrder" (change)="applySearch()">
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
       </select>
@@ -50,23 +49,45 @@
   </div>
 
   <div class="radio-container">
-    <label>Select Type</label>
-    <input type="radio" id="product-type" name="type" value="product" />
-    <label for="product-type">Product</label>
-
-    <input type="radio" id="service-type" name="type" value="service" />
-    <label for="service-type">Service</label>
+    <label>Select Type:</label>
+    <label>
+      <input
+        type="radio"
+        name="type"
+        [value]="true"
+        [(ngModel)]="showProducts"
+        (change)="toggleView(true)"
+      />
+      Products
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="type"
+        [value]="false"
+        [(ngModel)]="showProducts"
+        (change)="toggleView(false)"
+      />
+      Services
+    </label>
   </div>
 
-  <div class="products-services-grid">
-    <app-product-service-card
-      *ngFor="let product of paginatedProductsServices"
-      [productService]="product"
-      (cardClick)="openProductServiceDetails(product)"
-    ></app-product-service-card>
+  <div *ngIf="showProducts" class="products-services-grid">
+    <app-product-card
+      *ngFor="let product of paginatedProducts"
+      [product]="product"
+      (cardClick)="openDetails(product)"
+    ></app-product-card>
+  </div>
+  <div *ngIf="!showProducts" class="products-services-grid">
+    <app-service-card
+      *ngFor="let service of paginatedServices"
+      [service]="service"
+      (cardClick)="openDetails(service)"
+    ></app-service-card>
   </div>
 
-  <div *ngIf="!filteredProductsServices?.length && !loading" class="no-products-services">
+  <div *ngIf="!filteredProducts?.length && !filteredServices?.length && !loading" class="no-products-services">
     <p>No products or services available at the moment.</p>
   </div>
 
@@ -79,12 +100,14 @@
       class="previous"
       (click)="goToPreviousPage()"
       [disabled]="currentPage === 1"
-    ></button>
-    <span class="current-page">{{ currentPage }}</span>
+    >
+    </button>
+    <span class="current-page">{{ currentPage }} / {{ totalPages }}</span>
     <button
       class="next"
       (click)="goToNextPage()"
       [disabled]="currentPage === totalPages"
-    ></button>
+    >
+    </button>
   </div>
 </div>

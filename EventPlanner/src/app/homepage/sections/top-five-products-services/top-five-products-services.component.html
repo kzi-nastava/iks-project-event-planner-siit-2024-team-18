@@ -1,26 +1,44 @@
 <div class="top-five-products-services">
-    <h2>Top 5 Products/Services</h2>
-    
-    <div class="swiper-container" [ngStyle]="{'transform': 'translateX(' + swiperOffset + '%)'}">
-        <div 
-            class="product-item" 
-            *ngFor="let product of products; let i = index" 
-            [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
-            (click)="openProductServiceDetails(product)">
-            
-            <img [src]="product.image" alt="Product/Service Image">
-            <h3>{{ product.title }}</h3>
-            <p>{{ product.description }}</p>
-        </div>
-    </div>
-    
-    <button class="swiper-button-prev" (click)="prevProduct()"></button>
-    <button class="swiper-button-next" (click)="nextProduct()"></button>
+  <h2>Top 5 {{ showProducts ? 'Products' : 'Services' }}</h2>
   
-    <div class="bullets">
-      <span *ngFor="let product of products; let i = index" 
-            [class.active]="i === currentIndex" 
-            (click)="goToProduct(i)">
-      </span>
-    </div>
+  <div 
+      class="swiper-container" 
+      [ngStyle]="{'transform': 'translateX(' + swiperOffset + '%)'}">
+
+    <ng-container *ngIf="showProducts">
+      <div 
+          class="product-service-item" 
+          *ngFor="let product of products; let i = index" 
+          [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
+          (click)="openDetails(product)">
+        
+        <img [src]="product.image" alt="Product Image">
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description }}</p>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!showProducts">
+      <div 
+          class="product-service-item" 
+          *ngFor="let service of services; let i = index" 
+          [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
+          (click)="openDetails(service)">
+        
+        <img [src]="service.images[0]" alt="Service Image">
+        <h3>{{ service.title }}</h3>
+        <p>{{ service.description }}</p>
+      </div>
+    </ng-container>
   </div>
+  
+  <button class="swiper-button-prev" (click)="prevItem()"></button>
+  <button class="swiper-button-next" (click)="nextItem()"></button>
+
+  <div class="bullets">
+    <span *ngFor="let item of currentList; let i = index" 
+          [class.active]="i === currentIndex" 
+          (click)="goToItem(i)">
+    </span>
+  </div>
+</div>

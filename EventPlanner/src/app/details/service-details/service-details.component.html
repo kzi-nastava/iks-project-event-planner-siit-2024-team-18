@@ -1,1 +1,16 @@
-<p>service-details works!</p>
+<div class="service-details-container" *ngIf="service">
+    <div class="service-image">
+      <img [src]="service.images[0]" alt="{{ service.title }}">
+    </div>
+    <div class="service-info">
+      <h2>{{ service.title }}</h2>
+      <p class="service-description">{{ service.description }}</p>
+    </div>
+    
+    <button (click)="goBack()">Back</button>
+  </div>
+  
+  <div *ngIf="!service" class="loading">
+    <p>Loading service details...</p>
+  </div>
+  

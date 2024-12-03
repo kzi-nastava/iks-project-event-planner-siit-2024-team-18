@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Service } from '../models/service.model';
+import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceManagerService {
+  constructor(private router : Router) {}
   private services: Service[] = [
     {
       _id: 1,
@@ -133,9 +136,13 @@ export class ServiceManagerService {
       reservationType: 'manual',
     },
   ];
+  
+  getTopFiveServices(): Observable<Service[]> {
+    return of(this.services.slice(0, 5));
+  }
 
-  getServices(): Service[] {
-    return this.services;
+  getServices(): Observable<Service[]> {
+    return of(this.services);
   }
 
   getServiceById(id: number): Service | undefined {
@@ -150,5 +157,14 @@ export class ServiceManagerService {
 
   deleteService(serviceId: number): void {
     this.services = this.services.filter(service => service._id !== serviceId);
+  }
+
+
+  openServiceDetails(serviceId: number) {
+    if(serviceId){
+      this.router.navigate(['/service/', serviceId]);
+    } else {
+      console.log('Invalid service Id: ', serviceId);
+    }
   }
 }

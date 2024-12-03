@@ -6,12 +6,12 @@ import { CreateServiceComponent } from './service-manager/create-service/create-
 import { EditServiceComponent } from './service-manager/edit-service/edit-service.component';
 import { HomeComponent } from './homepage/home/home.component';
 import { EventDetailsComponent } from './details/event-details/event-details.component';
-import { ProductServiceDetailsComponent } from './details/product-service-details/product-service-details.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
-import { InviteScreenComponent } from './invite-screen/invite-screen.component';
-import { InvitedEventsComponent } from './invited-events/invited-events.component';
+import { InviteScreenComponent } from './event-manager/invite-screen/invite-screen.component';
+import { InvitedEventsComponent } from './event-manager/invited-events/invited-events.component';
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
+import { ProductDetailsComponent } from './details/product-details/product-details.component';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 
 const routes: Routes = [
@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'event-details/:id', component: EventDetailsComponent },
   { path: 'event/create/invites', component: InviteScreenComponent },
   { path: 'invited-events', component: InvitedEventsComponent },
-  { path: 'product-service-details/:id', component: ProductServiceDetailsComponent },
+  { path: 'product/:id', component: ProductDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'budget-planning', component: BudgetPlanningComponent },

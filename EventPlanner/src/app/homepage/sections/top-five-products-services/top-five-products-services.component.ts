@@ -1,36 +1,54 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductServiceService } from '../../../services/product-service.service';
-import { ProductService } from '../../../models/product-service.model';
+import { ServiceManagerService } from '../../../services/service-manager.service';
+import { Service } from '../../../models/service.model';
+import { ProductManagerService } from '../../../services/product-manager.service';
+import { Product } from '../../../models/product.model';
 
 @Component({
   selector: 'app-top-five-products-services',
   templateUrl: './top-five-products-services.component.html',
-  styleUrls: ['./top-five-products-services.component.css']
+  styleUrls: ['./top-five-products-services.component.css'],
 })
 export class TopFiveProductsServicesComponent implements OnInit {
-  products: ProductService[] = [];
+  products: Product[] = [];
+  services: Service[] = [];
   currentIndex: number = 0;
   swiperOffset: number = 0;
+  showProducts: boolean = false;
 
-  constructor(private productServiceService: ProductServiceService) {}
+  constructor(
+    private productManager: ProductManagerService,
+    private serviceManager: ServiceManagerService
+  ) {}
 
   ngOnInit(): void {
-    this.productServiceService.getTopFiveProductsServices().subscribe((data) => {
+    this.fetchProducts();
+    this.fetchServices();
+  }
+
+  fetchProducts(): void {
+    this.productManager.getTopFiveProducts().subscribe((data) => {
       this.products = data;
     });
   }
 
-  prevProduct(): void {
+  fetchServices(): void {
+    this.serviceManager.getTopFiveServices().subscribe((data) => {
+      this.services = data;
+    });
+  }
+
+  prevItem(): void {
     if (this.currentIndex > 0) {
       this.currentIndex--;
     } else {
-      this.currentIndex = this.products.length - 1;
+      this.currentIndex = this.currentList.length - 1;
     }
     this.updateSwiperPosition();
   }
 
-  nextProduct(): void {
-    if (this.currentIndex < this.products.length - 1) {
+  nextItem(): void {
+    if (this.currentIndex < this.currentList.length - 1) {
       this.currentIndex++;
     } else {
       this.currentIndex = 0;
@@ -38,7 +56,7 @@ export class TopFiveProductsServicesComponent implements OnInit {
     this.updateSwiperPosition();
   }
 
-  goToProduct(index: number): void {
+  goToItem(index: number): void {
     this.currentIndex = index;
     this.updateSwiperPosition();
   }
@@ -47,7 +65,15 @@ export class TopFiveProductsServicesComponent implements OnInit {
     this.swiperOffset = -this.currentIndex * 100;
   }
 
-  openProductServiceDetails(productService: ProductService): void {
-    this.productServiceService.openProductServiceDetails(productService.id);
+  openDetails(item: Product | Service): void {
+    if (this.showProducts) {
+      this.productManager.openProductDetails((item as Product).id);
+    } else {
+      this.serviceManager.openServiceDetails((item as Service)._id);
+    }
+  }
+
+  get currentList(): (Product | Service)[] {
+    return this.showProducts ? this.products : this.services;
   }
 }

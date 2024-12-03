@@ -10,18 +10,14 @@ import { DetailsModule } from './details/details.module';
 import { CardsModule } from './cards/cards.module';
 import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
-import { InviteScreenComponent } from './invite-screen/invite-screen.component';
-import { InvitedEventsComponent } from './invited-events/invited-events.component';
-import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
+import { EventManagerModule } from './event-manager/event-manager.module';
+import { ProductManagerModule } from './product-manager/product-manager.module';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 import { MaterialModule } from './infrastructure/material/material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InviteScreenComponent,
-    InvitedEventsComponent,
-    ServiceReservationComponent,
     BudgetPlanningComponent,
   ],
   imports: [
@@ -35,6 +31,8 @@ import { MaterialModule } from './infrastructure/material/material.module';
     CardsModule,
     HomePageModule,
     AuthModule,
+    EventManagerModule,
+    ProductManagerModule,
     MaterialModule
   ],
   providers: [

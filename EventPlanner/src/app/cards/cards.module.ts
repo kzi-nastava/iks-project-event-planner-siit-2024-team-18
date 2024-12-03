@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventCardComponent } from './event-card/event-card.component';
-import { ProductServiceCardComponent } from './product-service-card/product-service-card.component';
+import { ProductCardComponent } from './product-card/product-card.component';
+import { ServiceCardComponent } from './service-card/service-card.component';
 
 @NgModule({
   declarations: [
     EventCardComponent,
-    ProductServiceCardComponent
+    ProductCardComponent,
+    ServiceCardComponent
   ],
   imports: [
     CommonModule
   ],
   exports: [
     EventCardComponent,
-    ProductServiceCardComponent
+    ProductCardComponent,
+    ServiceCardComponent,
   ]
 })
 export class CardsModule { }
