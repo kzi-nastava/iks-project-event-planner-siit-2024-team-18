@@ -12,10 +12,13 @@ import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
 import { EventManagerModule } from './event-manager/event-manager.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
+import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
+import { MaterialModule } from './infrastructure/material/material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
+    BudgetPlanningComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,7 @@ import { ProductManagerModule } from './product-manager/product-manager.module';
     AuthModule,
     EventManagerModule,
     ProductManagerModule,
+    MaterialModule
   ],
   providers: [
     provideClientHydration(),

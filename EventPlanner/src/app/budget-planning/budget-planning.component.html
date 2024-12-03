@@ -1,0 +1,114 @@
+<div class="budget-planning">
+    <!-- Total Budget Calculation -->
+    <div class="header-container">
+        <h2>Event: <span class="highlight">{{ budgetPlanningService.event.name }}</span></h2>
+        <h3>Total Budget: <span class="highlight">{{ calculateTotal() }} $</span></h3>
+    </div>
+
+    <!-- Event Type & Category Selection -->
+    <div class="input-data">
+        <form [formGroup]="budgetForm" style="display: flex; gap: 1em;">
+
+        <mat-form-field appearance="fill">
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="budgetPlanningService.selectedCategory" formControlName="category" id="category" name="category" required>
+                <mat-option *ngFor="let category of budgetPlanningService.categories" [value]="category">
+                    {{ category.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!budgetPlanningService.selectedCategory">Category is required</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+            <mat-label>Item Name</mat-label>
+            <input matInput placeholder="Enter item name" type="text" formControlName="name" />
+            <mat-error *ngIf="budgetForm.get('name')?.invalid">Item Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Planned Sum</mat-label>
+            <input matInput [(ngModel)]="budgetPlanningService.newBudgetItem.plannedAmount"  formControlName="plannedAmount" name="plannedSum" type="number" placeholder="Enter planned sum" required />
+            <mat-error *ngIf="!budgetPlanningService.newBudgetItem.plannedAmount">Planned Sum is required</mat-error>
+        </mat-form-field>
+        </form>
+    
+        <button class="create" (click)="addItem()"> 
+            <mat-icon class="custom-add-icon"></mat-icon>
+        </button>
+    </div>
+  
+    <!-- Budget Item List (Scrollable) -->
+    <div class="item-list-container">
+      <mat-list>
+        <mat-list-item *ngFor="let item of budgetPlanningService.event.budget">
+          <div class="item">
+            <span>{{ item.name }} - {{ item.plannedAmount }} $</span>
+            <div class="item-buttons">
+              <button class="info" (click)="showItemDetails()">
+                <mat-icon class="custom-info-icon"></mat-icon>
+              </button>
+              <button class="edit" (click)="editItem(item)">
+                <mat-icon class="custom-edit-icon"></mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  
+    <!-- Modal for Editing Item Details -->
+    <div class="modal" *ngIf="selectedItem">
+        <div class="modal-content">
+        <h2 class="modal-title">Edit Budget Item</h2>
+        <form>
+            <mat-form-field appearance="fill">
+                <mat-label>Category</mat-label>
+                <mat-select [value]="selectedItem.category" disabled>
+                  <mat-option *ngFor="let category of budgetPlanningService.categories" [value]="selectedItem.category">
+                    {{ category.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              
+    
+            <!-- Editable Item Name Field -->
+            <mat-form-field appearance="fill">
+            <mat-label>Item Name</mat-label>
+            <input
+                matInput
+                [(ngModel)]="selectedItem.name"
+                name="editItemName"
+                placeholder="Enter item name"
+                required
+            />
+            <mat-error *ngIf="!selectedItem.name">Item Name is required</mat-error>
+            </mat-form-field>
+    
+            <!-- Editable Planned Amount Field -->
+            <mat-form-field appearance="fill">
+            <mat-label>Planned Amount</mat-label>
+            <input
+                matInput
+                [(ngModel)]="selectedItem.plannedAmount"
+                name="editPlannedAmount"
+                type="number"
+                placeholder="Enter amount"
+                required
+            />
+            <mat-error *ngIf="!selectedItem.plannedAmount">Planned Amount is required</mat-error>
+            </mat-form-field>
+    
+            <!-- Modal Actions -->
+            <div class="modal-actions">
+            <button mat-raised-button color="warn" type="button" (click)="deleteItem()">
+                <mat-icon>delete</mat-icon> Delete
+            </button>
+            <button mat-raised-button color="primary" type="button" (click)="updateItem()">
+                <mat-icon>save</mat-icon> Save
+            </button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+  
