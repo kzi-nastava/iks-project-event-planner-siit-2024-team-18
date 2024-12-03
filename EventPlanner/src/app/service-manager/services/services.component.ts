@@ -26,7 +26,9 @@ export class ServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.services = this.serviceManagerService.getServices();
+    this.serviceManagerService.getServices().subscribe((data: Service[]) => {
+      this.services = data;
+    });
     this.filteredServices = [...this.services];
     this.paginatedServices = this.filteredServices.slice(0, 6);
   }
@@ -101,7 +103,9 @@ export class ServicesComponent implements OnInit {
       if (result) {
         this.serviceManagerService.deleteService(serviceId);
 
-        this.services = this.serviceManagerService.getServices();
+        this.serviceManagerService.getServices().subscribe((data: Service[]) => {
+          this.services = data;
+        });
         this.filteredServices = [...this.services];
         this.paginatedServices = this.filteredServices.slice(0, 6);
   

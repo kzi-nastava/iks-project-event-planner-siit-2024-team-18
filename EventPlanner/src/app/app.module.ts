@@ -10,16 +10,12 @@ import { DetailsModule } from './details/details.module';
 import { CardsModule } from './cards/cards.module';
 import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
-import { InviteScreenComponent } from './invite-screen/invite-screen.component';
-import { InvitedEventsComponent } from './invited-events/invited-events.component';
-import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
+import { EventManagerModule } from './event-manager/event-manager.module';
+import { ProductManagerModule } from './product-manager/product-manager.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InviteScreenComponent,
-    InvitedEventsComponent,
-    ServiceReservationComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +27,9 @@ import { ServiceReservationComponent } from './service-manager/service-reservati
     DetailsModule,
     CardsModule,
     HomePageModule,
-    AuthModule
+    AuthModule,
+    EventManagerModule,
+    ProductManagerModule,
   ],
   providers: [
     provideClientHydration(),

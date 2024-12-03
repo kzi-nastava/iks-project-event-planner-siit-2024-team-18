@@ -8,13 +8,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { EditServiceComponent } from './edit-service/edit-service.component';
 import { ServiceFiltersComponent } from './service-filters/service-filters.component';
+import { ServiceReservationComponent } from './service-reservation/service-reservation.component';
 
 @NgModule({
   declarations: [
     ServicesComponent,
     CreateServiceComponent,
     EditServiceComponent,
-    ServiceFiltersComponent
+    ServiceFiltersComponent,
+    ServiceReservationComponent,
   ],
   imports: [
     CommonModule,

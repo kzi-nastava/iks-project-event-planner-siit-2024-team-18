@@ -78,17 +78,17 @@ export class AllEventsComponent implements OnInit {
     this.filteredEvents = this.events.filter(
       (event) =>
         event.title.toLowerCase().includes(query) ||
-        event.description.toLowerCase().includes(query) ||
-        event.location.toLowerCase().includes(query)
+        event.description.toLowerCase().includes(query)
+        //event.location.toLowerCase().includes(query)
     );
     this.resetPagination();
   }
 
   applyDateFilter(): void {
-    this.filteredEvents = this.events.filter((event) => {
-      const eventDate = new Date(event.date);
-      return (!this.fromDate || eventDate >= this.fromDate) && (!this.toDate || eventDate <= this.toDate);
-    });
+    // this.filteredEvents = this.events.filter((event) => {
+    //   const eventDate = new Date(event.date);
+    //   return (!this.fromDate || eventDate >= this.fromDate) && (!this.toDate || eventDate <= this.toDate);
+    // });
     this.resetPagination();
   }
 
@@ -99,7 +99,7 @@ export class AllEventsComponent implements OnInit {
     this.filteredEvents.sort((a, b) => {
       if (this.selectedFilter === 'title') return compare(a.title, b.title);
       if (this.selectedFilter === 'description') return compare(a.description, b.description);
-      if (this.selectedFilter === 'location') return compare(a.location, b.location);
+      //if (this.selectedFilter === 'location') return compare(a.location, b.location);
       return 0;
     });
 

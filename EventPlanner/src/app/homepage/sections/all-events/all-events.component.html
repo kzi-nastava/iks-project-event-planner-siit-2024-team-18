@@ -83,7 +83,7 @@
       [disabled]="currentPage === 1"
     >
     </button>
-    <span class="current-page">{{ currentPage }}</span>
+    <span class="current-page">{{ currentPage }} / {{ totalPages }}</span>
     <button 
       class="next" 
       (click)="goToNextPage()" 

@@ -1,23 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ServiceManagerService } from '../../services/service-manager.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Service } from '../../models/service.model';
+import { ServiceManagerService } from '../../services/service-manager.service';
 
 @Component({
   selector: 'app-service-details',
   templateUrl: './service-details.component.html',
-  styleUrl: './service-details.component.css'
+  styleUrls: ['./service-details.component.css']
 })
 export class ServiceDetailsComponent implements OnInit {
-  service: Service | undefined;
+  serviceId!: number;
+  service!: Service | undefined;
 
   constructor(
     private route: ActivatedRoute,
-    private ServiceManagerService: ServiceManagerService
+    private serviceManager: ServiceManagerService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    const serviceId = Number(this.route.snapshot.paramMap.get('id'));
-    this.service = this.ServiceManagerService.getServiceById(serviceId);
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.serviceId = +id;
+      this.fetchServiceDetails(this.serviceId);
+    } else {
+      this.router.navigate(['']);
+    }
+  }
+
+  fetchServiceDetails(serviceId: number): void {
+    this.service = this.serviceManager.getServiceById(serviceId);
+  }
+
+  goBack(): void {
+    this.router.navigate(['']);
   }
 }
