@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ServicesComponent } from './service-manager/services/services.component';
-import { ServiceDetailComponent } from './details/service-detail/service-detail.component';
+import { ServiceDetailsComponent } from './details/service-details/service-details.component';
 import { CreateServiceComponent } from './service-manager/create-service/create-service.component';
 import { EditServiceComponent } from './service-manager/edit-service/edit-service.component';
 import { HomeComponent } from './homepage/home/home.component';
@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'services', component: ServicesComponent },
   { path: 'service/create', component: CreateServiceComponent },
   { path: 'service/edit/:id', component: EditServiceComponent },
-  { path: 'service/:id', component: ServiceDetailComponent },
+  { path: 'service/:id', component: ServiceDetailsComponent },
   { path: 'service/:id/reserve', component: ServiceReservationComponent },
   { path: '**', redirectTo: ''},
 ];

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServicesComponent } from './services/services.component';
-import { ServiceDetailComponent } from '../details/service-detail/service-detail.component';
 import { MaterialModule } from '../infrastructure/material/material.module';
 import { SharedModule } from '../shared/shared.module';
 import { CreateServiceComponent } from './create-service/create-service.component';
@@ -13,7 +12,6 @@ import { ServiceFiltersComponent } from './service-filters/service-filters.compo
 @NgModule({
   declarations: [
     ServicesComponent,
-    ServiceDetailComponent,
     CreateServiceComponent,
     EditServiceComponent,
     ServiceFiltersComponent

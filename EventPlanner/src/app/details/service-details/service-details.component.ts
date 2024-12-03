@@ -4,11 +4,11 @@ import { ServiceManagerService } from '../../services/service-manager.service';
 import { Service } from '../../models/service.model';
 
 @Component({
-  selector: 'app-service-detail',
-  templateUrl: './service-detail.component.html',
-  styleUrl: './service-detail.component.css'
+  selector: 'app-service-details',
+  templateUrl: './service-details.component.html',
+  styleUrl: './service-details.component.css'
 })
-export class ServiceDetailComponent implements OnInit {
+export class ServiceDetailsComponent implements OnInit {
   service: Service | undefined;
 
   constructor(
