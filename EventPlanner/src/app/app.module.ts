@@ -13,6 +13,8 @@ import { AuthModule } from './auth/auth.module';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
 import { InvitedEventsComponent } from './invited-events/invited-events.component';
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
+import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
+import { MaterialModule } from './infrastructure/material/material.module';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import { ServiceReservationComponent } from './service-manager/service-reservati
     InviteScreenComponent,
     InvitedEventsComponent,
     ServiceReservationComponent,
+    BudgetPlanningComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,8 @@ import { ServiceReservationComponent } from './service-manager/service-reservati
     DetailsModule,
     CardsModule,
     HomePageModule,
-    AuthModule
+    AuthModule,
+    MaterialModule
   ],
   providers: [
     provideClientHydration(),

@@ -21,10 +21,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatOptionModule } from '@angular/material/core';
-import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSidenavModule } from '@angular/material/sidenav';
 
+// Importing MatListModule and MatDividerModule for list and divider components
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -57,7 +60,9 @@ import { MatSidenavModule } from '@angular/material/sidenav'
     MatOptionModule,
     MatSelectModule,
     MatRadioModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatListModule,
+    MatDividerModule
   ],
   exports: [
     MatToolbarModule,
@@ -88,7 +93,9 @@ import { MatSidenavModule } from '@angular/material/sidenav'
     MatOptionModule,
     MatSelectModule,
     MatRadioModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatListModule,
+    MatDividerModule
   ]
 })
 export class MaterialModule {}

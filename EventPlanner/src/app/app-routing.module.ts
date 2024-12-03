@@ -12,6 +12,7 @@ import { RegistrationComponent } from './auth/registration/registration.componen
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
 import { InvitedEventsComponent } from './invited-events/invited-events.component';
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
+import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'product-service-details/:id', component: ProductServiceDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
+  { path: 'budget-planning', component: BudgetPlanningComponent },
   { path: 'services', component: ServicesComponent },
   { path: 'service/create', component: CreateServiceComponent },
   { path: 'service/edit/:id', component: EditServiceComponent },
