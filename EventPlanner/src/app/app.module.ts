@@ -14,6 +14,7 @@ import { EventManagerModule } from './event-manager/event-manager.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 import { MaterialModule } from './infrastructure/material/material.module';
+import { EventTypeManagerModule } from './event-type-manager/event-type-manager.module';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MaterialModule } from './infrastructure/material/material.module';
     HomePageModule,
     AuthModule,
     EventManagerModule,
+    EventTypeManagerModule,
     ProductManagerModule,
     MaterialModule
   ],

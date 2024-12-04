@@ -1,0 +1,50 @@
+<div class="center-container">
+    <form [formGroup]="editEventTypeForm" class="event-type-form">
+      <div class="form-title">
+        <button type="button" class="close-button" [routerLink]="['/event-types']">
+          <mat-icon>close</mat-icon>
+        </button>
+  
+        <h2>Edit Event Type</h2>
+      </div>
+  
+    <mat-form-field>
+        <mat-label>
+            Name
+        </mat-label>
+        <input matInput required formControlName="name"/>
+        <mat-error *ngIf="editEventTypeForm.get('name')?.invalid && editEventTypeForm.get('name')?.touched">
+          Please enter name.
+        </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field>
+        <mat-label>
+            <mat-icon>description</mat-icon>
+            Description
+        </mat-label>
+        <textarea matInput required formControlName="description"></textarea>
+        <mat-error *ngIf="editEventTypeForm.get('description')?.invalid && editEventTypeForm.get('description')?.touched">
+            Please enter description.
+        </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field>
+        <mat-label>
+            <mat-icon>category</mat-icon>
+            Categories
+        </mat-label>
+        <mat-select formControlName="categories" multiple required >
+            <mat-option *ngFor="let category of categoriesList" [value]="category">{{ category }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="editEventTypeForm.get('categories')?.invalid && editEventTypeForm.get('categories')?.touched">
+            Please select categories.
+        </mat-error>
+    </mat-form-field>
+  
+      <div class="form-buttons form-field">
+        <button [routerLink]="['/event-types']" mat-raised-button class="cancel">Cancel</button>
+        <button mat-raised-button class="submit">Submit</button>
+      </div>
+    </form>
+</div>

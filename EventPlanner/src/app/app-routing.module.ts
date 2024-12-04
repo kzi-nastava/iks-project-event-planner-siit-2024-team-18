@@ -13,6 +13,9 @@ import { InvitedEventsComponent } from './event-manager/invited-events/invited-e
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
 import { ProductDetailsComponent } from './details/product-details/product-details.component';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
+import { EventTypesComponent } from './event-type-manager/event-types/event-types.component';
+import { CreateEventTypeComponent } from './event-type-manager/create-event-type/create-event-type.component';
+import { EditEventTypeComponent } from './event-type-manager/edit-event-type/edit-event-type.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,6 +31,9 @@ const routes: Routes = [
   { path: 'service/edit/:id', component: EditServiceComponent },
   { path: 'service/:id', component: ServiceDetailsComponent },
   { path: 'service/:id/reserve', component: ServiceReservationComponent },
+  { path: 'event-types', component: EventTypesComponent },
+  { path: 'event-types/create', component: CreateEventTypeComponent },
+  { path: 'event-types/edit/:id', component: EditEventTypeComponent },
   { path: '**', redirectTo: ''},
 ];
 
