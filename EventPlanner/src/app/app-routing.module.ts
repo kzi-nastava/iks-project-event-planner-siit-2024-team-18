@@ -13,8 +13,8 @@ import { InvitedEventsComponent } from './event-manager/invited-events/invited-e
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
 import { ProductDetailsComponent } from './details/product-details/product-details.component';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
-import { CategoryManagerComponent } from './category-manager/category-manager.component';
-import { CategoryReviewComponent } from './category-review/category-review.component';
+import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
+import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },

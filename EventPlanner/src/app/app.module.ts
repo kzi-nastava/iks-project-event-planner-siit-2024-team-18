@@ -14,8 +14,8 @@ import { EventManagerModule } from './event-manager/event-manager.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 import { MaterialModule } from './infrastructure/material/material.module';
-import { CategoryManagerComponent } from './category-manager/category-manager.component';
-import { CategoryReviewComponent } from './category-review/category-review.component';
+import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
+import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,7 @@ import { CategoryReviewComponent } from './category-review/category-review.compo
     AuthModule,
     EventManagerModule,
     ProductManagerModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [
     provideClientHydration(),
