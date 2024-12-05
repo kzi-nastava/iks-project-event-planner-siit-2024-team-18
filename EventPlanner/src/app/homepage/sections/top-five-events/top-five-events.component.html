@@ -1,7 +1,6 @@
 <div class="top-five-events">
   <h2>Top 5 Events</h2>
   
-  <!-- Swiper Container -->
   <div 
     class="swiper-container" 
     [style.transform]="'translateX(' + swiperOffset + '%)'"
@@ -15,14 +14,13 @@
         }"
         (click)="openEventDetails(event)"
       >
-        <img [src]="event.image" alt="Event Image" />
-        <h3>{{ event.title }}</h3>
+        <img [src]="event.cardImage" alt="Event Image" />
+        <h3>{{ event.name }}</h3>
         <p>{{ event.description }}</p>
       </div>
     </ng-container>
   </div>
   
-  <!-- Navigation Buttons -->
   <button 
     class="swiper-button-prev" 
     (click)="prevEvent()"
@@ -34,7 +32,6 @@
     aria-label="Next Event"
   ></button>
 
-  <!-- Bullets -->
   <div class="bullets">
     <span 
       *ngFor="let event of events; let i = index" 

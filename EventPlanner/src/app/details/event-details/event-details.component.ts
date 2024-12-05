@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../services/event.service';
+import { EventCard } from '../../models/event-card.model';
 
 @Component({
   selector: 'app-event-details',
@@ -8,8 +9,7 @@ import { EventService } from '../../services/event.service';
   styleUrls: ['./event-details.component.css']
 })
 export class EventDetailsComponent implements OnInit {
-  eventId!: number;
-  eventDetails: any;
+  event!: EventCard;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,17 +18,26 @@ export class EventDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.eventId = +id;
-      this.fetchEventDetails(this.eventId);
-    } else {
-      this.router.navigate(['']);
-    }
+    this.route.params.subscribe((params) => {
+      const id = +params['id'];
+      if (!isNaN(id)) {
+        this.fetchEventDetails(id);
+      } else {
+        this.router.navigate(['']);
+      }
+    });
   }
 
   fetchEventDetails(eventId: number): void {
-    this.eventDetails = this.eventService.getEventById(eventId);
+    this.eventService.getEventById(eventId).subscribe({
+      next: (data: EventCard) => {
+        this.event = data;
+      },
+      error: (err) => {
+        console.error('Failed to fetch event details:', err);
+        this.router.navigate(['']);
+      }
+    });
   }
 
   goBack(): void {

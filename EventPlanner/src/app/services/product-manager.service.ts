@@ -2,14 +2,17 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Product } from '../models/product.model';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductManagerService {
-  constructor(private router : Router) {}
+  constructor(private router : Router,
+              private httpClient: HttpClient) {}
   private products: Product[] = [
-    { id: 1, name: 'Smartphone', description: 'Latest smartphone with cutting-edge features.', price: 350, discount: 0, images: ['assets/product_service_placeholder.png', 'assets/product_service_placeholder2.png', 'assets/product_service_placeholder3.png'], isVisible: true, isAvailable: true, isDeleted: false },
+    { id: 1, name: 'Smartphone', description: 'Latest smartphone with cutting-edge features.', price: 350, discount: 0, images: ['assets/product_service_placeholder.png'], isVisible: true, isAvailable: true, isDeleted: false },
     { id: 2, name: 'Laptop', description: 'Lightweight and powerful laptop for professionals.', price: 350, discount: 0, images: ['assets/product_service_placeholder2.png'], isVisible: true, isAvailable: true, isDeleted: false },
     { id: 3, name: 'Wireless Earbuds', description: 'Noise-cancelling earbuds with long battery life.', price: 350, discount: 0, images: ['assets/product_service_placeholder3.png'], isVisible: true, isAvailable: true, isDeleted: false },
     { id: 4, name: 'Gaming Chair', description: 'Ergonomic chair designed for ultimate comfort.', price: 350, discount: 0, images: ['assets/product_service_placeholder2.png'], isVisible: true, isAvailable: true, isDeleted: false },
@@ -25,8 +28,8 @@ export class ProductManagerService {
     return of(this.products);
   }
 
-  getProductById(id: number): Product | null {
-    return this.products.find(product => product.id === id) || null;
+  getProductById(id: number): Observable<Product> {
+    return this.httpClient.get<Product>(environment.apiHost + "/api/products/details/" + id);
   }
 
   getTopFiveProducts(): Observable<Product[]> {

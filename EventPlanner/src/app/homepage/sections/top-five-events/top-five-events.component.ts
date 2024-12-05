@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../../services/event.service';
 import { Event } from '../../../models/event.model';
+import { EventCard } from '../../../models/event-card.model';
 
 @Component({
   selector: 'app-top-five-events',
@@ -8,15 +9,20 @@ import { Event } from '../../../models/event.model';
   styleUrls: ['./top-five-events.component.css']
 })
 export class TopFiveEventsComponent implements OnInit {
-  events: Event[] = [];
+  events: EventCard[] = [];
   currentIndex: number = 0;
   swiperOffset: number = 0;
 
   constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
-    this.eventService.getTopFiveEvents().subscribe((data) => {
-      this.events = data;
+    this.eventService.getTopFiveEvents("Paris").subscribe({
+      next: (result: EventCard[]) => {
+        this.events = result;
+      },
+      error: (err) => {
+        console.error('Failed to fetch top events:', err);
+      }
     });
   }
 
@@ -47,7 +53,7 @@ export class TopFiveEventsComponent implements OnInit {
     this.swiperOffset = -this.currentIndex * 100;
   }
 
-  openEventDetails(event: Event): void {
+  openEventDetails(event: EventCard): void {
     this.eventService.openEventDetails(event.id);
   }
 }

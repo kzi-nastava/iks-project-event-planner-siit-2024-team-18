@@ -1,6 +1,7 @@
 export interface Event {
   id: number;
-  title: string;
+  name: string;
   description: string;
-  image: string;
+  locationName: string;
+  cardImage: string;
 }

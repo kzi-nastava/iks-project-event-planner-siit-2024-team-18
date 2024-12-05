@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../../models/product.model';
 import { ProductManagerService } from '../../services/product-manager.service';
+import { Product } from '../../models/product.model';  // Use Product model
 
 @Component({
   selector: 'app-product-details',
@@ -23,13 +23,14 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.productId = +id;
-      this.fetchProductDetails(this.productId);
-    } else {
-      this.router.navigate(['']);
-    }
+    this.route.params.subscribe((params) => {
+      const id = +params['id'];
+      if (!isNaN(id)) {
+        this.fetchProductDetails(id);
+      } else {
+        this.router.navigate(['']);
+      }
+    });
   }
 
   prevImage(): void {
@@ -66,11 +67,15 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   fetchProductDetails(productId: number): void {
-    this.product = this.productService.getProductById(productId);
-
-    if (!this.product || !this.product.isVisible) {
-      this.router.navigate(['']);
-    }
+    this.productService.getProductById(productId).subscribe({
+      next: (data: Product) => {
+        this.product = data;
+      },
+      error: (err) => {
+        console.error('Failed to fetch product details:', err);
+        this.router.navigate(['']);
+      }
+    });
   }
 
   goBack(): void {

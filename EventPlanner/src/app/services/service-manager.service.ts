@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { Service } from '../models/service.model';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../env/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceManagerService {
-  constructor(private router : Router) {}
+  constructor(private router : Router,
+              private httpClient: HttpClient) {}
   private services: Service[] = [
     {
       id: 1,
@@ -138,8 +141,8 @@ export class ServiceManagerService {
     return of(this.services);
   }
 
-  getServiceById(id: number): Service | undefined {
-    return this.services.find(service => service.id === id);
+  getServiceById(id: number): Observable<Service> {
+    return this.httpClient.get<Service>(environment.apiHost + "/api/services/details/" + id);
   }
 
   createService(service: Service): Service {
