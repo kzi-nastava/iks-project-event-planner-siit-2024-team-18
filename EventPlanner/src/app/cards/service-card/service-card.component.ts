@@ -11,6 +11,6 @@ export class ServiceCardComponent {
   @Output() cardClick = new EventEmitter<number>();
 
   onCardClick(): void {
-    this.cardClick.emit(this.service._id);
+    this.cardClick.emit(this.service.id);
   }
 }

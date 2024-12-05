@@ -22,7 +22,7 @@ export class CreateServiceComponent {
     cancellationDate: new FormControl('', [Validators.required]),
     price: new FormControl(0, [Validators.required, Validators.min(1)]),
     discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-    isPublic: new FormControl(false),
+    isAvailable: new FormControl(false),
     isVisible: new FormControl(false),
     duration: new FormControl(15, [Validators.required, Validators.min(15), Validators.max(120)]),
     engagement: new FormControl([1, 2], [Validators.required, Validators.min(1), Validators.max(5)]),
@@ -50,23 +50,30 @@ export class CreateServiceComponent {
   create() {
     if (this.createServiceForm.valid) {
       const service: Service = {
-        _id: Math.random(),
-        title: this.createServiceForm.value.title!,
+        id: Math.random(),
+        name: this.createServiceForm.value.title!,
         description: this.createServiceForm.value.description!,
-        specifics: this.createServiceForm.value.specifics || '',
-        images: this.selectedImages,
-        category: this.createServiceForm.value.category!,
-        eventType: this.createServiceForm.value.eventType!,
-        reservationDate: new Date(this.createServiceForm.value.reservationDate!),
-        reservationTime: this.createServiceForm.value.reservationTime!,
-        cancellationDate: new Date(this.createServiceForm.value.cancellationDate!),
         price: this.createServiceForm.value.price!,
         discount: this.createServiceForm.value.discount || 0,
-        isPublic: this.createServiceForm.value.isPublic!,
+        images: this.selectedImages,
         isVisible: this.createServiceForm.value.isVisible!,
-        duration: this.createServiceForm.value.duration!,
-        engagement: this.createServiceForm.value.engagement!,
+        isAvailable: this.createServiceForm.value.isAvailable!,
+        isDeleted: false,
         reservationType: this.createServiceForm.value.reservationType as 'auto' | 'manual',
+        
+        specifics: this.createServiceForm.value.specifics || '',
+        minDuration: 0,
+        maxDuration: 0,
+        reservationDeadline: 0,
+        cancellationDeadline: 0,
+    
+        // category: this.createServiceForm.value.category!,
+        // eventType: this.createServiceForm.value.eventType!,
+        // reservationDate: new Date(this.createServiceForm.value.reservationDate!),
+        // reservationTime: this.createServiceForm.value.reservationTime!,
+        // cancellationDate: new Date(this.createServiceForm.value.cancellationDate!),
+        // duration: this.createServiceForm.value.duration!,
+        // engagement: this.createServiceForm.value.engagement!,
       };
 
       this.serviceManagerService.createService(service);

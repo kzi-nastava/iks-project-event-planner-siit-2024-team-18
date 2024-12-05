@@ -36,7 +36,7 @@ export class EditServiceComponent implements OnInit {
       cancellationDate: new FormControl('', [Validators.required]),
       price: new FormControl(0, [Validators.required, Validators.min(1)]),
       discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-      isPublic: new FormControl(false),
+      isAvailable: new FormControl(false),
       isVisible: new FormControl(false),
       duration: new FormControl(15, [Validators.required]),
       engagement: new FormControl([1, 2], null), // TODO: fix this
@@ -58,21 +58,28 @@ export class EditServiceComponent implements OnInit {
         const service = data;
         if (service) {
           this.editServiceForm.patchValue({
-            title: service.title,
+            name: service.name,
             description: service.description,
-            specifics: service.description,
-            category: service.category,
-            eventType: service.eventType,
-            reservationDate: service.reservationDate.toISOString().split('T')[0],
-            reservationTime: service.reservationTime,
-            cancellationDate: service.cancellationDate.toISOString().split('T')[0],
             price: service.price,
             discount: service.discount,
-            isPublic: service.isPublic,
             isVisible: service.isVisible,
-            duration: service.duration,
-            engagement: service.engagement,
+            isAvailable: service.isAvailable,
+            isDeleted: service.isDeleted,
+    
             reservationType: service.reservationType,
+            specifics: service.description,
+            minDuration: 0,
+            maxDuration: 0,
+            reservationDeadline: 0,
+            cancellationDeadline: 0,
+            
+            // category: service.category,
+            // eventType: service.eventType,
+            // reservationDate: service.reservationDate.toISOString().split('T')[0],
+            // reservationTime: service.reservationTime,
+            // cancellationDate: service.cancellationDate.toISOString().split('T')[0],
+            // duration: service.duration,
+            // engagement: service.engagement,
           });
     
           this.selectedImages = service.images;
@@ -94,23 +101,22 @@ export class EditServiceComponent implements OnInit {
   edit(): void {
     if (this.editServiceForm.valid) {
       const service: Service = {
-        _id: this.serviceId,
-        title: this.editServiceForm.value.title!,
+        id: Math.random(),
+        name: this.editServiceForm.value.title!,
         description: this.editServiceForm.value.description!,
-        specifics: this.editServiceForm.value.specifics || '',
-        images: this.selectedImages,
-        category: this.editServiceForm.value.category!,
-        eventType: this.editServiceForm.value.eventType!,
-        reservationDate: new Date(this.editServiceForm.value.reservationDate!),
-        reservationTime: this.editServiceForm.value.reservationTime!,
-        cancellationDate: new Date(this.editServiceForm.value.cancellationDate!),
         price: this.editServiceForm.value.price!,
         discount: this.editServiceForm.value.discount || 0,
-        isPublic: this.editServiceForm.value.isPublic!,
+        images: this.selectedImages,
         isVisible: this.editServiceForm.value.isVisible!,
-        duration: this.editServiceForm.value.duration!,
-        engagement: this.editServiceForm.value.engagement!,
+        isAvailable: this.editServiceForm.value.isAvailable!,
+        isDeleted: false,
         reservationType: this.editServiceForm.value.reservationType as 'auto' | 'manual',
+        
+        specifics: this.editServiceForm.value.specifics || '',
+        minDuration: 0,
+        maxDuration: 0,
+        reservationDeadline: 0,
+        cancellationDeadline: 0,
       };
       this.serviceManagerService.createService(service);
       this.router.navigate(['/services']);

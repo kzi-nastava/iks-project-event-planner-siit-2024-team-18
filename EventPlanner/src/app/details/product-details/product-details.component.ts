@@ -9,7 +9,12 @@ import { Product } from '../../models/product.model';  // Use Product model
   styleUrls: ['./product-details.component.css']
 })
 export class ProductDetailsComponent implements OnInit {
-  product!: Product;  // Use Product model
+  productId!: number;
+  product: Product | null = null;
+  currentImageIndex: number = 0; 
+  isFavorite: boolean = false; 
+  currentIndex: number = 0;
+  swiperOffset: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +33,39 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+  prevImage(): void {
+    if (this.product?.images) {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      } else {
+        this.currentIndex = this.product.images.length - 1;
+      }
+      this.updateSwiperPosition();
+    }
+  }
+
+  nextImage(): void {
+    if (this.product?.images) {
+      if (this.currentIndex < this.product.images.length - 1) {
+        this.currentIndex++;
+      } else {
+        this.currentIndex = 0;
+      }
+      this.updateSwiperPosition();
+    }
+  }
+
+  goToImage(index: number): void {
+    if (this.product?.images) {
+      this.currentIndex = index;
+      this.updateSwiperPosition();
+    }
+  }
+
+  private updateSwiperPosition(): void {
+    this.swiperOffset = -this.currentIndex * 100;
+  }
+
   fetchProductDetails(productId: number): void {
     this.productService.getProductById(productId).subscribe({
       next: (data: Product) => {
@@ -42,5 +80,9 @@ export class ProductDetailsComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['']);
+  }
+
+  toggleFavorite(): void {
+    this.isFavorite = !this.isFavorite;
   }
 }

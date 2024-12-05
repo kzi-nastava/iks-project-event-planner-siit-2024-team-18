@@ -35,7 +35,7 @@ export class ServicesComponent implements OnInit {
 
   filterServices(searchText: string): void {
     this.filteredServices = this.services.filter(service =>
-      service.title.toLowerCase().includes(searchText.toLowerCase())
+      service.name.toLowerCase().includes(searchText.toLowerCase())
     );
     this.paginatedServices = this.filteredServices.slice(0, 6);
     if (this.paginator) {
@@ -68,12 +68,12 @@ export class ServicesComponent implements OnInit {
   applyFilters(filters: any): void {
     console.log(filters);
     this.filteredServices = this.services.filter(service => {
-      const matchesCategory = !filters.category || service.category === filters.category;
-      const matchesEventType = !filters.eventType || service.eventType === filters.eventType;
-      const matchesPublic = !filters.public || service.isPublic === filters.public;
+      // const matchesCategory = !filters.category || service.category === filters.category;
+      // const matchesEventType = !filters.eventType || service.eventType === filters.eventType;
+      // const matchesPublic = !filters.public || service.isPublic === filters.public;
       const matchesMinPrice = filters.minPrice === 0 || service.price >= filters.minPrice;
       const matchesMaxPrice = filters.maxPrice === 0 || service.price <= filters.maxPrice;
-      return matchesCategory && matchesEventType && matchesMinPrice && matchesMaxPrice && matchesPublic;
+      return matchesMinPrice && matchesMaxPrice;
     });
   
     this.paginatedServices = this.filteredServices.slice(0, 6);

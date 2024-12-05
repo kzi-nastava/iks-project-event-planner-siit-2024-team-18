@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EventDetailsComponent } from './event-details/event-details.component';
 import { ServiceDetailsComponent } from './service-details/service-details.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { MaterialModule } from '../infrastructure/material/material.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
     ProductDetailsComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule
   ],
   exports: [
     EventDetailsComponent,

@@ -14,12 +14,16 @@ import { EventManagerModule } from './event-manager/event-manager.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 import { MaterialModule } from './infrastructure/material/material.module';
+import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
+import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     BudgetPlanningComponent,
+    CategoryManagerComponent,
+    CategoryReviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,7 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
     AuthModule,
     EventManagerModule,
     ProductManagerModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [
     provideClientHydration(),
