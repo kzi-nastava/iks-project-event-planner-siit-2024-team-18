@@ -24,10 +24,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-
-// Importing MatListModule and MatDividerModule for list and divider components
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { CarouselModule  } from 'ngx-owl-carousel-o';
 
 @NgModule({
   imports: [
@@ -62,7 +61,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatRadioModule,
     MatSidenavModule,
     MatListModule,
-    MatDividerModule
+    MatDividerModule,
+    CarouselModule,
   ],
   exports: [
     MatToolbarModule,
@@ -95,7 +95,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatRadioModule,
     MatSidenavModule,
     MatListModule,
-    MatDividerModule
+    MatDividerModule,
+    CarouselModule,
   ]
 })
 export class MaterialModule {}

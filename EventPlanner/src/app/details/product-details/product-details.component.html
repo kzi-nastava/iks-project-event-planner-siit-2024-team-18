@@ -1,15 +1,79 @@
 <div class="product-details-container" *ngIf="product">
-    <div class="product-image">
-      <img [src]="product.image" alt="{{ product.name }}">
+  <div class="product-image-gallery">
+    <div class="swiper-container" [style.transform]="'translateX(' + swiperOffset + '%)'">
+      <ng-container *ngFor="let image of product.images; let i = index">
+        <div 
+          class="image-item" 
+          [ngClass]="{
+            'focused': i === currentIndex, 
+            'adjacent': i === currentIndex - 1 || i === currentIndex + 1
+          }"
+        >
+          <img [src]="image" alt="Product Image" class="carousel-image" />
+        </div>
+      </ng-container>
     </div>
-    <div class="product-info">
-      <h2>{{ product.name }}</h2>
-      <p class="product-description">{{ product.description }}</p>
+
+    <button class="swiper-button-prev" (click)="prevImage()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button class="swiper-button-next" (click)="nextImage()">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+
+    <div class="bullets">
+      <span *ngFor="let image of product.images; let i = index" [class.active]="i === currentIndex" (click)="goToImage(i)"></span>
+    </div>
+  </div>
+
+  <div class="product-info">
+    <div class="header">
+      <div class="header-words">
+        <h3 class="m-0">{{ product.name }}</h3>
+          <span *ngIf="product.isAvailable" class="pt-2">(Available)</span>
+          <span *ngIf="!product.isAvailable">(Unavailable)</span>
+      </div>
+      <button mat-fab class="favourite">
+        <mat-icon>favorite</mat-icon>
+      </button>
+    </div>
+    <div class="rating">
+      <span>⭐⭐⭐⭐⭐</span>
+      <span class="reviews">(42 reviews)</span>
+      <button mat-button class="contact-btn">
+        <mat-icon>chat</mat-icon>
+      </button>
+    </div>
+
+    <p class="product-description">{{ product.description }}</p>
+
+    <div class="product-price">
+      <span>Price: </span>
+      <span class="price" *ngIf="product.discount > 0">
+        <del>{{ product.price | currency }}</del> {{ (product.price - product.discount) | currency }}
+      </span>
+      <span class="price" *ngIf="product.discount === 0">
+        {{ product.price | currency }}
+      </span>
+    </div>
+
+
+    <div class="product-status">
+      <p><strong>Visibility:</strong> {{ product.isVisible ? 'Visible' : 'Hidden' }}</p>
+      <p><strong>Status:</strong> {{ product.isDeleted ? 'Deleted' : 'Active' }}</p>
     </div>
     
-    <button (click)="goBack()">Back</button>
+    <div class="actions">
+      <a>Visit Provider</a>
+      <button mat-button class="buy-btn">Buy Product
+        <mat-icon>
+          shopping_cart
+        </mat-icon>
+      </button>
+    </div>
   </div>
-  
-  <div *ngIf="!product" class="loading">
-    <p>Loading product details...</p>
-  </div>
+</div>
+
+<div *ngIf="!product" class="loading">
+  <p>Loading product details...</p>
+</div>

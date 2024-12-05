@@ -29,6 +29,8 @@ export class TopFiveProductsServicesComponent implements OnInit {
   fetchProducts(): void {
     this.productManager.getTopFiveProducts().subscribe((data) => {
       this.products = data;
+      console.log('Fetched Products:', data); // Log the products to verify
+
     });
   }
 
