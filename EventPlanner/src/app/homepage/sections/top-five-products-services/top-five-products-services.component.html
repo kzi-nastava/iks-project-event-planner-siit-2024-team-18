@@ -7,12 +7,12 @@
 
     <ng-container *ngIf="showProducts">
       <div 
-          class="product-service-item" 
-          *ngFor="let product of products; let i = index" 
-          [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
-          (click)="openDetails(product)">
+        class="product-service-item" 
+        *ngFor="let product of products; let i = index" 
+        [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
+        (click)="openDetails(product)">
         
-        <img [src]="product.image" alt="Product Image">
+        <img [src]="product.images[0]" alt="Product Image">
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
       </div>
