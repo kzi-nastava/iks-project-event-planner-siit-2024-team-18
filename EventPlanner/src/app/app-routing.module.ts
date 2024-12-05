@@ -13,16 +13,22 @@ import { InvitedEventsComponent } from './event-manager/invited-events/invited-e
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
 import { ProductDetailsComponent } from './details/product-details/product-details.component';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
+import { CreateEventComponent } from './event-manager/create-event/create-event.component';
+import { EditEventComponent } from './event-manager/edit-event/edit-event.component';
+import { EventsComponent } from './event-manager/events/events.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'event-details/:id', component: EventDetailsComponent },
-  { path: 'event/create/invites', component: InviteScreenComponent },
+  { path: 'events/create/invites', component: InviteScreenComponent },
+  { path: 'events/create', component: CreateEventComponent},
   { path: 'invited-events', component: InvitedEventsComponent },
   { path: 'product/:id', component: ProductDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
-  { path: 'budget-planning', component: BudgetPlanningComponent },
+  { path: 'events', component: EventsComponent },
+  { path: 'events/create/budget-planning', component: BudgetPlanningComponent },
+  { path: 'events/edit/:id', component: EditEventComponent },
   { path: 'services', component: ServicesComponent },
   { path: 'service/create', component: CreateServiceComponent },
   { path: 'service/edit/:id', component: EditServiceComponent },

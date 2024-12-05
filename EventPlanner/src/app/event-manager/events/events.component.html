@@ -1,0 +1,30 @@
+<div class="container mt-4">
+    <h2 class="text-center mb-4">My Events</h2>
+    <button [routerLink]="['/events/create']" class="create mx-auto d-block">
+        <mat-icon class="custom-add-icon"></mat-icon>
+    </button>
+    
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div *ngFor="let event of events" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
+                <mat-card class="card shadow">
+                    <div class="event-settings">
+                        <button class="edit" (click)="edit($event, event.id)">
+                            <mat-icon class="custom-edit-icon"></mat-icon>
+                        </button>
+                        <button class="delete" (click)="delete($event, event.id)">
+                            <mat-icon class="custom-delete-icon"></mat-icon>
+                        </button>
+                    </div>
+                    <img mat-card-image class="mat-card-image" [src]="event.image[0]" alt="Event image" />
+                    <mat-card-header>
+                        <mat-card-title class="bold-font">{{ event.title }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="margin-top">
+                        <span>{{ event.description }}</span><br/>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
