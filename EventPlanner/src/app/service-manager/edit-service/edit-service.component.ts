@@ -53,28 +53,36 @@ export class EditServiceComponent implements OnInit {
   }
 
   loadServiceData(): void {
-    const service = this.serviceManagerService.getServiceById(this.serviceId);
-    if (service) {
-      this.editServiceForm.patchValue({
-        title: service.title,
-        description: service.description,
-        specifics: service.description,
-        category: service.category,
-        eventType: service.eventType,
-        reservationDate: service.reservationDate.toISOString().split('T')[0],
-        reservationTime: service.reservationTime,
-        cancellationDate: service.cancellationDate.toISOString().split('T')[0],
-        price: service.price,
-        discount: service.discount,
-        isPublic: service.isPublic,
-        isVisible: service.isVisible,
-        duration: service.duration,
-        engagement: service.engagement,
-        reservationType: service.reservationType,
-      });
-
-      this.selectedImages = service.images;
-    }
+    this.serviceManagerService.getServiceById(this.serviceId).subscribe({
+      next: (data: Service) => {
+        const service = data;
+        if (service) {
+          this.editServiceForm.patchValue({
+            title: service.title,
+            description: service.description,
+            specifics: service.description,
+            category: service.category,
+            eventType: service.eventType,
+            reservationDate: service.reservationDate.toISOString().split('T')[0],
+            reservationTime: service.reservationTime,
+            cancellationDate: service.cancellationDate.toISOString().split('T')[0],
+            price: service.price,
+            discount: service.discount,
+            isPublic: service.isPublic,
+            isVisible: service.isVisible,
+            duration: service.duration,
+            engagement: service.engagement,
+            reservationType: service.reservationType,
+          });
+    
+          this.selectedImages = service.images;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch service details:', err);
+        this.router.navigate(['']);
+      }
+    });
   }
 
   minImagesValidator(): ValidatorFn {

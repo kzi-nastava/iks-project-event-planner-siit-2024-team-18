@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Product } from '../models/product.model';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductManagerService {
-  constructor(private router : Router) {}
+  constructor(private router : Router,
+              private httpClient: HttpClient) {}
   private products: Product[] = [
     { id: 1, name: 'Smartphone', description: 'Latest smartphone with cutting-edge features.', image: 'assets/product_service_placeholder.png' },
     { id: 2, name: 'Laptop', description: 'Lightweight and powerful laptop for professionals.', image: 'assets/product_service_placeholder2.png' },
@@ -25,8 +28,8 @@ export class ProductManagerService {
     return of(this.products);
   }
 
-  getProductById(id: number): Product | null {
-    return this.products.find(product => product.id === id) || null;
+  getProductById(id: number): Observable<Product> {
+    return this.httpClient.get<Product>(environment.apiHost + "/api/products/details/" + id);
   }
 
   getTopFiveProducts(): Observable<Product[]> {

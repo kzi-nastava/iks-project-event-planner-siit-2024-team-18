@@ -12,6 +12,7 @@ import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
 import { EventManagerModule } from './event-manager/event-manager.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
+import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ProductManagerModule } from './product-manager/product-manager.module';
   ],
   providers: [
     provideClientHydration(),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
 })
