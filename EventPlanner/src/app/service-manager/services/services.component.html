@@ -13,18 +13,18 @@
     
     <div class="row justify-content-center">
       <div *ngFor="let service of paginatedServices" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
-        <mat-card class="card shadow" (click)="goToServiceDetails(service._id)">
+        <mat-card class="card shadow" (click)="goToServiceDetails(service.id)">
           <div class="service-settings">
-            <button class="edit" (click)="editService($event, service._id)">
+            <button class="edit" (click)="editService($event, service.id)">
               <mat-icon class="custom-edit-icon"></mat-icon>
             </button>
-            <button class="delete" (click)="deleteService($event, service._id)">
+            <button class="delete" (click)="deleteService($event, service.id)">
               <mat-icon class="custom-delete-icon"></mat-icon>
             </button>
           </div>
-          <img mat-card-image class="mat-card-image" [src]="service.images[0]" alt="{{ service.title }}" />
+          <img mat-card-image class="mat-card-image" [src]="service.images[0]" alt="{{ service.name }}" />
           <mat-card-header>
-            <mat-card-title>{{ service.title }}</mat-card-title>
+            <mat-card-title>{{ service.name }}</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <p>{{ service.description }}</p>

@@ -71,7 +71,7 @@ export class TopFiveProductsServicesComponent implements OnInit {
     if (this.showProducts) {
       this.productManager.openProductDetails((item as Product).id);
     } else {
-      this.serviceManager.openServiceDetails((item as Service)._id);
+      this.serviceManager.openServiceDetails((item as Service).id);
     }
   }
 
