@@ -10,7 +10,7 @@ import { ProductManagerService } from '../../services/product-manager.service';
 })
 export class ProductDetailsComponent implements OnInit {
   productId!: number;
-  product: Product | null = null; // Initialize as null
+  product: Product | null = null;
   currentImageIndex: number = 0; 
   isFavorite: boolean = false; 
   currentIndex: number = 0;
@@ -33,7 +33,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   prevImage(): void {
-    if (this.product?.images) { // Optional chaining here
+    if (this.product?.images) {
       if (this.currentIndex > 0) {
         this.currentIndex--;
       } else {
@@ -44,7 +44,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   nextImage(): void {
-    if (this.product?.images) { // Optional chaining here
+    if (this.product?.images) {
       if (this.currentIndex < this.product.images.length - 1) {
         this.currentIndex++;
       } else {
@@ -55,7 +55,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   goToImage(index: number): void {
-    if (this.product?.images) { // Optional chaining
+    if (this.product?.images) {
       this.currentIndex = index;
       this.updateSwiperPosition();
     }

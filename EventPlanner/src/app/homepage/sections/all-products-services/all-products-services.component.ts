@@ -79,7 +79,7 @@ export class AllProductsServicesComponent implements OnInit {
       this.sortItems(this.filteredProducts);
     } else {
       this.filteredServices = this.services.filter((service) =>
-        service.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+        service.name.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
       this.sortItems(this.filteredServices);
     }
@@ -137,7 +137,7 @@ export class AllProductsServicesComponent implements OnInit {
     if (this.showProducts) {
       this.productManager.openProductDetails((item as Product).id);
     } else {
-      this.serviceManager.openServiceDetails((item as Service)._id);
+      this.serviceManager.openServiceDetails((item as Service).id);
     }
   }
 
