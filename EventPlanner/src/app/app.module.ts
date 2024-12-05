@@ -12,11 +12,14 @@ import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
 import { EventManagerModule } from './event-manager/event-manager.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
+import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
+import { MaterialModule } from './infrastructure/material/material.module';
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
+    BudgetPlanningComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,6 +34,7 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
     AuthModule,
     EventManagerModule,
     ProductManagerModule,
+    MaterialModule
   ],
   providers: [
     provideClientHydration(),
