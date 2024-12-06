@@ -77,7 +77,7 @@ export class AllEventsComponent implements OnInit {
     const query = this.searchQuery.toLowerCase();
     this.filteredEvents = this.events.filter(
       (event) =>
-        event.title.toLowerCase().includes(query) ||
+        event.name.toLowerCase().includes(query) ||
         event.description.toLowerCase().includes(query)
         //event.location.toLowerCase().includes(query)
     );
@@ -97,7 +97,7 @@ export class AllEventsComponent implements OnInit {
       this.sortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
 
     this.filteredEvents.sort((a, b) => {
-      if (this.selectedFilter === 'title') return compare(a.title, b.title);
+      if (this.selectedFilter === 'title') return compare(a.name, b.name);
       if (this.selectedFilter === 'description') return compare(a.description, b.description);
       //if (this.selectedFilter === 'location') return compare(a.location, b.location);
       return 0;

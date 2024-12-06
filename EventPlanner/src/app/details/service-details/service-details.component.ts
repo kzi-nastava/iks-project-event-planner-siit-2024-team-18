@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Service } from '../../models/service.model';
-import { ServiceManagerService } from '../../services/service-manager.service';
+import { ServiceManagerService } from '../../services/service-manager.service';  // Use ServiceManagerService
+import { Service } from '../../models/service.model';  // Use Service model
 
 @Component({
   selector: 'app-service-details',
@@ -27,6 +27,24 @@ export class ServiceDetailsComponent implements OnInit {
       this.serviceManager
         .getServiceById(+params['id'])
         .subscribe((service) => (this.service = service));
+      const id = +params['id'];
+      if (!isNaN(id)) {
+        this.fetchServiceDetails(id);
+      } else {
+        this.router.navigate(['']);
+      }
+    });
+  }
+
+  fetchServiceDetails(serviceId: number): void {
+    this.serviceManager.getServiceById(serviceId).subscribe({
+      next: (data: Service) => {
+        this.service = data;
+      },
+      error: (err) => {
+        console.error('Failed to fetch service details:', err);
+        this.router.navigate(['']);
+      }
     });
   }
 

@@ -10,6 +10,7 @@ import { environment } from '../environments/environment';
 })
 export class ServiceManagerService {
   constructor(private router : Router, private http: HttpClient) {}
+  
   private services: Service[] = [
     {
       id: 1,
@@ -144,13 +145,17 @@ export class ServiceManagerService {
     return this.http.get<Service[]>(environment.apiHost + '/api/services');
   }
 
-  getServiceById(id: number): Observable<Service> {
-    return this.http.get<Service>(environment.apiHost + '/api/services/' + id);
-  }
+  // getServiceById(id: number): Observable<Service> {
+  //   return this.http.get<Service>(environment.apiHost + '/api/services/' + id);
+  // }
 
   searchAndFilter(name: string): Observable<Service[]> {
     const params = new HttpParams().set('name', name);
     return this.http.get<Service[]>(`${environment.apiHost}/api/services/search`, { params });
+  }
+  
+  getServiceById(id: number): Observable<Service> {
+    return this.http.get<Service>(environment.apiHost + "/api/services/details/" + id);
   }
 
   createService(service: Service): Service {

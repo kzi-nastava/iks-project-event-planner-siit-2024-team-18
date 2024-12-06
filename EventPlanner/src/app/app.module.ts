@@ -45,6 +45,7 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
     provideClientHydration(),
     provideAnimationsAsync(),
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
+    provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
 })

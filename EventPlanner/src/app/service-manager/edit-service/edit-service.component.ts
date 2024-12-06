@@ -53,35 +53,43 @@ export class EditServiceComponent implements OnInit {
   }
 
   loadServiceData(): void {
-    const service = this.serviceManagerService.getServiceByIdStatic(this.serviceId);
-    if (service) {
-      this.editServiceForm.patchValue({
-        name: service.name,
-        description: service.description,
-        price: service.price,
-        discount: service.discount,
-        isVisible: service.isVisible,
-        isAvailable: service.isAvailable,
-        isDeleted: service.isDeleted,
-
-        reservationType: service.reservationType,
-        specifics: service.description,
-        minDuration: 0,
-        maxDuration: 0,
-        reservationDeadline: 0,
-        cancellationDeadline: 0,
-        
-        // category: service.category,
-        // eventType: service.eventType,
-        // reservationDate: service.reservationDate.toISOString().split('T')[0],
-        // reservationTime: service.reservationTime,
-        // cancellationDate: service.cancellationDate.toISOString().split('T')[0],
-        // duration: service.duration,
-        // engagement: service.engagement,
-      });
-
-      this.selectedImages = service.images;
-    }
+    this.serviceManagerService.getServiceById(this.serviceId).subscribe({
+      next: (data: Service) => {
+        const service = data;
+        if (service) {
+          this.editServiceForm.patchValue({
+            name: service.name,
+            description: service.description,
+            price: service.price,
+            discount: service.discount,
+            isVisible: service.isVisible,
+            isAvailable: service.isAvailable,
+            isDeleted: service.isDeleted,
+    
+            reservationType: service.reservationType,
+            specifics: service.description,
+            minDuration: 0,
+            maxDuration: 0,
+            reservationDeadline: 0,
+            cancellationDeadline: 0,
+            
+            // category: service.category,
+            // eventType: service.eventType,
+            // reservationDate: service.reservationDate.toISOString().split('T')[0],
+            // reservationTime: service.reservationTime,
+            // cancellationDate: service.cancellationDate.toISOString().split('T')[0],
+            // duration: service.duration,
+            // engagement: service.engagement,
+          });
+    
+          this.selectedImages = service.images;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch service details:', err);
+        this.router.navigate(['']);
+      }
+    });
   }
 
   minImagesValidator(): ValidatorFn {
