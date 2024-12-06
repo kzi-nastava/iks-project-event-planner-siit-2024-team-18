@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
+import { Observable, of } from 'rxjs';
 
 const USERS = [
   {
@@ -83,6 +84,11 @@ export class UserService {
     return this.users;
   }
 
+  getById(id: number): Observable<User | undefined> {
+    const user = this.users.find((user) => user._id === id);
+    return of(user);
+  } 
+
   add(user: User): void {
     this.users.push(user);
   }
@@ -99,5 +105,9 @@ export class UserService {
     }
     this.add(user);
     return true;
+  }
+
+  delete(id: number) {
+    
   }
 }

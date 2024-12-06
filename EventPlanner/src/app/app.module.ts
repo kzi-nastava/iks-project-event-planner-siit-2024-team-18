@@ -16,6 +16,9 @@ import { BudgetPlanningComponent } from './budget-planning/budget-planning.compo
 import { MaterialModule } from './infrastructure/material/material.module';
 import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
 import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
+import { UserManagerModule } from './user-manager/user-manager.module';
+import { FullCalendarModule } from '@fullcalendar/angular';
+
 
 @NgModule({
   declarations: [
@@ -38,6 +41,8 @@ import { CategoryReviewComponent } from './category-manager/category-review/cate
     EventManagerModule,
     ProductManagerModule,
     MaterialModule,
+    UserManagerModule,
+    FullCalendarModule,
   ],
   providers: [
     provideClientHydration(),

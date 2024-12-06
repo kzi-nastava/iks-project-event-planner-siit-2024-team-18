@@ -15,6 +15,8 @@ import { ProductDetailsComponent } from './details/product-details/product-detai
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
 import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
+import { UserProfileComponent } from './user-manager/user-profile/user-profile.component';
+import { EditProfileComponent } from './user-manager/edit-profile/edit-profile.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +32,8 @@ const routes: Routes = [
   { path: 'service/edit/:id', component: EditServiceComponent },
   { path: 'service/:id', component: ServiceDetailsComponent },
   { path: 'service/:id/reserve', component: ServiceReservationComponent },
+  { path: 'users/profile/:id', component: UserProfileComponent },
+  { path: 'users/profile/edit/:id', component: EditProfileComponent },
   { path: 'categories', component: CategoryManagerComponent },
   { path: 'categories/review', component: CategoryReviewComponent },
   { path: '**', redirectTo: ''},

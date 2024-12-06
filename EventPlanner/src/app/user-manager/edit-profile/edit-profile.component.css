@@ -1,0 +1,110 @@
+.background {
+    width: 100%;
+    height: auto;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 45%;
+    height: auto;
+    background-color: #2c3e50;
+    border-radius: 1.875rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2), 0 0.375rem 1.25rem 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 1.25rem;
+}
+
+h1 {
+    text-align: center;
+    color: #ebebeb;
+    font-family: 'Merriweather';
+    font-weight: 700;
+    font-size: 2.8125rem;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+app-email,
+app-password,
+mat-form-field {
+    width: 100%;
+    margin-bottom: 0.625rem;
+}
+
+#submit {
+    background-color: #a29bfe;
+    color: #ebebeb;
+    border: none;
+    width: 8.75rem;
+    height: 3.75rem;
+    font-size: 1.25rem;
+    border-radius: 1.875rem;
+    cursor: pointer;
+    margin: 1.25rem 0;
+    align-self: center;
+    font-family: 'Raleway';
+    font-size: 1.5625rem;
+}
+
+#submit:hover, .button:hover {
+    background-color: #7e79d7;
+}
+
+mat-form-field, mat-label, input {
+    font-family: 'Raleway';
+    font-size: 1.25rem;
+}
+
+mat-form-field mat-label mat-icon {
+    margin-right: 0.5rem;
+}
+
+.profile-photo-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-photo-placeholder {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.profile-photo-section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.button {
+    font-family: 'Raleway';
+    font-size: 1.25rem;
+    color: #ebebeb;
+    background-color: #a29bfe;
+    border-radius: 1.25rem;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+}
+
+mat-error {
+    font-family: 'Raleway';
+    font-size: 1rem;
+}

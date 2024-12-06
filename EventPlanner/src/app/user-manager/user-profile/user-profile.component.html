@@ -1,0 +1,69 @@
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-image">
+            <img src="{{ user.profilePhoto }}" alt="Profile Image" />
+        </div>
+        <div class="profile-details">
+            <h1>{{ user.firstName }} {{user.lastName}}</h1>
+            <p><mat-icon class="icon">person</mat-icon> <b>Role:</b> {{ user.role }}</p>
+            <p>
+                <mat-icon class="icon">email</mat-icon> <b>E-mail:</b> {{ user.email }}
+            </p>
+            <p>
+                <mat-icon class="icon">location_on</mat-icon> <b>Address:</b> {{ user.address }}
+            </p>
+            <p>
+                <mat-icon class="icon">phone</mat-icon> <b>Phone Number:</b> {{ user.phoneNumber }}
+            </p>
+            <p *ngIf="user.role === 'Service Product Provider'">
+                <mat-icon class="icon">business</mat-icon> <b>Company Name:</b> {{ user.companyName }}
+            </p>
+            <p *ngIf="user.role === 'Service Product Provider'">
+                <mat-icon class="icon">location_on</mat-icon> <b>Company Address:</b> {{ user.address }}
+                Street New York
+            </p>
+            <p *ngIf="user.role === 'Service Product Provider'">
+                <mat-icon class="icon">category</mat-icon> <b>Categories:</b> {{ (user.categories ?? []).join(', ') }}
+            </p>
+            <p *ngIf="user.role === 'Service Product Provider'">
+                <mat-icon class="icon">event</mat-icon> <b>Event Types:</b> {{ (user.eventTypes ?? []).join(', ') }}
+            </p>
+            <p *ngIf="user.role === 'Service Product Provider'" class="description">
+                <mat-icon class="icon">description</mat-icon>
+                <b>Description:</b> {{ user.description }}
+            </p>
+        </div>
+        <div class="profile-actions">
+            <button mat-raised-button class="edit-btn">
+                <mat-icon>edit</mat-icon> Edit Profile
+            </button>
+            <button mat-raised-button color="warn" class="deactivate-btn" (click)="deactivate($event, user._id)">
+                <mat-icon>cancel</mat-icon> Deactivate Profile
+            </button>
+        </div>
+    </div>
+
+    <div class="profile-menu-section">
+        <div class="profile-menu">
+            <button class="menu-btn" [class.active]="activeMenu === 'calendar'" (click)="activeMenu = 'calendar'">
+              <mat-icon class="icon">calendar_today</mat-icon> Calendar
+            </button>
+            <button class="menu-btn" [class.active]="activeMenu === 'favouriteEvents'" (click)="activeMenu = 'favouriteEvents'">
+              <mat-icon class="icon">favorite</mat-icon> Favourite Events
+            </button>
+            <button class="menu-btn" [class.active]="activeMenu === 'favouriteServices'" (click)="activeMenu = 'favouriteServices'">
+              <mat-icon class="icon">favorite</mat-icon> Favourite Services
+            </button>
+            <button class="menu-btn" [class.active]="activeMenu === 'favouriteProducts'" (click)="activeMenu = 'favouriteProducts'">
+              <mat-icon class="icon">favorite</mat-icon> Favourite Products
+            </button>
+          </div>
+          
+          <div class="section">
+            <app-calendar *ngIf="activeMenu === 'calendar'"></app-calendar>
+            <app-favourite-events *ngIf="activeMenu === 'favouriteEvents'"></app-favourite-events>
+            <app-favourite-services *ngIf="activeMenu === 'favouriteServices'"></app-favourite-services>
+            <app-favourite-products *ngIf="activeMenu === 'favouriteProducts'"></app-favourite-products>
+          </div>
+    </div>
+</div>
