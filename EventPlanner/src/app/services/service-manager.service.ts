@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Service } from '../models/service.model';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceManagerService {
-  constructor(private router : Router) {}
+  constructor(private router : Router, private http: HttpClient) {}
   private services: Service[] = [
     {
       id: 1,
@@ -129,17 +131,26 @@ export class ServiceManagerService {
       cancellationDeadline: 5,
     },
   ];
-  
+
   getTopFiveServices(): Observable<Service[]> {
     return of(this.services.slice(0, 5));
   }
 
-  getServices(): Observable<Service[]> {
-    return of(this.services);
+  getServiceByIdStatic(id: number): Service {
+    return this.services[0];
   }
 
-  getServiceById(id: number): Service | undefined {
-    return this.services.find(service => service.id === id);
+  getServices(): Observable<Service[]> {
+    return this.http.get<Service[]>(environment.apiHost + '/api/services');
+  }
+
+  getServiceById(id: number): Observable<Service> {
+    return this.http.get<Service>(environment.apiHost + '/api/services/' + id);
+  }
+
+  searchAndFilter(name: string): Observable<Service[]> {
+    const params = new HttpParams().set('name', name);
+    return this.http.get<Service[]>(`${environment.apiHost}/api/services/search`, { params });
   }
 
   createService(service: Service): Service {

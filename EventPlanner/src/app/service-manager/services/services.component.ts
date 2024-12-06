@@ -26,22 +26,37 @@ export class ServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  private loadData(): void {
     this.serviceManagerService.getServices().subscribe((data: Service[]) => {
       this.services = data;
+      this.filteredServices = [...this.services];
+      this.paginatedServices = this.filteredServices.slice(0, 6);
     });
-    this.filteredServices = [...this.services];
-    this.paginatedServices = this.filteredServices.slice(0, 6);
   }
 
   filterServices(searchText: string): void {
-    this.filteredServices = this.services.filter(service =>
-      service.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    this.paginatedServices = this.filteredServices.slice(0, 6);
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
+    this.serviceManagerService
+      .searchAndFilter(searchText)
+      .subscribe((data: Service[]) => {
+        this.services = data;
+        this.filteredServices = [...this.services];
+        this.paginatedServices = this.filteredServices.slice(0, 6);
+        if (this.paginator) {
+          this.paginator.firstPage();
+        }
+      });
   }
+  
+    // this.filteredServices = this.services.filter(service =>
+    //   service.name.toLowerCase().includes(searchText.toLowerCase())
+    // );
+    // this.paginatedServices = this.filteredServices.slice(0, 6);
+    // if (this.paginator) {
+    //   this.paginator.firstPage();
+    // }
 
   onPageChange(event: PageEvent): void {
     const startIndex = event.pageIndex * event.pageSize;

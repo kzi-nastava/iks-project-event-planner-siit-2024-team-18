@@ -53,7 +53,7 @@ export class EditServiceComponent implements OnInit {
   }
 
   loadServiceData(): void {
-    const service = this.serviceManagerService.getServiceById(this.serviceId);
+    const service = this.serviceManagerService.getServiceByIdStatic(this.serviceId);
     if (service) {
       this.editServiceForm.patchValue({
         name: service.name,

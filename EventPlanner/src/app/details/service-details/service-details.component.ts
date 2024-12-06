@@ -23,17 +23,11 @@ export class ServiceDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.serviceId = +id;
-      this.fetchServiceDetails(this.serviceId);
-    } else {
-      this.router.navigate(['']);
-    }
-  }
-
-  fetchServiceDetails(serviceId: number): void {
-    this.service = this.serviceManager.getServiceById(serviceId)!;
+    this.route.params.subscribe((params) => {
+      this.serviceManager
+        .getServiceById(+params['id'])
+        .subscribe((service) => (this.service = service));
+    });
   }
 
   goBack(): void {
