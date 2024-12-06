@@ -40,7 +40,7 @@ export class EditServiceComponent implements OnInit {
       isVisible: new FormControl(false),
       duration: new FormControl(15, [Validators.required]),
       engagement: new FormControl([1, 2], null), // TODO: fix this
-      reservationType: new FormControl('auto', [Validators.required]),
+      reservationType: new FormControl('AUTOMATIC', [Validators.required]),
       selectedImages: new FormControl([], this.minImagesValidator()),
     });
   }
@@ -109,15 +109,21 @@ export class EditServiceComponent implements OnInit {
         images: this.selectedImages,
         isVisible: this.editServiceForm.value.isVisible!,
         isAvailable: this.editServiceForm.value.isAvailable!,
-        isDeleted: false,
-        reservationType: this.editServiceForm.value.reservationType as 'auto' | 'manual',
+        category: "category",
+        eventTypes: ["eventTypes"],
+        location: "location",
+        creator: "creator",
+        isDeleted: true,
+        status: 'ACCEPTED',
+        reservationType: this.editServiceForm.value.reservationType as 'AUTOMATIC' | 'MANUAL',
         
         specifics: this.editServiceForm.value.specifics || '',
-        minDuration: 0,
-        maxDuration: 0,
-        reservationDeadline: 0,
-        cancellationDeadline: 0,
-      };
+        duration: 120,
+        minEngagement: 1,
+        maxEngagement: 5,
+        reservationDeadline: 5,
+        cancellationDeadline: 5,
+        };
       this.serviceManagerService.createService(service);
       this.router.navigate(['/services']);
     }
