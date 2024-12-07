@@ -187,10 +187,6 @@ export class ServiceManagerService {
     return this.http.get<Service[]>(environment.apiHost + '/api/services');
   }
 
-  // getServiceById(id: number): Observable<Service> {
-  //   return this.http.get<Service>(environment.apiHost + '/api/services/' + id);
-  // }
-
   searchAndFilter(name: string): Observable<Service[]> {
     const params = new HttpParams().set('name', name);
     return this.http.get<Service[]>(`${environment.apiHost}/api/services/search`, { params });
@@ -202,6 +198,10 @@ export class ServiceManagerService {
 
   createService(service: any): Observable<any> {
     return this.http.post<string>(environment.apiHost + '/api/services/create', service);
+  }
+
+  updateService(service: any, id: number): Observable<any> {
+    return this.http.put<string>(environment.apiHost + '/api/services/edit/' + id, service);
   }
 
   deleteService(serviceId: number): void {

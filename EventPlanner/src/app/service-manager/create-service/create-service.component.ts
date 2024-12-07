@@ -47,8 +47,6 @@ export class CreateServiceComponent {
   }
 
   create() {
-    console.log(this.createServiceForm);
-
     if (this.createServiceForm.valid) {
       const service: Service = {
         id: Math.random(),
