@@ -12,7 +12,6 @@ export class ServiceFiltersComponent {
   isAvailable: boolean = true;
   minPrice: number | null = 0;
   maxPrice: number | null = 0;
-  creatorName: string = '';
 
   categories: string[] = ['Photography', 'Catering', 'Decorations', 'DJ Services'];
   eventTypes: string[] = ['Wedding', 'Birthday', 'Corporate', 'Party'];
@@ -26,7 +25,6 @@ export class ServiceFiltersComponent {
       isAvailable: true,
       minPrice: 0,
       maxPrice: 0,
-      creatorName: "",
     });
   }
 
@@ -37,7 +35,6 @@ export class ServiceFiltersComponent {
       isAvailable: this.isAvailable,
       minPrice: this.minPrice !== 0 ? this.minPrice : 0,
       maxPrice: this.maxPrice !== 0 ? this.maxPrice : 0,
-      creatorName: this.creatorName || "",
     });
   }
 
