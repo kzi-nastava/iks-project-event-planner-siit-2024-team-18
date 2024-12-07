@@ -11,7 +11,7 @@
 
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Event Type</mat-label>
-    <mat-select [(ngModel)]="selectedEventType">
+    <mat-select [(ngModel)]="selectedEventTypes" multiple>
       <mat-option *ngFor="let type of eventTypes" [value]="type">
         {{ type }}
       </mat-option>
@@ -34,7 +34,7 @@
   </mat-form-field>
 </div>
 
-<mat-slide-toggle [(ngModel)]="public" class="ms-4">Public</mat-slide-toggle>
+<mat-slide-toggle [(ngModel)]="isAvailable" class="ms-4">Available</mat-slide-toggle>
 
 <div mat-dialog-actions>
   <button mat-button (click)="resetFilters()">Reset Filters</button>

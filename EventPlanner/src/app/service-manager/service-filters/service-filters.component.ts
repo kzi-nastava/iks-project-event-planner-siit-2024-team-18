@@ -8,8 +8,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ServiceFiltersComponent {
   selectedCategory: string = '';
-  selectedEventType: string = '';
-  public: boolean | null = null;
+  selectedEventTypes: string = '';
+  isAvailable: boolean = true;
   minPrice: number | null = 0;
   maxPrice: number | null = 0;
   creatorName: string = '';
@@ -23,7 +23,7 @@ export class ServiceFiltersComponent {
     this.dialogRef.close({
       category: "",
       eventType: "",
-      public: null,
+      isAvailable: true,
       minPrice: 0,
       maxPrice: 0,
       creatorName: "",
@@ -33,8 +33,8 @@ export class ServiceFiltersComponent {
   applyFilters(): void {
     this.dialogRef.close({
       category: this.selectedCategory || "",
-      eventType: this.selectedEventType || "",
-      public: this.public !== null ? this.public : null,
+      eventType: this.selectedEventTypes || "",
+      isAvailable: this.isAvailable,
       minPrice: this.minPrice !== 0 ? this.minPrice : 0,
       maxPrice: this.maxPrice !== 0 ? this.maxPrice : 0,
       creatorName: this.creatorName || "",

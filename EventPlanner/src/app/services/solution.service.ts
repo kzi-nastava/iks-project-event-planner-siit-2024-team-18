@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { SolutionCard } from '../models/solution-card.model';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../env/environment';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'

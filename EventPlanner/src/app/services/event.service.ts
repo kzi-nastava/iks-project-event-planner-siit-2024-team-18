@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { Event } from '../models/event.model';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../env/environment';
+import { environment } from '../environments/environment';
 import { EventCard } from '../models/event-card.model';
 
 @Injectable({
