@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { PagedResponse } from '../shared/model/paged-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -187,9 +188,18 @@ export class ServiceManagerService {
     return this.http.get<Service[]>(environment.apiHost + '/api/services');
   }
 
-  searchAndFilter(name: string): Observable<Service[]> {
-    const params = new HttpParams().set('name', name);
-    return this.http.get<Service[]>(`${environment.apiHost}/api/services/search`, { params });
+  searchAndFilter(filters: any, page: number, pageSize: number): Observable<PagedResponse<Service>> {
+    let params = new HttpParams();
+  
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== undefined) {
+        params = params.set(key, filters[key]);
+      }
+    });
+  
+    params = params.set('page', page.toString()).set('size', pageSize.toString());
+  
+    return this.http.get<PagedResponse<Service>>(`${environment.apiHost}/api/services/search`, { params });
   }
   
   getServiceById(id: number): Observable<Service> {
