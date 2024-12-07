@@ -204,9 +204,10 @@ export class ServiceManagerService {
     return this.http.put<string>(environment.apiHost + '/api/services/edit/' + id, service);
   }
 
-  deleteService(serviceId: number): void {
-    this.services = this.services.filter(service => service.id !== serviceId);
+  deleteService(id: number): Observable<void> {
+    return this.http.delete<void>(environment.apiHost + '/api/services/delete/' + id);
   }
+  
 
   openServiceDetails(serviceId: number) {
     if(serviceId){

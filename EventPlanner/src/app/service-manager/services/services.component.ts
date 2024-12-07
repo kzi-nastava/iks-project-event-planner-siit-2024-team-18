@@ -108,26 +108,31 @@ export class ServicesComponent implements OnInit {
 
   deleteService(event: MouseEvent, serviceId: number): void {
     event.stopPropagation();
-
+  
     const dialogRef = this.dialog.open(DeleteFormComponent, {
       width: '25em',
       data: { message: 'Are you sure you want to delete this service?' }
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.serviceManagerService.deleteService(serviceId);
-
-        this.serviceManagerService.getServices().subscribe((data: Service[]) => {
-          this.services = data;
+        this.serviceManagerService.deleteService(serviceId).subscribe({
+          next: () => {
+            // Remove the service from the local list
+            this.services = this.services.filter(service => service.id !== serviceId);
+            this.filteredServices = [...this.services];
+            this.paginatedServices = this.filteredServices.slice(0, 6);
+            if (this.paginator) {
+              this.paginator.firstPage();
+            }
+            console.log('Service deleted successfully');
+          },
+          error: (err) => {
+            console.error('Error deleting service:', err);
+          }
         });
-        this.filteredServices = [...this.services];
-        this.paginatedServices = this.filteredServices.slice(0, 6);
-  
-        if (this.paginator) {
-          this.paginator.firstPage();
-        }      
       }
     });
   }
+  
 }
