@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../services/event.service';
-import { EventCard } from '../../models/event-card.model';
+import { Event } from '../../models/event.model';
 
 @Component({
   selector: 'app-event-details',
@@ -9,7 +9,7 @@ import { EventCard } from '../../models/event-card.model';
   styleUrls: ['./event-details.component.css']
 })
 export class EventDetailsComponent implements OnInit {
-  event!: EventCard;
+  event!: Event;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +30,7 @@ export class EventDetailsComponent implements OnInit {
 
   fetchEventDetails(eventId: number): void {
     this.eventService.getEventById(eventId).subscribe({
-      next: (data: EventCard) => {
+      next: (data: Event) => {
         this.event = data;
       },
       error: (err) => {
