@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CategoryService } from '../../services/category-service.service';
+import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
+import { Category } from '../../models/category.model';
+import { CategoryReviewEditComponent } from '../category-review-edit/category-review-edit.component';
 
 @Component({
   selector: 'app-category-review',
@@ -6,68 +11,77 @@ import { Component } from '@angular/core';
   styleUrls: ['./category-review.component.css']
 })
 export class CategoryReviewComponent {
-  categories: Category[] = [
-    { id: 0, name: 'ALL', description: '-', status: 'ACCEPTED', isDeleted: false },
-    { id: 1, name: 'Venue', description: 'Venue Description', status: 'ACCEPTED', isDeleted: false },
-    { id: 2, name: 'Catering', description: 'Catering Description', status: 'ACCEPTED', isDeleted: false }
-  ];
+  reviewCategories: Category[] = [];
 
-  get filteredCategories(): Category[] {
-    return this.categories.filter(category => category.name !== 'ALL');
+  constructor(
+    private dialog: MatDialog,
+    private categoryService: CategoryService
+  ) {
+    this.loadCategories();
   }
 
-  selectedCategory: Category | null = null;
-  originalCategory: Category | null = null;
+  loadCategories() {
+    this.categoryService.getReviewCategories()
+    .subscribe({
+      next: (data: Category[]) => {
+        this.reviewCategories = data;
+      },
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      },
+    });
+  }
 
-  approveSuggestion(event: MouseEvent, suggestion: Category) {
+  approveSuggestion(event: MouseEvent, category: Category, id: number) {
     event.stopPropagation();
-    alert(`Suggestion ${suggestion.name} approved.`);
+    this.categoryService.approveSuggestion(category, id).subscribe({
+      next: () => {
+        this.loadCategories();
+      },
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      },
+    });
   }
 
   editSuggestion(suggestion: Category) {
-    this.originalCategory = suggestion;
-    this.selectedCategory = { ...suggestion };
-  }
-
-  deleteSuggestion(event: MouseEvent, suggestion: Category) {
-    event.stopPropagation();
-    alert(`Suggestion ${suggestion.name} deleted.`);
-  }
-
-  assignExistingCategory(suggestion: Category) {
-    alert(`Existing category assigned for ${suggestion.name}.`);
-  }
-
-  closeModal() {
-    this.selectedCategory = null;
-    this.originalCategory = null;
-  }
-
-  save(selectedCategory: Category) {
-    if (selectedCategory && selectedCategory.name && selectedCategory.description) {
-      if (this.originalCategory) {
-        this.originalCategory.name = selectedCategory.name;
-        this.originalCategory.description = selectedCategory.description;
+    const dialogRef = this.dialog.open(CategoryReviewEditComponent, {
+      width: '500px',
+      data: { category: suggestion }
+    });
+  
+    dialogRef.afterClosed().subscribe(updatedCategory => {
+      if (updatedCategory) {
+        this.categoryService.updateCategoryReview(updatedCategory, suggestion.id).subscribe({
+          next: () => {
+            this.loadCategories();
+          },
+          error: (err) => {
+            console.error('Error updating category:', err);
+          }
+        });
       }
-      this.closeModal();
-    }
+    });
   }
+  
+  deleteSuggestion(event: MouseEvent, id: number) {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(DeleteFormComponent, {
+      width: '25em',
+      data: { message: 'Are you sure you want to delete this category?' }
+    });
 
-  onCategorySelectionChange(selected: Category) {
-    if (selected) {
-      this.selectedCategory = { ...selected };
-    }
+    dialogRef.afterClosed().subscribe(deleteCategory => {
+      if (deleteCategory) {
+        this.categoryService.deleteReviewCategory(id).subscribe({
+          next: () => {
+            this.loadCategories();
+          },
+          error: (err) => {
+            console.error('Error fetching categories:', err);
+          },
+        });;
+      }
+    });
   }
-
-  isAllCategorySelected(): boolean {
-    return this.selectedCategory?.name === 'ALL';
-  }
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  description: string;
-  status: 'PENDING' | 'ACCEPTED' | 'DENIED';
-  isDeleted: boolean;
 }

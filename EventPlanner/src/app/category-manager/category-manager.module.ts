@@ -6,6 +6,7 @@ import { CategoryManagerComponent } from './category-types/category-manager.comp
 import { CategoryReviewComponent } from './category-review/category-review.component';
 import { CreateCategoryComponent } from './create-category/create-category.component';
 import { EditCategoryComponent } from './edit-category/edit-category.component';
+import { CategoryReviewEditComponent } from './category-review-edit/category-review-edit.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { EditCategoryComponent } from './edit-category/edit-category.component';
     CategoryManagerComponent,
     CreateCategoryComponent,
     EditCategoryComponent,
+    CategoryReviewEditComponent,
 ],
   imports: [
     CommonModule,
