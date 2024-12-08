@@ -24,6 +24,9 @@ export class ServiceDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
+      this.serviceManager
+        .getServiceById(+params['id'])
+        .subscribe((service) => (this.service = service));
       const id = +params['id'];
       if (!isNaN(id)) {
         this.fetchServiceDetails(id);

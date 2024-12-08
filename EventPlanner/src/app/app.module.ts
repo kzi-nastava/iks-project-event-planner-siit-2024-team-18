@@ -39,10 +39,12 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
     EventManagerModule,
     ProductManagerModule,
     MaterialModule,
+    
   ],
   providers: [
     provideClientHydration(),
     provideAnimationsAsync(),
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
