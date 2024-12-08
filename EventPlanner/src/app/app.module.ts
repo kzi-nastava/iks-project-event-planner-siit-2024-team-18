@@ -16,7 +16,8 @@ import { BudgetPlanningComponent } from './budget-planning/budget-planning.compo
 import { MaterialModule } from './infrastructure/material/material.module';
 import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
 import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
-import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import { Interceptor } from './auth/interceptor';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,12 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
     MaterialModule,
   ],
   providers: [
+    provideAnimationsAsync(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: Interceptor,
+      multi: true,
+    },
     provideClientHydration(),
     provideAnimationsAsync(),
     provideHttpClient(withFetch(), withInterceptorsFromDi())
