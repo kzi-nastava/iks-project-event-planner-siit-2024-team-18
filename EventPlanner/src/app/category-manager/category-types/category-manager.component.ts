@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
+import { CreateCategoryComponent } from '../create-category/create-category.component';
+import { EditCategoryComponent } from '../edit-category/edit-category.component';
+import { CategoryService } from '../../services/category-service.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-category-manager',
@@ -8,46 +12,67 @@ import { DeleteFormComponent } from '../../shared/delete-form/delete-form.compon
   styleUrls: ['./category-manager.component.css']
 })
 export class CategoryManagerComponent {
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private categoryService: CategoryService
+  ) {
+    this.loadCategories();
+  }
+  categories: Category[] = [];
 
-  categories: Category[] = [
-    { id: 1, name: 'Venue', description: 'Venue Description', status: 'ACCEPTED', isDeleted: false },
-    { id: 2, name: 'Catering', description: 'Catering Description', status: 'ACCEPTED', isDeleted: false }
-  ];
-
-  isCreateModalVisible: boolean = false;
-  isEditModalVisible: boolean = false;
-  selectedCategory: Category | null = null;
-  newCategory: Category = { id: 0, name: '', description: '', status: 'PENDING', isDeleted: false };
+  loadCategories() {
+    this.categoryService.getCategories()
+    .subscribe({
+      next: (data: Category[]) => {
+        this.categories = data;
+      },
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      },
+    });
+  }
 
   openCreateModal() {
-    this.newCategory = { id: 0, name: '', description: '', status: 'PENDING', isDeleted: false };
-    this.isCreateModalVisible = true;
-    this.isEditModalVisible = false;
+    const dialogRef = this.dialog.open(CreateCategoryComponent, {
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe((newCategory: Category) => {
+      if (newCategory) {
+        this.categoryService.addCategory(newCategory)
+        .subscribe({
+          next: () => {
+            this.loadCategories();
+          },
+          error: (err) => {
+            console.error('Error fetching categories:', err);
+          },
+        });;
+        this.loadCategories();
+      }
+    });
   }
 
   openEditModal(category: Category) {
-    this.selectedCategory = { ...category };
-    this.isEditModalVisible = true;
-    this.isCreateModalVisible = false;
-  }
+    const dialogRef = this.dialog.open(EditCategoryComponent, {
+      width: '500px',
+      data: { category }
+    });
 
-  createCategory() {
-    if (this.newCategory.name && this.newCategory.description) {
-      this.newCategory.id = this.categories.length + 1;
-      this.categories.push(this.newCategory);
-      this.closeModal();
-    }
-  }
-
-  saveEditedCategory() {
-    if (this.selectedCategory) {
-      const index = this.categories.findIndex(c => c.id === this.selectedCategory!.id);
-      if (index !== -1) {
-        this.categories[index] = this.selectedCategory;
+    dialogRef.afterClosed().subscribe((updatedCategory: Category) => {
+      if (updatedCategory) {
+        this.categoryService.updateCategory(updatedCategory, updatedCategory.id)
+        .subscribe({
+          next: () => {
+            this.loadCategories();
+          },
+          error: (err) => {
+            console.error('Error fetching categories:', err);
+          },
+        });;
+        this.loadCategories();
       }
-      this.closeModal();
-    }
+    });
   }
 
   deleteCategory(event: MouseEvent, id: number) {
@@ -57,24 +82,17 @@ export class CategoryManagerComponent {
       data: { message: 'Are you sure you want to delete this category?' }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.categories = this.categories.filter(c => c.id !== id);
+    dialogRef.afterClosed().subscribe(deleteCategory => {
+      if (deleteCategory) {
+        this.categoryService.deleteCategory(id).subscribe({
+          next: () => {
+            this.loadCategories();
+          },
+          error: (err) => {
+            console.error('Error fetching categories:', err);
+          },
+        });;
       }
     });
   }
-
-  closeModal() {
-    this.isCreateModalVisible = false;
-    this.isEditModalVisible = false;
-    this.selectedCategory = null;
-  }
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  description: string;
-  status: 'PENDING' | 'ACCEPTED' | 'DENIED';
-  isDeleted: boolean;
 }
