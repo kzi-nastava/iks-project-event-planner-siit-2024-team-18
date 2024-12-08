@@ -26,6 +26,9 @@
     (click)="prevEvent()"
     aria-label="Previous Event"
   ></button>
+  <div *ngIf="!events?.length" class="no-events">
+    <p>No events available at the moment.</p>
+  </div>
   <button 
     class="swiper-button-next" 
     (click)="nextEvent()"

@@ -14,8 +14,9 @@ import { EventManagerModule } from './event-manager/event-manager.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
 import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
 import { MaterialModule } from './infrastructure/material/material.module';
-import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { CategoryManagerModule } from './category-manager/category-manager.module';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import { Interceptor } from './auth/interceptor';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,12 @@ import { CategoryManagerModule } from './category-manager/category-manager.modul
     MaterialModule,
   ],
   providers: [
+    provideAnimationsAsync(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: Interceptor,
+      multi: true,
+    },
     provideClientHydration(),
     provideAnimationsAsync(),
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
