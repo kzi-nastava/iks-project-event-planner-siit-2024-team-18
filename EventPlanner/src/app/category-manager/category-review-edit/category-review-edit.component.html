@@ -1,0 +1,31 @@
+<div class="modal-content">
+  <h2 class="modal-title">Edit Category</h2>
+
+  <mat-form-field appearance="fill">
+    <mat-label>{{ category.name }}</mat-label>
+    <mat-select [(ngModel)]="category" (selectionChange)="onCategorySelectionChange($event.value)">
+      <mat-option *ngFor="let category of categories" [value]="category">
+        {{ category.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Category Name</mat-label>
+    <input matInput [(ngModel)]="category.name" [disabled]="isFieldsDisabled" required />
+    <mat-error *ngIf="!category.name">Category Name is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Description</mat-label>
+    <input matInput [(ngModel)]="category.description" [disabled]="isFieldsDisabled" required />
+    <mat-error *ngIf="!category.description">Description is required</mat-error>
+  </mat-form-field>
+
+  <div class="modal-actions">
+    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="button" (click)="save()">
+      <mat-icon>save</mat-icon> Save
+    </button>
+  </div>
+</div>

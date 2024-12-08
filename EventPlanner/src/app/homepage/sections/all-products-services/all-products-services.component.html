@@ -1,4 +1,4 @@
-<div class="all-products-services-container">
+<div class="all-products-services-container"> 
   <h2>All Products/Services</h2>
 
   <div class="search-container">
@@ -12,50 +12,47 @@
   </div>
 
   <div class="controls-container">
-      <div class="date-filter-container">
-        <label for="from-date">From</label>
-        <input
-          id="from-date"
-          type="date"
-          [(ngModel)]="fromDate"
-          (change)="applyDateFilter()"
-          placeholder="From Date"
-        />
-        <label for="to-date">To</label>
-        <input
-          id="to-date"
-          type="date"
-          [(ngModel)]="toDate"
-          (change)="applyDateFilter()"
-          placeholder="To Date"
-        />
-      </div>
-      
+    <div class="date-filter-container">
+      <label for="from-date">From</label>
+      <input
+        id="from-date"
+        type="date"
+        [(ngModel)]="fromDate"
+        (change)="applySearch()"
+      />
+      <label for="to-date">To</label>
+      <input
+        id="to-date"
+        type="date"
+        [(ngModel)]="toDate"
+        (change)="applySearch()"
+      />
+    </div>
+
     <div class="sort-container">
       <label for="sort-select">Sort by</label>
       <select [(ngModel)]="selectedFilter" (change)="applySearch()">
-        <option value="title">Title</option>
-        <option value="description">Description</option>
+        <option *ngFor="let option of sortOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
       </select>
     </div>
 
     <div class="sort-container">
-      <label for="sort-order">Sort Order</label>
+      <label for="sort-order">Order</label>
       <select [(ngModel)]="sortOrder" (change)="applySearch()">
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
+        <option value="ASC">Ascending</option>
+        <option value="DESC">Descending</option>
       </select>
     </div>
   </div>
 
   <div class="radio-container">
-    <label>Select Type:</label>
     <label>
       <input
         type="radio"
-        name="type"
-        [value]="true"
-        [(ngModel)]="showProducts"
+        name="viewToggle"
+        [checked]="showProducts"
         (change)="toggleView(true)"
       />
       Products
@@ -63,9 +60,8 @@
     <label>
       <input
         type="radio"
-        name="type"
-        [value]="false"
-        [(ngModel)]="showProducts"
+        name="viewToggle"
+        [checked]="!showProducts"
         (change)="toggleView(false)"
       />
       Services
@@ -74,20 +70,26 @@
 
   <div *ngIf="showProducts" class="products-services-grid">
     <app-product-card
-      *ngFor="let product of paginatedProducts"
+      *ngFor="let product of solutions"
       [product]="product"
-      (cardClick)="openDetails(product)"
+      (cardClick)="openSolutionDetails(product.id)"
     ></app-product-card>
   </div>
   <div *ngIf="!showProducts" class="products-services-grid">
     <app-service-card
-      *ngFor="let service of paginatedServices"
+      *ngFor="let service of solutions"
       [service]="service"
-      (cardClick)="openDetails(service)"
+      (cardClick)="openSolutionDetails(service.id)"
     ></app-service-card>
   </div>
 
-  <div *ngIf="!filteredProducts?.length && !filteredServices?.length && !loading" class="no-products-services">
+  <ng-template #noItems>
+    <div class="no-products-services">
+      <p>No products or services available at the moment.</p>
+    </div>
+  </ng-template>
+
+  <div *ngIf="!solutions?.length && !loading" class="no-products-services">
     <p>No products or services available at the moment.</p>
   </div>
 
@@ -99,14 +101,14 @@
     <button
       class="previous"
       (click)="goToPreviousPage()"
-      [disabled]="currentPage === 1"
+      [disabled]="currentPage === 0"
     >
     </button>
-    <span class="current-page">{{ currentPage }} / {{ totalPages }}</span>
+    <span class="current-page">{{ currentPage + 1 }} / {{ totalPages }}</span>
     <button
       class="next"
       (click)="goToNextPage()"
-      [disabled]="currentPage === totalPages"
+      [disabled]="currentPage >= totalPages - 1"
     >
     </button>
   </div>

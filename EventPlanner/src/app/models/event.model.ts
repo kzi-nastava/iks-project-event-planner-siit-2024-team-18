@@ -1,7 +1,12 @@
 export interface Event {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  categories?: [];
+  _id: number,
+  eventType: string,
+  name: string,
+  description: string,
+  maxParticipants: number,
+  privacyType: string,
+  location: string,
+  date: Date,
+  time: String,
+  images: string[];
 }

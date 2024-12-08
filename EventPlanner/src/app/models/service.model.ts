@@ -1,20 +1,25 @@
 export interface Service {
-    _id: number;
-    title: string;
-    description: string;
-    specifics: string;
-    images: string[];
-    category: string;
-    eventType: string;
-    reservationDate: Date;
-    reservationTime: string;
-    cancellationDate: Date;
-    price: number;
-    discount?: number;
-    isPublic: boolean;
-    isVisible: boolean;
-    duration?: number;
-    engagement?: number[];
-    reservationType: 'auto' | 'manual';
-  }
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  discount: number;
+  images: string[];
+  isVisible: boolean;
+  isAvailable: boolean;
+  category: string;
+  eventTypes: string[];
+  location: string;
+  creator: string;
+  isDeleted: boolean;
+  status: 'PENDING' | 'ACCEPTED' | 'DENIED';
+  reservationType: 'AUTOMATIC' | 'MANUAL';
+
+  specifics: string;
+  duration?: number;
+  minEngagement?: number;
+  maxEngagement?: number;
+  reservationDeadline: number;
+  cancellationDeadline: number;
+}
   

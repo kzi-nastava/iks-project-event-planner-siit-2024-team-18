@@ -14,7 +14,7 @@ export class EditServiceComponent implements OnInit {
   serviceId: number = 0;
   editServiceForm: FormGroup;
 
-  selectedImages: string[] = [];
+  images: string[] = [];
   categories: string[] = ['Photography', 'Catering', 'Decorations', 'DJ Services', 'Lighting Setup', 'Flower Arrangements', 'Videography'];
   filteredCategories: string[] = this.categories.slice();
   eventTypes: string[] = ['Wedding', 'Birthday', 'Corporate', 'Party', 'Festival'];
@@ -26,23 +26,24 @@ export class EditServiceComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.editServiceForm = new FormGroup({
-      title: new FormControl('', [Validators.required]),
+      name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
-      specifics: new FormControl('', [Validators.required]),
-      category: new FormControl('', [Validators.required]),
-      eventType: new FormControl('', [Validators.required]),
-      reservationDate: new FormControl('', [Validators.required]),
-      reservationTime: new FormControl('', [Validators.required]),
-      cancellationDate: new FormControl('', [Validators.required]),
       price: new FormControl(0, [Validators.required, Validators.min(1)]),
       discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-      isPublic: new FormControl(false),
+      images: new FormControl([], this.minImagesValidator()),
       isVisible: new FormControl(false),
-      duration: new FormControl(15, [Validators.required]),
-      engagement: new FormControl([1, 2], null), // TODO: fix this
-      reservationType: new FormControl('auto', [Validators.required]),
-      selectedImages: new FormControl([], this.minImagesValidator()),
-    });
+      isAvailable: new FormControl(false),
+      category: new FormControl('', [Validators.required]),
+      eventTypes: new FormControl([], [Validators.required]),
+      reservationType: new FormControl('AUTOMATIC', [Validators.required]),
+  
+      specifics: new FormControl('', [Validators.required]),
+      duration: new FormControl(15, [Validators.min(15), Validators.max(120)]),
+      minEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+      maxEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+      reservationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
+      cancellationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
+      });
   }
 
   ngOnInit(): void {
@@ -53,28 +54,45 @@ export class EditServiceComponent implements OnInit {
   }
 
   loadServiceData(): void {
-    const service = this.serviceManagerService.getServiceById(this.serviceId);
-    if (service) {
-      this.editServiceForm.patchValue({
-        title: service.title,
-        description: service.description,
-        specifics: service.description,
-        category: service.category,
-        eventType: service.eventType,
-        reservationDate: service.reservationDate.toISOString().split('T')[0],
-        reservationTime: service.reservationTime,
-        cancellationDate: service.cancellationDate.toISOString().split('T')[0],
-        price: service.price,
-        discount: service.discount,
-        isPublic: service.isPublic,
-        isVisible: service.isVisible,
-        duration: service.duration,
-        engagement: service.engagement,
-        reservationType: service.reservationType,
-      });
+    this.serviceManagerService.getServiceById(this.serviceId).subscribe({
+      next: (data: Service) => {
+        console.log('Service Data:', data); // Log the full response object
+        const service = data;
+        console.log(service);
+        console.log('isAvailable:', service.isAvailable);
+        
+        if (service) {
+          this.editServiceForm.patchValue({
+            name: service.name,
+            description: service.description,
+            price: service.price,
+            discount: service.discount,
+            isVisible: service.isVisible,
+            isAvailable: service.isAvailable,
+            category: "Photography",
+            eventTypes: ["Wedding"],
+            location: 'Serbia',
+            creator: 'Mare',
+            isDeleted: service.isDeleted,
+            status: 'ACCPETED',
+            reservationType: service.reservationType,
 
-      this.selectedImages = service.images;
-    }
+            specifics: service.specifics!,
+            duration: service.duration!,
+            minEngagement: service.minEngagement!,
+            maxEngagement: service.maxEngagement!,
+            reservationDeadline: service.reservationDeadline!,
+            cancellationDeadline: service.cancellationDeadline!,
+          });
+          this.images = service.images;
+    
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch service details:', err);
+        this.router.navigate(['']);
+      }
+    });
   }
 
   minImagesValidator(): ValidatorFn {
@@ -86,26 +104,36 @@ export class EditServiceComponent implements OnInit {
   edit(): void {
     if (this.editServiceForm.valid) {
       const service: Service = {
-        _id: this.serviceId,
-        title: this.editServiceForm.value.title!,
+        id: this.serviceId,
+        name: this.editServiceForm.value.name!,
         description: this.editServiceForm.value.description!,
-        specifics: this.editServiceForm.value.specifics || '',
-        images: this.selectedImages,
-        category: this.editServiceForm.value.category!,
-        eventType: this.editServiceForm.value.eventType!,
-        reservationDate: new Date(this.editServiceForm.value.reservationDate!),
-        reservationTime: this.editServiceForm.value.reservationTime!,
-        cancellationDate: new Date(this.editServiceForm.value.cancellationDate!),
         price: this.editServiceForm.value.price!,
         discount: this.editServiceForm.value.discount || 0,
-        isPublic: this.editServiceForm.value.isPublic!,
+        images: this.images,
         isVisible: this.editServiceForm.value.isVisible!,
+        isAvailable: this.editServiceForm.value.isAvailable!,
+        category: this.editServiceForm.value.category!,
+        eventTypes: this.editServiceForm.value.eventTypes!,
+        location: 'Serbia',
+        creator: 'Mare',
+        isDeleted: false,
+        status: 'PENDING',
+        reservationType: this.editServiceForm.value.reservationType as 'AUTOMATIC' | 'MANUAL',
+        
+        specifics: this.editServiceForm.value.specifics!,
         duration: this.editServiceForm.value.duration!,
-        engagement: this.editServiceForm.value.engagement!,
-        reservationType: this.editServiceForm.value.reservationType as 'auto' | 'manual',
-      };
-      this.serviceManagerService.createService(service);
-      this.router.navigate(['/services']);
+        minEngagement: this.editServiceForm.value.minEngagement!,
+        maxEngagement: this.editServiceForm.value.maxEngagement!,
+        reservationDeadline: this.editServiceForm.value.reservationDeadline!,
+        cancellationDeadline: this.editServiceForm.value.cancellationDeadline!,
+        };
+        this.route.params.subscribe((params) => {
+          this.serviceManagerService
+            .updateService(service, +params['id'])
+            .subscribe(((res: any) => {
+              this.router.navigate(['/services']);
+          }));
+      });
     }
   }
 
@@ -115,7 +143,7 @@ export class EditServiceComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           if (reader.result) {
-            this.selectedImages.push(reader.result as string);
+            this.images.push(reader.result as string);
           }
         };
         reader.readAsDataURL(file);
@@ -124,7 +152,7 @@ export class EditServiceComponent implements OnInit {
   }
 
   removeImage(index: number): void {
-    this.selectedImages.splice(index, 1);
+    this.images.splice(index, 1);
   }
 
   filterCategories(event: any): void {

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Event } from '../../models/event.model';
+import { EventCard } from '../../models/event-card.model';
 
 @Component({
   selector: 'app-event-card',
@@ -7,7 +7,7 @@ import { Event } from '../../models/event.model';
   styleUrls: ['./event-card.component.css']
 })
 export class EventCardComponent {
-  @Input() event!: Event;
+  @Input() event!: EventCard;
   @Output() cardClick = new EventEmitter<number>();
 
   onCardClick(): void {

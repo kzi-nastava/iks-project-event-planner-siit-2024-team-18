@@ -16,6 +16,8 @@ import { BudgetPlanningComponent } from './budget-planning/budget-planning.compo
 import { EventTypesComponent } from './event-type-manager/event-types/event-types.component';
 import { CreateEventTypeComponent } from './event-type-manager/create-event-type/create-event-type.component';
 import { EditEventTypeComponent } from './event-type-manager/edit-event-type/edit-event-type.component';
+import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
+import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -34,6 +36,8 @@ const routes: Routes = [
   { path: 'event-types', component: EventTypesComponent },
   { path: 'event-types/create', component: CreateEventTypeComponent },
   { path: 'event-types/edit/:id', component: EditEventTypeComponent },
+  { path: 'categories', component: CategoryManagerComponent },
+  { path: 'categories/review', component: CategoryReviewComponent },
   { path: '**', redirectTo: ''},
 ];
 

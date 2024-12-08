@@ -8,7 +8,7 @@
       class="search-input"
       placeholder="Search events..."
       [(ngModel)]="searchQuery"
-      (input)="applySearch()"
+      (input)="fetchEvents()"
     />
   </div>
 
@@ -20,7 +20,7 @@
         type="date"
         class="date-input"
         [(ngModel)]="fromDate"
-        (change)="applyDateFilter()"
+        (change)="fetchEvents()"
       />
       <label for="to-date" class="date-label">To</label>
       <input
@@ -28,7 +28,7 @@
         type="date"
         class="date-input"
         [(ngModel)]="toDate"
-        (change)="applyDateFilter()"
+        (change)="fetchEvents()"
       />
     </div>
 
@@ -38,37 +38,37 @@
         id="sort-select"
         class="sort-select"
         [(ngModel)]="selectedFilter"
-        (change)="applySort()"
+        (change)="fetchEvents()"
       >
-        <option value="title">Title</option>
-        <option value="description">Description</option>
-        <option value="location">Location</option>
+      <option *ngFor="let option of sortOptions" [value]="option.value">
+        {{ option.label }}
+      </option>
       </select>
     </div>
 
     <div class="sort-container">
-      <label for="sort-order" class="sort-label">Order</label>
+      <label for="sort-order" class="sort-label">Sort order</label>
       <select
         id="sort-order"
         class="sort-select"
         [(ngModel)]="sortOrder"
-        (change)="applySort()"
+        (change)="fetchEvents()"
       >
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
+        <option value="ASC">Ascending</option>
+        <option value="DESC">Descending</option>
       </select>
     </div>
   </div>
 
-  <div *ngIf="filteredEvents.length > 0 && !loading" class="events-grid">
+  <div *ngIf="events.length > 0 && !loading" class="events-grid">
     <app-event-card
-      *ngFor="let event of paginatedEvents"
+      *ngFor="let event of events"
       [event]="event"
-      (cardClick)="openEventDetails($event)"
+      (cardClick)="openEventDetails(event.id)"
     ></app-event-card>
   </div>
 
-  <div *ngIf="!filteredEvents?.length && !loading" class="no-events">
+  <div *ngIf="!events?.length && !loading" class="no-events">
     <p>No events available at the moment.</p>
   </div>
 
@@ -77,17 +77,17 @@
   </div>
 
   <div class="pagination">
-    <button 
-      class="previous" 
-      (click)="goToPreviousPage()" 
-      [disabled]="currentPage === 1"
+    <button
+      class="previous"
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 0"
     >
     </button>
-    <span class="current-page">{{ currentPage }} / {{ totalPages }}</span>
-    <button 
-      class="next" 
-      (click)="goToNextPage()" 
-      [disabled]="currentPage === totalPages"
+    <span class="current-page">{{ currentPage + 1 }} / {{ totalPages }}</span>
+    <button
+      class="next"
+      (click)="goToNextPage()"
+      [disabled]="currentPage + 1 === totalPages"
     >
     </button>
   </div>

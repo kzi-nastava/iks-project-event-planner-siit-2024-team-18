@@ -1,42 +1,30 @@
 <div class="top-five-products-services">
-  <h2>Top 5 {{ showProducts ? 'Products' : 'Services' }}</h2>
-  
+  <h2>Top 5 Solutions</h2>
+
   <div 
-      class="swiper-container" 
-      [ngStyle]="{'transform': 'translateX(' + swiperOffset + '%)'}">
+    class="swiper-container" 
+    [ngStyle]="{'transform': 'translateX(' + swiperOffset + '%)'}">
 
-    <ng-container *ngIf="showProducts">
-      <div 
-          class="product-service-item" 
-          *ngFor="let product of products; let i = index" 
-          [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
-          (click)="openDetails(product)">
-        
-        <img [src]="product.image" alt="Product Image">
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.description }}</p>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="!showProducts">
-      <div 
-          class="product-service-item" 
-          *ngFor="let service of services; let i = index" 
-          [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
-          (click)="openDetails(service)">
-        
-        <img [src]="service.images[0]" alt="Service Image">
-        <h3>{{ service.title }}</h3>
-        <p>{{ service.description }}</p>
-      </div>
-    </ng-container>
+    <div 
+      class="product-service-item" 
+      *ngFor="let solution of solutions; let i = index" 
+      [ngClass]="{'focused': i === currentIndex, 'adjacent': i === currentIndex - 1 || i === currentIndex + 1}"
+      (click)="openDetails(solution)">
+      
+      <img [src]="solution.cardImage" alt="Solution Image">
+      <h3>{{ solution.name }}</h3>
+      <p>{{ solution.description }}</p>
+    </div>
   </div>
-  
+
   <button class="swiper-button-prev" (click)="prevItem()"></button>
+  <div *ngIf="!solutions?.length" class="no-solutions">
+    <p>No products/services available at the moment.</p>
+  </div>
   <button class="swiper-button-next" (click)="nextItem()"></button>
 
   <div class="bullets">
-    <span *ngFor="let item of currentList; let i = index" 
+    <span *ngFor="let item of solutions; let i = index" 
           [class.active]="i === currentIndex" 
           (click)="goToItem(i)">
     </span>

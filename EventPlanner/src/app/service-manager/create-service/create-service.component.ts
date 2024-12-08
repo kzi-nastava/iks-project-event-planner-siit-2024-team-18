@@ -12,25 +12,26 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
 })
 export class CreateServiceComponent {
   createServiceForm = new FormGroup({
-    title: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
-    specifics: new FormControl('', [Validators.required]),
-    category: new FormControl('', [Validators.required]),
-    eventType: new FormControl('', [Validators.required]),
-    reservationDate: new FormControl('', [Validators.required]),
-    reservationTime: new FormControl('', [Validators.required]),
-    cancellationDate: new FormControl('', [Validators.required]),
     price: new FormControl(0, [Validators.required, Validators.min(1)]),
     discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-    isPublic: new FormControl(false),
+    images: new FormControl([], this.minImagesValidator()),
     isVisible: new FormControl(false),
-    duration: new FormControl(15, [Validators.required, Validators.min(15), Validators.max(120)]),
-    engagement: new FormControl([1, 2], [Validators.required, Validators.min(1), Validators.max(5)]),
-    reservationType: new FormControl('auto', [Validators.required]),
-    selectedImages: new FormControl([], this.minImagesValidator()),
+    isAvailable: new FormControl(false),
+    category: new FormControl('', [Validators.required]),
+    eventTypes: new FormControl([], [Validators.required]),
+    reservationType: new FormControl('AUTOMATIC', [Validators.required]),
+
+    specifics: new FormControl('', [Validators.required]),
+    duration: new FormControl(15, [Validators.min(15), Validators.max(120)]),
+    minEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+    maxEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+    reservationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
+    cancellationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
   });
 
-  selectedImages: string[] = [];
+  images: string[] = [];
   categories: string[] = ['Photography Category', 'Catering Category', 'Music Category', 'Decorations Category', 'Venue Category'];
   filteredCategories: string[] = this.categories.slice();
   eventTypes: string[] = ['Photography Event', 'Catering Event', 'Music Event', 'Decorations Event', 'Venue Event'];
@@ -38,8 +39,6 @@ export class CreateServiceComponent {
 
   constructor(private serviceManagerService: ServiceManagerService, private router: Router
   ) {}
-
-  ngOnInit(): void {}
 
   minImagesValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -50,27 +49,35 @@ export class CreateServiceComponent {
   create() {
     if (this.createServiceForm.valid) {
       const service: Service = {
-        _id: Math.random(),
-        title: this.createServiceForm.value.title!,
+        id: Math.random(),
+        name: this.createServiceForm.value.name!,
         description: this.createServiceForm.value.description!,
-        specifics: this.createServiceForm.value.specifics || '',
-        images: this.selectedImages,
-        category: this.createServiceForm.value.category!,
-        eventType: this.createServiceForm.value.eventType!,
-        reservationDate: new Date(this.createServiceForm.value.reservationDate!),
-        reservationTime: this.createServiceForm.value.reservationTime!,
-        cancellationDate: new Date(this.createServiceForm.value.cancellationDate!),
         price: this.createServiceForm.value.price!,
         discount: this.createServiceForm.value.discount || 0,
-        isPublic: this.createServiceForm.value.isPublic!,
+        images: this.images,
         isVisible: this.createServiceForm.value.isVisible!,
+        isAvailable: this.createServiceForm.value.isAvailable!,
+        category: this.createServiceForm.value.category!,
+        eventTypes: this.createServiceForm.value.eventTypes!,
+        location: 'Serbia',
+        creator: 'Mare',
+        isDeleted: false,
+        status: 'PENDING',
+        reservationType: this.createServiceForm.value.reservationType as 'AUTOMATIC' | 'MANUAL',
+        
+        specifics: this.createServiceForm.value.specifics!,
         duration: this.createServiceForm.value.duration!,
-        engagement: this.createServiceForm.value.engagement!,
-        reservationType: this.createServiceForm.value.reservationType as 'auto' | 'manual',
+        minEngagement: this.createServiceForm.value.minEngagement!,
+        maxEngagement: this.createServiceForm.value.maxEngagement!,
+        reservationDeadline: this.createServiceForm.value.reservationDeadline!,
+        cancellationDeadline: this.createServiceForm.value.cancellationDeadline!,
       };
 
-      this.serviceManagerService.createService(service);
-      this.router.navigate(['/services']);
+      this.serviceManagerService
+        .createService(service)
+        .subscribe((res: any) => {
+          this.router.navigate(['/services']);
+        });
     }
   }
 
@@ -80,7 +87,7 @@ export class CreateServiceComponent {
         const reader = new FileReader();
         reader.onload = () => {
           if (reader.result) {
-            this.selectedImages.push(reader.result as string);
+            this.images.push(reader.result as string);
           }
         };
         reader.readAsDataURL(file);
@@ -89,7 +96,7 @@ export class CreateServiceComponent {
   }
 
   removeImage(index: number): void {
-    this.selectedImages.splice(index, 1);
+    this.images.splice(index, 1);
   }
 
   filterCategories(event: any): void {
