@@ -132,10 +132,6 @@ export class ServiceManagerService {
       cancellationDeadline: 5,
     },
   ];
-  
-  getTopFiveServices(): Observable<Service[]> {
-    return of(this.services.slice(0, 5));
-  }
 
   getServices(): Observable<Service[]> {
     return of(this.services);

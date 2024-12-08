@@ -58,6 +58,7 @@ export class EventService {
       maxParticipants?: number;
       budget?: number;
       eventType?: string;
+      organizerFirstName?: string;
       sortBy?: string;
       sortDirection?: 'ASC' | 'DESC';
       page?: number;
@@ -89,6 +90,9 @@ export class EventService {
     }
     if (filters?.eventType) {
       params = params.set('eventType', filters.eventType);
+    }
+    if (filters?.organizerFirstName) {
+      params = params.set('organizerFirstName', filters.organizerFirstName);
     }
     if (filters?.sortBy) {
       params = params.set('sortBy', filters.sortBy);
