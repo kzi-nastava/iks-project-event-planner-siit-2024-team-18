@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
-import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { Login } from '../model/login.model';
+import { AuthResponse } from '../model/auth-response.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +13,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  private _snackBar = inject(MatSnackBar);
   loginForm: FormGroup;
 
   constructor(private userService: UserService, private authService: AuthService, private router: Router) {
@@ -27,17 +31,28 @@ export class LoginComponent {
   }
 
   login() {
-    const email = this.loginForm.value.email;
-    const password = this.loginForm.value.password;
-    const user = this.userService.login(email, password);
-
     if (this.loginForm.valid) {
-      if (user) {
-        this.authService.setUser(user);
-        this.router.navigate(['']);
-      } else {
-        alert('User with this credentials doesn\'t exist!');
-      }
+      const login: Login = {
+        email: this.loginForm.value.email || "",
+        password: this.loginForm.value.password || ""
+      };
+  
+      this.authService.login(login).subscribe({
+        next: (response: AuthResponse) => {
+          localStorage.setItem('user', response.token);
+          this.authService.setUser();
+          this.router.navigate(['home']);
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            this._snackBar.open('User with email ' + this.loginForm.value.email + ' not found.', 'OK');
+          } else if (err.status === 400) {
+            this._snackBar.open('Incorrect password. Please try again.', 'OK');
+          } else {
+            this._snackBar.open('An unexpected error occurred', 'OK');
+          }
+        }
+      });
     }
   }
 

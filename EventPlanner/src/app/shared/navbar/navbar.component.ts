@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,17 +10,18 @@ export class NavbarComponent {
   constructor(private authService: AuthService) {}
 
   get userProfilePhoto(): string | null {
-    const user = this.authService.getUser();
+    const user = this.authService.getUserInfo();
+    console.log(user?.profilePhoto);
     return user?.profilePhoto || null;
   }
 
   get userFullName(): string | null {
-    const user = this.authService.getUser();
+    const user = this.authService.getUserInfo();
     return user ? `${user.firstName} ${user.lastName}` : null;
   }
 
   get userEmail(): string | null {
-    const user = this.authService.getUser();
+    const user = this.authService.getUserInfo();
     return user?.email || null;
   }
 
@@ -33,6 +34,7 @@ export class NavbarComponent {
   }
 
   logout(): void {
-    this.authService.logout();
+    localStorage.removeItem('user');
+    this.authService.setUser();
   }
 }

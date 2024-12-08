@@ -5,50 +5,16 @@
 
   <div class="item-list-container">
     <mat-list>
-      <mat-card *ngFor="let suggestion of filteredCategories" (click)="editSuggestion(suggestion)">
+      <mat-card *ngFor="let suggestion of reviewCategories" (click)="editSuggestion(suggestion)">
         <div class="name-description">
           <h6>{{ suggestion.name }}</h6>
           <p>{{ suggestion.description }}</p>
         </div>
         <div class="options item">
-          <button class="delete" (click)="deleteSuggestion($event, suggestion)">Delete</button>
-          <button class="approve" (click)="approveSuggestion($event, suggestion)">Approve</button>
+          <button class="delete" (click)="deleteSuggestion($event, suggestion.id)">Delete</button>
+          <button class="approve" (click)="approveSuggestion($event, suggestion, suggestion.id)">Approve</button>
         </div>
       </mat-card>
     </mat-list>
-  </div>
-
-  <div class="modal" *ngIf="selectedCategory">
-    <div class="modal-content">
-      <h2 class="modal-title">Edit Category</h2>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Category</mat-label>
-        <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategorySelectionChange($event.value)">
-          <mat-option *ngFor="let category of categories" [value]="category">
-            {{ category.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Category Name</mat-label>
-        <input matInput [(ngModel)]="selectedCategory.name" [disabled]="isAllCategorySelected()" required />
-        <mat-error *ngIf="!selectedCategory.name">Category Name is required</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Description</mat-label>
-        <input matInput [(ngModel)]="selectedCategory.description" [disabled]="isAllCategorySelected()" required />
-        <mat-error *ngIf="!selectedCategory.description">Description is required</mat-error>
-      </mat-form-field>
-
-      <div class="modal-actions">
-        <button mat-raised-button color="warn" type="button" (click)="closeModal()">Cancel</button>
-        <button mat-raised-button color="primary" type="button" (click)="save(selectedCategory)">
-          <mat-icon>save</mat-icon> Save
-        </button>
-      </div>
-    </div>
   </div>
 </div>
