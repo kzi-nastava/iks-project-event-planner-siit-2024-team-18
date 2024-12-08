@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Product } from '../../models/product.model';
+import { SolutionCard } from '../../models/solution-card.model';
 
 @Component({
   selector: 'app-product-card',
@@ -7,7 +7,7 @@ import { Product } from '../../models/product.model';
   styleUrls: ['./product-card.component.css']
 })
 export class ProductCardComponent {
-  @Input() product!: Product;
+  @Input() product!: SolutionCard;
   @Output() cardClick = new EventEmitter<number>();
 
   onCardClick(): void {

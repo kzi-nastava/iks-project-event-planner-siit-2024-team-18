@@ -20,8 +20,13 @@ export class TopFiveProductsServicesComponent implements OnInit {
 
   fetchTopSolutions(): void {
     const cityName = 'Paris';
-    this.solutionService.getTopFiveSolutions(cityName).subscribe((data) => {
-      this.solutions = data;
+    this.solutionService.getTopFiveSolutions(cityName).subscribe({
+      next: (result: SolutionCard[]) => {
+        this.solutions = result;
+      },
+      error: (err) => {
+        console.error('Failed to fetch top solutions:', err);
+      }
     });
   }
 

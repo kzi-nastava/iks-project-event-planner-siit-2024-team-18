@@ -3,7 +3,8 @@ import { Observable, of } from 'rxjs';
 import { SolutionCard } from '../models/solution-card.model';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../environments/environment';
+import { environment } from '../../env/environment';
+import { PagedResponse } from '../shared/model/paged-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,74 @@ export class SolutionService {
     return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/solutions/top-solutions', { params });
   }
 
-//   getAllSolutions(): Observable<SolutionCard[]> {
-//     return of(this.allSolutions);
-//   }
+  getAllSolutions(
+    filters?: {
+      keyword?: string;
+      city?: string;
+      isProductOnly?: boolean;
+      name?: string;
+      description?: string;
+      price?: number;
+      discount?: number;
+      categoryName?: string;
+      providerFirstName?: string;
+      country?: string;
+      sortBy?: string;
+      sortDirection?: 'ASC' | 'DESC';
+      page?: number;
+      pageSize?: number;
+    }
+  ): Observable<PagedResponse<SolutionCard>> {
+    let params = new HttpParams();
+  
+    if (filters?.keyword) {
+      params = params.set('keyword', filters.keyword);
+    }
+    if (filters?.city) {
+      params = params.set('city', filters.city);
+    }
+    if (filters?.isProductOnly !== undefined) {
+      params = params.set('isProductOnly', filters.isProductOnly.toString());
+    }
+    if (filters?.name) {
+      params = params.set('name', filters.name);
+    }
+    if (filters?.description) {
+      params = params.set('description', filters.description);
+    }
+    if (filters?.price !== undefined) {
+      params = params.set('price', filters.price.toString());
+    }
+    if (filters?.discount !== undefined) {
+      params = params.set('discount', filters.discount.toString());
+    }
+    if (filters?.categoryName) {
+      params = params.set('categoryName', filters.categoryName);
+    }
+    if (filters?.providerFirstName) {
+      params = params.set('providerFirstName', filters.providerFirstName);
+    }
+    if (filters?.country) {
+      params = params.set('country', filters.country);
+    }
+    if (filters?.sortBy) {
+      params = params.set('sortBy', filters.sortBy);
+    }
+    if (filters?.sortDirection) {
+      params = params.set('sortDirection', filters.sortDirection);
+    }
+    if (filters?.page !== undefined) {
+      params = params.set('page', filters.page.toString());
+    }
+    if (filters?.pageSize !== undefined) {
+      params = params.set('size', filters.pageSize.toString());
+    }
+  
+    return this.httpClient.get<PagedResponse<SolutionCard>>(
+      `${environment.apiHost}/api/solutions`, 
+      { params }
+    );
+  }
 
   openSolutionDetails(solution: SolutionCard): void {
     if (solution.solutionType === "PRODUCT") {

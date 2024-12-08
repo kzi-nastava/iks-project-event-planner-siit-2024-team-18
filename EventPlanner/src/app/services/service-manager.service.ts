@@ -176,10 +176,6 @@ export class ServiceManagerService {
     },
   ];
 
-  getTopFiveServices(): Observable<Service[]> {
-    return of(this.services.slice(0, 5));
-  }
-
   getServiceByIdStatic(id: number): Service {
     return this.services[0];
   }

@@ -1,11 +1,11 @@
 <div class="event-details-container" *ngIf="event">
     <div class="event-image">
-      <img [src]="event.cardImage" alt="{{ event.name }}">
+      <img [src]="event.images[0]" alt="{{ event.name }}">
     </div>
     <div class="event-info">
       <h2>{{ event.name }}</h2>
       <!-- <p class="event-date">{{ event.date | date:'longDate' }}</p> -->
-      <p class="event-description">{{ event.locationName }}</p>
+      <p class="event-description">{{ event.location }}</p>
       <p class="event-description">{{ event.description }}</p>
     </div>
     
