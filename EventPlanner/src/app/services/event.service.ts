@@ -116,7 +116,7 @@ export class EventService {
 
   openEventDetails(eventId: number): void {
     if (eventId) {
-      this.router.navigate(['/event-details', eventId]);
+      this.router.navigate(['/event/', eventId]);
     } else {
       console.error('Invalid event ID:', eventId);
     }

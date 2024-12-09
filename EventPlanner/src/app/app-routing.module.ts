@@ -13,12 +13,13 @@ import { InvitedEventsComponent } from './event-manager/invited-events/invited-e
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
 import { ProductDetailsComponent } from './details/product-details/product-details.component';
 import { BudgetPlanningComponent } from './budget-manager/budget-planning/budget-planning.component';
+import { EventTypesComponent } from './event-type-manager/event-types/event-types.component';
 import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
 import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'event-details/:id', component: EventDetailsComponent },
+  { path: 'event/:id', component: EventDetailsComponent },
   { path: 'event/create/invites', component: InviteScreenComponent },
   { path: 'invited-events', component: InvitedEventsComponent },
   { path: 'product/:id', component: ProductDetailsComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'service/edit/:id', component: EditServiceComponent },
   { path: 'service/:id', component: ServiceDetailsComponent },
   { path: 'service/:id/reserve', component: ServiceReservationComponent },
+  { path: 'event-types', component: EventTypesComponent },
   { path: 'categories', component: CategoryManagerComponent },
   { path: 'categories/review', component: CategoryReviewComponent },
   { path: '**', redirectTo: ''},
