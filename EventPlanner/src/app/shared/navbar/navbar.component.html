@@ -39,7 +39,15 @@
       <mat-icon>shopping_cart</mat-icon>
       Products
     </a>
-    <a class="nav-item" routerLink="/invited-events" routerLinkActive="active" *ngIf="isLoggedIn">
+    <a class="nav-item" routerLink="/event-types" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>event</mat-icon>
+      Event Types
+    </a>
+    <a class="nav-item" routerLink="/categories" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>category</mat-icon>
+      Categories
+    </a>
+    <a class="nav-item" routerLink="/invited-events" routerLinkActive="active" *ngIf="userRole === 'AUTHENTICATED_USER'">
       <mat-icon>event_note</mat-icon>
       Invited Events
     </a>

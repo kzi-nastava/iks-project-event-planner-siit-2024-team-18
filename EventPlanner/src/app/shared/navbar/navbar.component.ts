@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -7,11 +8,10 @@ import { AuthService } from '../../auth/auth.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   get userProfilePhoto(): string | null {
     const user = this.authService.getUserInfo();
-    console.log(user?.profilePhoto);
     return user?.profilePhoto || null;
   }
 
@@ -22,7 +22,7 @@ export class NavbarComponent {
 
   get userEmail(): string | null {
     const user = this.authService.getUserInfo();
-    return user?.email || null;
+    return user?.sub || null;
   }
 
   get userRole(): string | null {
@@ -36,5 +36,6 @@ export class NavbarComponent {
   logout(): void {
     localStorage.removeItem('user');
     this.authService.setUser();
+    this.router.navigate(['']);
   }
 }
