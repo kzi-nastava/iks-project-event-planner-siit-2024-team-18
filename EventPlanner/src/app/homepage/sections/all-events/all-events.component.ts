@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { EventService } from '../../../services/event.service';
 import { PagedResponse } from '../../../shared/model/paged-response.model';
 import { EventCard } from '../../../models/event-card.model';
@@ -34,7 +33,7 @@ export class AllEventsComponent implements OnInit {
     { value: 'organizerFirstName', label: 'Creator Name' },
   ];
 
-  constructor(private eventService: EventService, private router: Router) {}
+  constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
     this.fetchEvents();
@@ -86,6 +85,6 @@ export class AllEventsComponent implements OnInit {
   }
 
   openEventDetails(eventId: number): void {
-    this.router.navigate(['/event-details', eventId]);
+    this.eventService.openEventDetails(eventId);
   }
 }

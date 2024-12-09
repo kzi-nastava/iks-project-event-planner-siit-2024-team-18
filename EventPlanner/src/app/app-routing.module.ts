@@ -18,7 +18,7 @@ import { CategoryReviewComponent } from './category-manager/category-review/cate
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'event-details/:id', component: EventDetailsComponent },
+  { path: 'event/:id', component: EventDetailsComponent },
   { path: 'event/create/invites', component: InviteScreenComponent },
   { path: 'invited-events', component: InvitedEventsComponent },
   { path: 'product/:id', component: ProductDetailsComponent },
