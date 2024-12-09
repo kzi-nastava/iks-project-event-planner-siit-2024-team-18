@@ -47,10 +47,6 @@ export class ServiceManagerService {
   }
   
   openServiceDetails(serviceId: number) {
-    if(serviceId){
-      this.router.navigate(['/service/', serviceId]);
-    } else {
-      console.log('Invalid service Id: ', serviceId);
-    }
+    this.router.navigate(['/service/', serviceId]);
   }
 }

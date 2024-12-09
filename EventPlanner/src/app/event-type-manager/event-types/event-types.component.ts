@@ -52,8 +52,6 @@ export class EventTypesComponent {
             });
           },
           error: (err) => {
-            console.log(err.status)
-            console.log(err.error)
             if (err.status === 400) {
               this.snackBar.open('An Event Type with the same name already exists. Please choose a different name.', 'OK', {
                 duration: 3000,

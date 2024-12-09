@@ -56,11 +56,7 @@ export class EditServiceComponent implements OnInit {
   loadServiceData(): void {
     this.serviceManagerService.getServiceById(this.serviceId).subscribe({
       next: (data: Service) => {
-        console.log('Service Data:', data); // Log the full response object
         const service = data;
-        console.log(service);
-        console.log('isAvailable:', service.isAvailable);
-        
         if (service) {
           this.editServiceForm.patchValue({
             name: service.name,

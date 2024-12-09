@@ -17,10 +17,6 @@ export class ProductManagerService {
   }
 
   openProductDetails(productId: number) {
-    if(productId){
-      this.router.navigate(['/product/', productId]);
-    } else {
-      console.log('Invalid product Id: ', productId);
-    }
+    this.router.navigate(['/product/', productId]);
   }
 }
