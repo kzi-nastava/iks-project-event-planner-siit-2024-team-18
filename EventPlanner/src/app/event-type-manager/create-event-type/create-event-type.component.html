@@ -1,10 +1,7 @@
 <div class="center-container">
   
-    <form [formGroup]="createEventTypeForm" class="event-type-form">
+    <form [formGroup]="createEventTypeForm" class="event-type-form" (ngSubmit)="create()">
       <div class="form-title">
-        <button type="button" class="close-button" [routerLink]="['/event-types']">
-          <mat-icon>close</mat-icon>
-        </button>
   
         <h2>Create Event Type</h2>
       </div>
@@ -44,7 +41,7 @@
     </mat-form-field>
   
       <div class="form-buttons form-field">
-        <button [routerLink]="['/event-types']" mat-raised-button class="cancel">Cancel</button>
+        <button mat-raised-button class="cancel" (click)="cancel()">Cancel</button>
         <button mat-raised-button class="submit">Submit</button>
       </div>
     </form>

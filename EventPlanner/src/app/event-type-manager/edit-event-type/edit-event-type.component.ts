@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EventTypeService } from '../../services/event-type.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { EventType } from '../../models/event-type.model';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CategoryService } from '../../services/category-service.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-edit-event-type',
@@ -9,37 +11,66 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './edit-event-type.component.css'
 })
 export class EditEventTypeComponent implements OnInit {
-  id: number = 0;
+  eventType: EventType;
   editEventTypeForm: FormGroup;
 
-  categoriesList: string[] = ['Photography', 'Catering', 'Sound System', 'Venue', 'Lightning'];
+  categoriesList: string[] = [];
 
-  constructor(private eventTypeService: EventTypeService, private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private dialogRef: MatDialogRef<EditEventTypeComponent>,
+    private categoryService: CategoryService,
+    @Inject(MAT_DIALOG_DATA) public data: { eventType: EventType }
+  ) {
     this.editEventTypeForm = new FormGroup({
       name: new FormControl({ value: '', disabled: true }, [Validators.required]),
       description: new FormControl('', [Validators.required]),
       categories: new FormControl([], [Validators.required]),
     });
+
+    this.eventType = { ...data.eventType };
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.id = +params['id'];
-      this.loadEventTypeData();
+    this.loadCategories();
+    this.loadFormData();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data: Category[]) => {
+        this.categoriesList = data.map((category: Category) => category.name);
+      },
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      },
     });
   }
 
-  loadEventTypeData() {
-    this.eventTypeService.getById(this.id).subscribe((eventType) => {
-      if (eventType) {
-        this.editEventTypeForm.patchValue({
-          name: eventType.name,
-          description: eventType.description,
-          categories: eventType.categories,
-        });
-      } else {
-        console.error(`Event Type with ID ${this.id} not found.`);
-      }
+  loadFormData(): void {
+    this.editEventTypeForm.patchValue({
+      name: this.eventType.name,
+      description: this.eventType.description,
+      categories: this.eventType.categories
     });
+  }
+
+  update(): void {
+    if (this.editEventTypeForm.valid) {
+      const formValues = this.editEventTypeForm.value;
+
+      this.eventType = {
+        ...this.eventType,
+        description: formValues.description,
+        categories: formValues.categories,
+      };
+
+      this.dialogRef.close(this.eventType);
+    } else {
+      console.error('Form is invalid!');
+    }
+  }
+
+  cancel(): void {
+    this.dialogRef.close(null);
   }
 }

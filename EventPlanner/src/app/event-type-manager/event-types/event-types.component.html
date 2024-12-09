@@ -1,6 +1,6 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Event Types</h2>
-    <button [routerLink]="['/event-types/create']" class="create mx-auto d-block">
+    <button class="create mx-auto d-block" (click)="openCreateModal()">
         <mat-icon class="custom-add-icon"></mat-icon>
     </button>
     
@@ -9,10 +9,10 @@
             <div *ngFor="let eventType of eventTypes" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
                 <mat-card class="card shadow">
                     <div class="event-type-settings">
-                        <button class="edit" (click)="edit($event, eventType._id)">
+                        <button class="edit" (click)="openEditModal(eventType)">
                             <mat-icon class="custom-edit-icon"></mat-icon>
                         </button>
-                        <button class="delete" (click)="deactivate($event, eventType._id)">
+                        <button class="delete" (click)="deactivate($event, eventType.id)">
                             <mat-icon class="custom-delete-icon"></mat-icon>
                         </button>
                     </div>

@@ -1,45 +1,28 @@
 import { Injectable } from '@angular/core';
 import { EventType } from '../models/event-type.model';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventTypeService {
-  constructor() { }
-
-  private eventTypes: EventType[] = [
-    {
-      _id: 1,
-      name: 'Wedding',
-      description: 'Events for wedding ceremonies.',
-      categories: ['Photography', 'Catering']
-    },
-    {
-      _id: 2,
-      name: 'Concert',
-      description: 'Music and entertainment events.',
-      categories: ['Sound System', 'Venue', 'Lightning']
-    },
-    {
-      _id: 3,
-      name: 'Conference',
-      description: 'Corporate and business conferences.',
-      categories: ['Catering', 'Venue']
-    }
-  ]
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<EventType[]> {
-    return of(this.eventTypes);
+    return this.http.get<EventType[]>(environment.apiHost + '/api/event-types');
+  }
+
+  create(eventType: EventType): Observable<EventType> {
+    return this.http.post<EventType>(environment.apiHost + '/api/event-types/create', eventType);
+  }
+
+  update(eventType: EventType, id: number): Observable<EventType> {
+    return this.http.put<EventType>(environment.apiHost + '/api/event-types/edit/' + id, eventType);
   }
   
   delete(id: number) {
-
-  }
-
-  getById(id: number): Observable<EventType | undefined> {
-    const eventType = this.eventTypes.find((eventType) => eventType._id === id);
-    console.log('uslo')
-    return of(eventType);
+    return this.http.delete<void>(environment.apiHost + '/api/event-types/delete/' + id);
   }
 }
