@@ -1,0 +1,30 @@
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Event Types</h2>
+    <button class="create mx-auto d-block" (click)="openCreateModal()">
+        <mat-icon class="custom-add-icon"></mat-icon>
+    </button>
+    
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div *ngFor="let eventType of eventTypes" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
+                <mat-card class="card shadow">
+                    <div class="event-type-settings">
+                        <button class="edit" (click)="openEditModal(eventType)">
+                            <mat-icon class="custom-edit-icon"></mat-icon>
+                        </button>
+                        <button class="delete" (click)="deactivate($event, eventType.id)">
+                            <mat-icon class="custom-delete-icon"></mat-icon>
+                        </button>
+                    </div>
+                    <mat-card-header>
+                        <mat-card-title class="bold-font">{{ eventType.name }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="margin-top">
+                        <span>{{ eventType.description }}</span><br/>
+                        <span><b class="medium-font">Categories:</b> {{ (eventType.categories ?? []).join(', ') }}</span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
