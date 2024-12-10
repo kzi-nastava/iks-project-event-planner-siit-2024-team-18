@@ -7,11 +7,17 @@ import { RouterModule } from '@angular/router';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
 import { InvitedEventsComponent } from './invited-events/invited-events.component';
 import { CardsModule } from '../cards/cards.module';
+import { CreateEventComponent } from './create-event/create-event.component';
+import { EditEventComponent } from './edit-event/edit-event.component';
+import { EventsComponent } from './events/events.component';
 
 @NgModule({
   declarations: [
     InviteScreenComponent,
     InvitedEventsComponent,
+    CreateEventComponent,
+    EditEventComponent,
+    EventsComponent,
   ],
   imports: [
     CommonModule,
@@ -23,7 +29,7 @@ import { CardsModule } from '../cards/cards.module';
   ],
   exports: [
     InviteScreenComponent,
-    InvitedEventsComponent
+    InvitedEventsComponent,
   ],
 })
 export class EventManagerModule {}

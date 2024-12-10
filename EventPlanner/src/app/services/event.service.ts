@@ -6,6 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { EventCard } from '../models/event-card.model';
 import { PagedResponse } from '../shared/model/paged-response.model';
+import { CreateEvent } from '../models/create-event.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,33 @@ import { PagedResponse } from '../shared/model/paged-response.model';
 export class EventService {
 
   private allEvents: Event[] = [
+    {
+      _id: 1,
+      eventType: 'Wedding',
+      name: 'John and Jane\'s Wedding',
+      description: 'A beautiful outdoor wedding ceremony.',
+      maxParticipants: 100,
+      privacyType: 'Public',
+      location: 'Central Park, NYC',
+      date: new Date('2024-12-20'),
+      time: '16:00',
+      images: ['https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg', 'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg']
+    },
+    {
+      _id: 2,
+      eventType: 'Conference',
+      name: 'Tech Conference 2024',
+      description: 'Annual technology conference for developers and entrepreneurs.',
+      maxParticipants: 500,
+      privacyType: 'Private',
+      location: 'Tech Hub Center, SF',
+      date: new Date('2024-12-15'),
+      time: '09:00',
+      images: ['https://static.vecteezy.com/system/resources/thumbnails/009/273/280/small/concept-of-loneliness-and-disappointment-in-love-sad-man-sitting-element-of-the-picture-is-decorated-by-nasa-free-photo.jpg', 'https://tinypng.com/images/social/website.jpg']
+    }
+  ];
+
+  private events: CreateEvent[] = [
     {
       _id: 1,
       eventType: 'Wedding',
@@ -124,5 +152,14 @@ export class EventService {
 
   getEventById(eventId: number): Observable<Event> {
     return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId)
+  }
+
+  getById(id: number): Observable<CreateEvent | undefined> {
+    const event = this.events.find(event => event._id === id);
+    return of(event);
+  }
+
+  delete(id: number) {
+
   }
 }
