@@ -13,9 +13,11 @@ import { CreateEvent } from '../models/create-event.model';
 })
 export class EventService {
 
+  private eventCards: EventCard[] = [];
+
   private allEvents: Event[] = [
     {
-      _id: 1,
+      id: 1,
       eventType: 'Wedding',
       name: 'John and Jane\'s Wedding',
       description: 'A beautiful outdoor wedding ceremony.',
@@ -27,7 +29,7 @@ export class EventService {
       images: ['https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg', 'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg']
     },
     {
-      _id: 2,
+      id: 2,
       eventType: 'Conference',
       name: 'Tech Conference 2024',
       description: 'Annual technology conference for developers and entrepreneurs.',
@@ -137,8 +139,12 @@ export class EventService {
     return this.httpClient.get<PagedResponse<EventCard>>(`${environment.apiHost}/api/events`, { params });
   }
 
+  getAllCards(): Observable<EventCard[]>{
+    return of(this.eventCards);
+  }
+
   getInvitedEvents(): Observable<Event[]> {
-    const invitedEvents = this.allEvents.filter(event => this.invitedEventIds.includes(event._id));
+    const invitedEvents = this.allEvents.filter(event => this.invitedEventIds.includes(event.id));
     return of(invitedEvents);
   }
 
@@ -151,7 +157,11 @@ export class EventService {
   }
 
   getEventById(eventId: number): Observable<Event> {
-    return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId)
+    return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId);
+  }
+
+  getEventsByOrganizerId(organizerId: number): Observable<Event[]> {
+    return this.httpClient.get<Event[]>(`${environment.apiHost}/api/events/by-organizer/${organizerId}`);
   }
 
   getById(id: number): Observable<CreateEvent | undefined> {

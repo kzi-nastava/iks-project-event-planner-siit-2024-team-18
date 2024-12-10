@@ -16,9 +16,9 @@
                             <mat-icon class="custom-delete-icon"></mat-icon>
                         </button>
                     </div>
-                    <img mat-card-image class="mat-card-image" [src]="event.image[0]" alt="Event image" />
+                    <img mat-card-image class="mat-card-image" [src]="event.cardImage" alt="Event image" />
                     <mat-card-header>
-                        <mat-card-title class="bold-font">{{ event.title }}</mat-card-title>
+                        <mat-card-title class="bold-font">{{ event.name }}</mat-card-title>
                     </mat-card-header>
                     <mat-card-content class="margin-top">
                         <span>{{ event.description }}</span><br/>

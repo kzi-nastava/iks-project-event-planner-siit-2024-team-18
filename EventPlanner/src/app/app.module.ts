@@ -50,7 +50,6 @@ import { BudgetManagerModule } from './budget-manager/budget-manager.module';
     },
     provideClientHydration(),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]

@@ -4,6 +4,7 @@ import { EventService } from '../../services/event.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
+import { EventCard } from '../../models/event-card.model';
 
 @Component({
   selector: 'app-events',
@@ -11,7 +12,7 @@ import { DeleteFormComponent } from '../../shared/delete-form/delete-form.compon
   styleUrl: './events.component.css'
 })
 export class EventsComponent {
-  events: Event[] = [];
+  events: EventCard[] = [];
 
   constructor(
     private eventService: EventService,
@@ -20,7 +21,7 @@ export class EventsComponent {
   ) {}
 
   ngOnInit(): void {
-    this.eventService.getAllEvents().subscribe((data: Event[]) => {
+    this.eventService.getAllCards().subscribe((data: EventCard[]) => {
       this.events = data;
     });
   }

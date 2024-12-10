@@ -1,120 +1,167 @@
 .service-reservation-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: #f5f5f5;
-    font-family: 'Raleway', sans-serif;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+  font-family: 'Raleway', sans-serif;
+}
+
+.reservation-container {
+  width: 90%;
+  max-width: 400px;
+  background: linear-gradient(55deg, rgb(137, 132, 213), rgb(44, 62, 80)); 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  color: #ebebeb;
+}
+
+.reservation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.reservation-header h2 {
+  font-family: 'Merriweather', serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.logo img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #ebebeb;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1.1);
+}
+
+.reservation-body {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.event-select,
+.date-picker,
+.time-picker {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #ebebeb;
+  color: #3f3f3f;
+  font-family: 'Raleway', sans-serif;
+}
+
+.date-time-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.book-btn {
+  background: #a29bfe;
+  color: #ebebeb;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.book-btn:hover {
+  background: #7a7df0;
+}
+
+.chat-link {
+  text-decoration: none;
+  color: #a29bfe;
+  text-align: center;
+  margin-top: 10px;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.chat-link:hover {
+  text-decoration: underline;
+  color: #7a7df0;
+}
+
+.current-reservations {
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.current-reservations h3 {
+  margin-bottom: 10px;
+  font-family: 'Merriweather', serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.current-reservations ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.current-reservations li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.current-reservations li:last-child {
+  margin-bottom: 0;
+}
+
+.reservation-date,
+.reservation-time {
+  font-size: 0.9rem;
+  color: #ebebeb;
+}
+
+@media (max-width: 600px) {
   .reservation-container {
-    width: 90%;
-    max-width: 400px;
-    background: #2c3e50;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    color: #ebebeb;
+    width: 95%;
+    padding: 15px;
   }
-  
-  .reservation-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
+
   .reservation-header h2 {
-    font-family: 'Merriweather', serif;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0;
+    font-size: 1.2rem;
   }
-  
-  .logo img {
-    width: 30px;
-    height: 30px;
-    object-fit: cover;
-  }
-  
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #ebebeb;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .close-btn:hover {
-    transform: scale(1.1);
-  }
-  
-  .reservation-body {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 15px;
-  }
-  
-  .event-select,
-  .date-picker,
-  .time-picker {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background: #ebebeb;
-    color: #3f3f3f;
-    font-family: 'Raleway', sans-serif;
-  }
-  
-  .date-time-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .book-btn {
-    background: #a29bfe;
-    color: #ebebeb;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
+
+  .current-reservations h3 {
     font-size: 1rem;
+  }
+
+  .current-reservations li {
+    flex-direction: column;
     text-align: center;
   }
-  
-  .book-btn:hover {
-    background: #7a7df0;
-  }
-  
-  .chat-link {
-    text-decoration: none;
-    color: #a29bfe;
-    text-align: center;
-    margin-top: 10px;
-    display: block;
-    font-size: 0.9rem;
-  }
-  
-  .chat-link:hover {
-    text-decoration: underline;
-    color: #7a7df0;;
-  }
-  
-  @media (max-width: 600px) {
-    .reservation-container {
-      width: 95%;
-      padding: 15px;
-    }
-  
-    .reservation-header h2 {
-      font-size: 1.2rem;
-    }
-  }
-  
+}
