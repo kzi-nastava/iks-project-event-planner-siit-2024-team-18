@@ -23,6 +23,8 @@ export class SolutionService {
       keyword?: string;
       city?: string;
       isProductOnly?: boolean;
+      startDate?: string;
+      endDate?: string;
       name?: string;
       description?: string;
       price?: number;
@@ -46,6 +48,12 @@ export class SolutionService {
     }
     if (filters?.isProductOnly !== undefined) {
       params = params.set('isProductOnly', filters.isProductOnly.toString());
+    }
+    if (filters?.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+    if (filters?.endDate) {
+      params = params.set('endDate', filters.endDate);
     }
     if (filters?.name) {
       params = params.set('name', filters.name);

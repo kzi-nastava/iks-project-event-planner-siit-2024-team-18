@@ -48,7 +48,6 @@ import { Interceptor } from './auth/interceptor';
     },
     provideClientHydration(),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
