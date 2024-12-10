@@ -9,7 +9,7 @@
   .invite-container {
     width: 90%;
     max-width: 400px;
-    background: #2c3e50;
+    background: linear-gradient(55deg, rgb(137, 132, 213), rgb(44, 62, 80)); 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     display: flex;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SolutionCard } from '../models/solution-card.model';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -31,6 +31,8 @@ export class SolutionService {
       keyword?: string;
       city?: string;
       isProductOnly?: boolean;
+      startDate?: string;
+      endDate?: string;
       name?: string;
       description?: string;
       price?: number;
@@ -54,6 +56,12 @@ export class SolutionService {
     }
     if (filters?.isProductOnly !== undefined) {
       params = params.set('isProductOnly', filters.isProductOnly.toString());
+    }
+    if (filters?.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+    if (filters?.endDate) {
+      params = params.set('endDate', filters.endDate);
     }
     if (filters?.name) {
       params = params.set('name', filters.name);

@@ -50,7 +50,6 @@ import { DetailsModule } from './details/details.module';
     },
     provideClientHydration(),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]

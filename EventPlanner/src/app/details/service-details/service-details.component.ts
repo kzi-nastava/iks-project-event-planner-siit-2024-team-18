@@ -88,4 +88,12 @@ export class ServiceDetailsComponent implements OnInit {
   toggleFavorite(): void {
     this.isFavorite = !this.isFavorite;
   }
+
+  bookService(serviceId: number): void {
+    if (serviceId) {
+      this.router.navigate([`/service/${serviceId}/reserve`]);
+    } else {
+      console.error('Service ID is not available');
+    }
+  }
 }
