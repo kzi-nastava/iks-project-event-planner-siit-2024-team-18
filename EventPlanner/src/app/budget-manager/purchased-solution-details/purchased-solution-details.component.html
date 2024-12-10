@@ -1,0 +1,21 @@
+<div class="container mt-4">
+  <div class="title">
+      <h2>{{ event?.name }}</h2>
+  </div>
+
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div *ngFor="let solution of solutions" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
+        <mat-card class="card shadow" (click)="details(solution.id)">
+          <mat-card-header>
+            <mat-card-title class="bold-font">{{ solution.name }} - {{ solution.price }} $</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="margin-top">
+            <span>{{ solution.description }}</span><br/>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
+  

@@ -4,7 +4,6 @@
       <h3>Total Budget: <span class="highlight">{{ totalBudget }} $</span></h3>
   </div>
 
-    <!-- Event Type & Category Selection -->
     <div class="input-data">
         <form [formGroup]="budgetForm" style="display: flex; gap: 1em;">
           <mat-form-field appearance="fill">
@@ -24,21 +23,20 @@
         </mat-form-field>
         </form>
     
+        <button class="create" [routerLink]="['/budget-planning/details']">
+          <mat-icon class="custom-info-icon"></mat-icon>
+        </button>
         <button class="create" (click)="addItem()"> 
             <mat-icon class="custom-add-icon"></mat-icon>
         </button>
     </div>
   
-    <!-- Budget Item List (Scrollable) -->
     <div class="item-list-container">
       <mat-list>
         <mat-list-item *ngFor="let item of budgetItems">
           <div class="item">
             <span>{{ item.categoryName }} - {{ item.maxAmount }} $</span>
             <div class="item-buttons">
-              <button class="info" (click)="showItemDetails()">
-                <mat-icon class="custom-info-icon"></mat-icon>
-              </button>
               <button class="edit" (click)="editItem(item)">
                 <mat-icon class="custom-edit-icon"></mat-icon>
               </button>

@@ -1,0 +1,32 @@
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+}
+
+.container {
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card {
+  width: 100%;
+  border-radius: 0.625rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  cursor: pointer;
+}
+
+.margin-top {
+  margin-top: 1.25rem;
+}
+
+.bold-font {
+  font-weight: 600;
+}

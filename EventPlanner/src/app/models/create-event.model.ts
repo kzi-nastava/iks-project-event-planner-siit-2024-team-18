@@ -1,5 +1,5 @@
 export interface CreateEvent {
-    _id: number,
+    id: number,
     eventType: string,
     name: string,
     description: string,

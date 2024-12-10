@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SolutionCard } from '../models/solution-card.model';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -16,6 +16,14 @@ export class SolutionService {
   getTopFiveSolutions(city: string): Observable<SolutionCard[]> {
     let params = new HttpParams().set('city', city);
     return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/solutions/top-solutions', { params });
+  }
+
+  getSolutions(eventId: number): Observable<SolutionCard[]> {
+    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/budget/details/' + eventId);
+  }
+
+  isProduct(solutionId: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(environment.apiHost + '/api/solutions/isProduct/' + solutionId);
   }
 
   getAllSolutions(
