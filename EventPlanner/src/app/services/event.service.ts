@@ -13,6 +13,8 @@ import { CreateEvent } from '../models/create-event.model';
 })
 export class EventService {
 
+  private eventCards: EventCard[] = [];
+
   private allEvents: Event[] = [
     {
       id: 1,
@@ -135,6 +137,10 @@ export class EventService {
       params = params.set('size', filters.pageSize.toString());
     }
     return this.httpClient.get<PagedResponse<EventCard>>(`${environment.apiHost}/api/events`, { params });
+  }
+
+  getAllCards(): Observable<EventCard[]>{
+    return of(this.eventCards);
   }
 
   getInvitedEvents(): Observable<Event[]> {
