@@ -48,6 +48,10 @@ export class EventService {
     return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/events/top-events', { params });
   }
 
+  getEvents(): Observable<Event[]> {
+    return this.httpClient.get<Event[]>(environment.apiHost + '/api/events/events-all');
+  }
+
   getAllEvents(
     filters?: {
       keyword?: string;

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductManagerService } from '../../services/product-manager.service';
 import { Product } from '../../models/product.model';  // Use Product model
+import { MatDialog } from '@angular/material/dialog';
+import { PurchaseProductDialogComponent } from '../purchase-product-dialog/purchase-product-dialog.component';
 
 @Component({
   selector: 'app-product-details',
@@ -19,8 +21,9 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductManagerService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private dialog: MatDialog,
+) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -31,6 +34,24 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['']);
       }
     });
+  }
+
+  openBuyProductDialog(): void {
+    if (this.product) {
+      const dialogRef = this.dialog.open(PurchaseProductDialogComponent, {
+        width: '40em',
+        data: { productName: this.product.name }
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          console.log(`Product purchased for event: ${result}`);
+          // Handle the purchase logic here
+        } else {
+          console.log('Purchase canceled');
+        }
+      });
+    }
   }
 
   prevImage(): void {

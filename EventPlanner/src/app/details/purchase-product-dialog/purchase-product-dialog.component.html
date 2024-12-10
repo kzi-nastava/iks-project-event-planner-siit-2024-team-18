@@ -1,0 +1,24 @@
+<div class="container">
+    <h2 mat-dialog-title>Purchase Product: {{ data.productName }}</h2>
+  
+    <div mat-dialog-content>
+      <p>Select an event for this product:</p>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Event</mat-label>
+        <mat-select [formControl]="eventControl">
+          <mat-option *ngFor="let event of events" [value]="event.name">{{ event.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="eventControl.hasError('required')">Please select an event.</mat-error>
+      </mat-form-field>
+    </div>
+  
+    <div mat-dialog-actions class="modal-actions">
+      <button mat-raised-button color="warn" type="button" (click)="onCancel()">
+        <mat-icon>cancel</mat-icon> Cancel
+      </button>
+      <button mat-raised-button color="primary" type="button" (click)="onBuy()">
+        <mat-icon>shopping_cart</mat-icon> Buy Product
+      </button>
+    </div>
+  </div>
+  
