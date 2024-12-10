@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductManagerService } from '../../services/product-manager.service';
-import { Product } from '../../models/product.model';  // Use Product model
+import { Product } from '../../models/product.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PurchaseProductDialogComponent } from '../purchase-product-dialog/purchase-product-dialog.component';
+import { BudgetService } from './../../services/budget.service';
 
 @Component({
   selector: 'app-product-details',
@@ -12,7 +13,7 @@ import { PurchaseProductDialogComponent } from '../purchase-product-dialog/purch
 })
 export class ProductDetailsComponent implements OnInit {
   productId!: number;
-  product: Product | null = null;
+  product!: Product;
   currentImageIndex: number = 0; 
   isFavorite: boolean = false; 
   currentIndex: number = 0;
@@ -21,6 +22,7 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductManagerService,
+    private budgetService: BudgetService,
     private router: Router,
     private dialog: MatDialog,
 ) {}
@@ -45,8 +47,14 @@ export class ProductDetailsComponent implements OnInit {
   
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
-          console.log(`Product purchased for event: ${result}`);
-          // Handle the purchase logic here
+          this.budgetService.buyProduct(this.product, result).subscribe({
+            next(value) {
+                
+            },
+            error(err) {
+              console.error('Failed to do something:', err);
+            },
+          })
         } else {
           console.log('Purchase canceled');
         }

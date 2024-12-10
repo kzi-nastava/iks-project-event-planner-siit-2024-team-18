@@ -11,7 +11,7 @@ import { PurchaseProductDialogComponent } from './purchase-product-dialog/purcha
     EventDetailsComponent,
     ServiceDetailsComponent,
     ProductDetailsComponent,
-    PurchaseProductDialogComponent
+    PurchaseProductDialogComponent,
   ],
   imports: [
     CommonModule,

@@ -1,7 +1,6 @@
 <div class="modal-container">
   <h2>Create Category</h2>
   <form (ngSubmit)="onSave()">
-    <!-- Category Name -->
     <mat-form-field appearance="fill">
       <mat-label>Category Name</mat-label>
       <input 
@@ -14,7 +13,6 @@
       <mat-error *ngIf="!newCategory.name">Category Name is required</mat-error>
     </mat-form-field>
 
-    <!-- Description -->
     <mat-form-field appearance="fill">
       <mat-label>Description</mat-label>
       <textarea 

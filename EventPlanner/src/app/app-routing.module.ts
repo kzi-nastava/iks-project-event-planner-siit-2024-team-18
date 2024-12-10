@@ -17,6 +17,7 @@ import { EventTypesComponent } from './event-type-manager/event-types/event-type
 import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
 import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
 import { AuthGuard } from './auth/auth.guard';
+import { PurchasedSolutionDetailsComponent } from './budget-manager/purchased-solution-details/purchased-solution-details.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -26,10 +27,11 @@ const routes: Routes = [
   { path: 'product/:id', component: ProductDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
-  { path: 'budget-planning', component: BudgetPlanningComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']}},
-  { path: 'services', component: ServicesComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']}},
-  { path: 'service/create', component: CreateServiceComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']} },
-  { path: 'service/edit/:id', component: EditServiceComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']} },
+  { path: 'budget-planning', component: BudgetPlanningComponent, canActivate: [AuthGuard], data: {role: ['ADMIN', 'EVENT_ORGANIZER']}},
+  { path: 'budget-planning/details', component: PurchasedSolutionDetailsComponent, canActivate: [AuthGuard], data: {role: ['ADMIN', 'EVENT_ORGANIZER']}},
+  { path: 'services', component: ServicesComponent, canActivate: [AuthGuard], data: {role: ['ADMIN', 'SERVICE_PRODUCT_PROVIDER']}},
+  { path: 'service/create', component: CreateServiceComponent, canActivate: [AuthGuard], data: {role: ['ADMIN', 'SERVICE_PRODUCT_PROVIDER']} },
+  { path: 'service/edit/:id', component: EditServiceComponent, canActivate: [AuthGuard], data: {role: ['ADMIN', 'SERVICE_PRODUCT_PROVIDER']} },
   { path: 'service/:id', component: ServiceDetailsComponent },
   { path: 'service/:id/reserve', component: ServiceReservationComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']} },
   { path: 'event-types', component: EventTypesComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },

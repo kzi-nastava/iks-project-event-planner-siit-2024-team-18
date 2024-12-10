@@ -18,6 +18,14 @@ export class SolutionService {
     return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/solutions/top-solutions', { params });
   }
 
+  getSolutions(eventId: number): Observable<SolutionCard[]> {
+    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/budget/details/' + eventId);
+  }
+
+  isProduct(solutionId: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(environment.apiHost + '/api/solutions/isProduct/' + solutionId);
+  }
+
   getAllSolutions(
     filters?: {
       keyword?: string;

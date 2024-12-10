@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../env/environment';
 import { BudgetItem } from '../models/budget-item.model';
+import { Product } from '../models/product.model';
+import { Event } from '../models/event.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +30,9 @@ export class BudgetService {
 
   updateBudgetItem(item: BudgetItem): Observable<void> {
     return this.http.put<void>(`${environment.apiHost}/api/budget/edit/${item.id}`, item);
+  }
+
+  buyProduct(product: Product, event: Event): Observable<void> {
+    return this.http.post<void>(`${environment.apiHost}/api/budget/purchase-product/${product.id}?eventId=${event.id}`, {});
   }
 }

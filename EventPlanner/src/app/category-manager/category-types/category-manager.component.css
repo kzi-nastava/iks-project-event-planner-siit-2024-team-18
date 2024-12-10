@@ -1,58 +1,8 @@
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  overflow-y: auto;
-}
-
 .title {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2em;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 0.625rem;
-  max-width: 500px;
-  width: 100%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.modal-title {
-  font-size: 1.5rem;
-  margin-bottom: 1.25rem;
-  color: #333;
-  text-align: center;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.25rem;
-}
-
-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-mat-form-field {
-  width: 100%;
-}
-
-mat-error {
-  font-size: 0.875rem;
 }
 
 .container {
@@ -79,17 +29,6 @@ mat-error {
 .create:hover {
   background-color: #a29bfe;
   border: 1px solid #000000;
-}
-
-.info {
-  border-radius: 100%;
-  background-color: #e3e3e3c5;
-  border: 0;
-  padding: 0.5em;
-}
-
-.info:hover {
-  background-color: #a29bfebe;
 }
 
 .custom-info-icon {
