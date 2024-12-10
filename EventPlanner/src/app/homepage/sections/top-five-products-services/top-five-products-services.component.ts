@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ServiceManagerService } from '../../../services/service-manager.service';
-import { Service } from '../../../models/service.model';
-import { ProductManagerService } from '../../../services/product-manager.service';
-import { Product } from '../../../models/product.model';
+import { SolutionService } from '../../../services/solution.service';
+import { SolutionCard } from '../../../models/solution-card.model';
 
 @Component({
   selector: 'app-top-five-products-services',
@@ -10,31 +8,25 @@ import { Product } from '../../../models/product.model';
   styleUrls: ['./top-five-products-services.component.css'],
 })
 export class TopFiveProductsServicesComponent implements OnInit {
-  products: Product[] = [];
-  services: Service[] = [];
+  solutions: SolutionCard[] = [];
   currentIndex: number = 0;
   swiperOffset: number = 0;
-  showProducts: boolean = false;
 
-  constructor(
-    private productManager: ProductManagerService,
-    private serviceManager: ServiceManagerService
-  ) {}
+  constructor(private solutionService: SolutionService) {}
 
   ngOnInit(): void {
-    this.fetchProducts();
-    this.fetchServices();
+    this.fetchTopSolutions();
   }
 
-  fetchProducts(): void {
-    this.productManager.getTopFiveProducts().subscribe((data) => {
-      this.products = data;
-    });
-  }
-
-  fetchServices(): void {
-    this.serviceManager.getTopFiveServices().subscribe((data) => {
-      this.services = data;
+  fetchTopSolutions(): void {
+    const cityName = 'Paris';
+    this.solutionService.getTopFiveSolutions(cityName).subscribe({
+      next: (result: SolutionCard[]) => {
+        this.solutions = result;
+      },
+      error: (err) => {
+        console.error('Failed to fetch top solutions:', err);
+      }
     });
   }
 
@@ -42,13 +34,13 @@ export class TopFiveProductsServicesComponent implements OnInit {
     if (this.currentIndex > 0) {
       this.currentIndex--;
     } else {
-      this.currentIndex = this.currentList.length - 1;
+      this.currentIndex = this.solutions.length - 1;
     }
     this.updateSwiperPosition();
   }
 
   nextItem(): void {
-    if (this.currentIndex < this.currentList.length - 1) {
+    if (this.currentIndex < this.solutions.length - 1) {
       this.currentIndex++;
     } else {
       this.currentIndex = 0;
@@ -65,15 +57,7 @@ export class TopFiveProductsServicesComponent implements OnInit {
     this.swiperOffset = -this.currentIndex * 100;
   }
 
-  openDetails(item: Product | Service): void {
-    if (this.showProducts) {
-      this.productManager.openProductDetails((item as Product).id);
-    } else {
-      this.serviceManager.openServiceDetails((item as Service)._id);
-    }
-  }
-
-  get currentList(): (Product | Service)[] {
-    return this.showProducts ? this.products : this.services;
+  openDetails(solution: SolutionCard): void {
+    this.solutionService.openSolutionDetails(solution);
   }
 }

@@ -1,13 +1,13 @@
 <div class="invited-events-container">
     <h2 class="section-title">Invited Events</h2>
   
-    <div *ngIf="events.length > 0 && !loading" class="events-grid">
+    <!-- <div *ngIf="events.length > 0 && !loading" class="events-grid">
       <app-event-card
         *ngFor="let event of paginatedEvents"
         [event]="event"
         (cardClick)="openEventDetails($event)"
       ></app-event-card>
-    </div>
+    </div> -->
   
     <div *ngIf="!events?.length && !loading" class="no-events">
       <p>No invited events available at the moment.</p>

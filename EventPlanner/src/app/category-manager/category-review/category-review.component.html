@@ -1,0 +1,20 @@
+<div class="requests">
+  <div class="header-container">
+    <h3>Review Suggested Categories</h3>
+  </div>
+
+  <div class="item-list-container">
+    <mat-list>
+      <mat-card *ngFor="let suggestion of reviewCategories" (click)="editSuggestion(suggestion)">
+        <div class="name-description">
+          <h6>{{ suggestion.name }}</h6>
+          <p>{{ suggestion.description }}</p>
+        </div>
+        <div class="options item">
+          <button class="delete" (click)="deleteSuggestion($event, suggestion.id)">Delete</button>
+          <button class="approve" (click)="approveSuggestion($event, suggestion, suggestion.id)">Approve</button>
+        </div>
+      </mat-card>
+    </mat-list>
+  </div>
+</div>

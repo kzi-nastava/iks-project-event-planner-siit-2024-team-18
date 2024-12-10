@@ -1,0 +1,36 @@
+<div class="modal-container">
+  <h2>Create Category</h2>
+  <form (ngSubmit)="onSave()">
+    <!-- Category Name -->
+    <mat-form-field appearance="fill">
+      <mat-label>Category Name</mat-label>
+      <input 
+        matInput 
+        [(ngModel)]="newCategory.name" 
+        name="newCategoryName" 
+        required 
+        placeholder="Enter category name" 
+      />
+      <mat-error *ngIf="!newCategory.name">Category Name is required</mat-error>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea 
+        matInput 
+        [(ngModel)]="newCategory.description" 
+        name="newCategoryDescription" 
+        required 
+        placeholder="Enter description"
+        rows="3">
+      </textarea>
+      <mat-error *ngIf="!newCategory.description">Description is required</mat-error>
+    </mat-form-field>
+
+    <div class="modal-actions">
+      <button mat-raised-button color="warn" type="button" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Create</button>
+    </div>
+  </form>
+</div>

@@ -9,10 +9,10 @@
 		</div>
 
 		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Title</mat-label>
-			<input matInput type="text" formControlName="title" />
-			<mat-error *ngIf="editServiceForm.get('title')?.hasError('required')">
-				Title is required
+			<mat-label>Name</mat-label>
+			<input matInput type="text" formControlName="name" />
+			<mat-error *ngIf="editServiceForm.get('name')?.hasError('required')">
+				Name is required
 			</mat-error>
 		</mat-form-field>
 
@@ -51,53 +51,48 @@
 			</mat-error>
 		</mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field half-width">
+		<mat-form-field appearance="fill" class="form-field full-width">
 			<mat-label>Event Type</mat-label>
-			<input
-				type="text"
-				matInput
-				formControlName="eventType"
-				[matAutocomplete]="eventTypeAuto"
-				(input)="filterEventTypes($event)"
-			/>
-			<mat-autocomplete #eventTypeAuto="matAutocomplete">
-				<mat-option *ngFor="let option of filteredEventTypes" [value]="option">
-					{{ option }}
-				</mat-option>
-			</mat-autocomplete>
-			<mat-error *ngIf="editServiceForm.get('eventType')?.hasError('required')">
-				Event Type is required
+			<mat-select formControlName="eventTypes" multiple>
+			  <mat-option *ngFor="let option of eventTypes" [value]="option">
+				{{ option }}
+			  </mat-option>
+			</mat-select>
+			<mat-error *ngIf="editServiceForm.get('eventTypes')?.hasError('required')">
+			  Event Type is required
 			</mat-error>
 		</mat-form-field>
-		
+	
 		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Reservation Time</mat-label>
-			<input matInput [ngxMatTimepicker]="timePicker" formControlName="reservationTime" />
-			<ngx-mat-timepicker-toggle matSuffix [for]="timePicker"></ngx-mat-timepicker-toggle>
-			<ngx-mat-timepicker #timePicker></ngx-mat-timepicker>
-			<mat-error *ngIf="editServiceForm.get('reservationTime')?.hasError('required')">
-				Reservation Time is required
-			</mat-error>
-		</mat-form-field>
-
-		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Reservation Date</mat-label>
-			<input matInput [matDatepicker]="reservationPicker" formControlName="reservationDate" />
-			<mat-datepicker-toggle matSuffix [for]="reservationPicker"></mat-datepicker-toggle>
-			<mat-datepicker #reservationPicker></mat-datepicker>
-			<mat-error *ngIf="editServiceForm.get('reservationDate')?.hasError('required')">
-				Reservation Date is required
-			</mat-error>
+		<mat-label>Reservation Deadline (Days)</mat-label>
+		<input 
+			matInput 
+			type="number" 
+			formControlName="reservationDeadline" 
+			min="1"
+			placeholder="Enter number of days" />
+		<mat-error *ngIf="editServiceForm.get('reservationDeadline')?.hasError('required')">
+			Reservation Deadline is required
+		</mat-error>
+		<mat-error *ngIf="editServiceForm.get('reservationDeadline')?.hasError('min')">
+			Reservation Deadline must be at least 1 day.
+		</mat-error>
 		</mat-form-field>
 
 		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Cantellation Date</mat-label>
-			<input matInput [matDatepicker]="cancellationPicker" formControlName="cancellationDate" />
-			<mat-datepicker-toggle matSuffix [for]="cancellationPicker"></mat-datepicker-toggle>
-			<mat-datepicker #cancellationPicker></mat-datepicker>
-			<mat-error *ngIf="editServiceForm.get('cancellationDate')?.hasError('required')">
-				Cancellation Date is required
-			</mat-error>
+		<mat-label>Cancellation Deadline (Days)</mat-label>
+		<input 
+			matInput 
+			type="number" 
+			formControlName="cancellationDeadline" 
+			min="1"
+			placeholder="Enter number of days" />
+		<mat-error *ngIf="editServiceForm.get('cancellationDeadline')?.hasError('required')">
+			Cancellation Deadline is required
+		</mat-error>
+		<mat-error *ngIf="editServiceForm.get('cancellationDeadline')?.hasError('min')">
+			Cancellation Deadline must be at least 1 day.
+		</mat-error>
 		</mat-form-field>
 
 		<mat-form-field appearance="fill" class="form-field half-width">
@@ -119,7 +114,7 @@
 					<mat-icon>add_photo_alternate</mat-icon>
 				</label>
 				<input
-					formControlName="selectedImages"
+					formControlName="images"
 					type="file"
 					id="imageUpload"
 					(change)="onFileSelected($event)"
@@ -127,13 +122,13 @@
 					hidden
 				/>
 				<p>Upload Images</p>
-				<mat-error *ngIf="editServiceForm.get('selectedImages')?.hasError('minImages')">
+				<mat-error *ngIf="editServiceForm.get('images')?.hasError('minImages')">
 					At least one image is required.
 				</mat-error>
 			</div>
 
-			<div class="image-preview" *ngIf="selectedImages.length > 0">
-				<div *ngFor="let image of selectedImages; let i = index" class="image-container">
+			<div class="image-preview" *ngIf="images.length > 0">
+				<div *ngFor="let image of images; let i = index" class="image-container">
 					<img [src]="image" alt="Preview" />
 					<button type="button" class="remove-button" (click)="removeImage(i)">
 						<mat-icon>close</mat-icon>
@@ -144,31 +139,31 @@
 
 		<div class="form-field full-width sliders">
 			<div class="slider-container">
-				<span class="pe-2">Duration (In minutes):</span>
-				<mat-slider min="15" max="180" step="15" tickInterval="15" discrete>
-					<input matSliderThumb formControlName="duration"/>
-				</mat-slider>
+			  <span class="pe-2">Duration (In minutes):</span>
+			  <mat-slider min="15" max="120" step="15" tickInterval="15" discrete>
+				<input matSliderThumb formControlName="duration" [value]="editServiceForm.get('duration')?.value"/>
+			  </mat-slider>
 			</div>
 			<span>OR</span>
 			<div class="slider-container">
-				<span class="pe-2">Min. Max. Engagement (In hours):</span>
-				<mat-slider min="1" max="5" step="1" tickInterval="1" discrete>
-					<input matSliderStartThumb value="1" formControlName="engagement"/>
-					<input matSliderEndThumb value="2" formControlName="engagement"/>
-				</mat-slider>
+			  <span class="pe-2">Min. Max. Engagement (In hours):</span>
+			  <mat-slider min="1" max="5" step="1" tickInterval="1" discrete>
+				<input matSliderStartThumb value="1" formControlName="minEngagement"/>
+				<input matSliderEndThumb value="2" formControlName="maxEngagement"/>
+			  </mat-slider>
 			</div>
-		</div>
+		  </div>
 
 		<div class="checkbox-stuff full-width form-field">
 			<div class="checkboxes">
 				<mat-checkbox formControlName="isVisible">Visible</mat-checkbox>
-				<mat-checkbox formControlName="isPublic">Public</mat-checkbox>
+				<mat-checkbox formControlName="isAvailable">Available</mat-checkbox>
 			</div>
 
 			<mat-radio-group formControlName="reservationType" class="form-buttons">
 				<span>Reservation Type:</span>
-				<mat-radio-button value="auto">Auto</mat-radio-button>
-				<mat-radio-button value="manual">Manual</mat-radio-button>
+				<mat-radio-button value="AUTOMATIC">Auto</mat-radio-button>
+				<mat-radio-button value="MANUAL">Manual</mat-radio-button>
 			</mat-radio-group>
 		</div>
 
