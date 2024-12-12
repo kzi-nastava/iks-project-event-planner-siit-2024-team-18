@@ -19,8 +19,7 @@ export class TopFiveProductsServicesComponent implements OnInit {
   }
 
   fetchTopSolutions(): void {
-    const cityName = 'Paris';
-    this.solutionService.getTopFiveSolutions(cityName).subscribe({
+    this.solutionService.getTopFiveSolutions().subscribe({
       next: (result: SolutionCard[]) => {
         this.solutions = result;
       },

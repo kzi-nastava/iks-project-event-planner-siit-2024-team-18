@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../services/event.service';
 import { ReservationService } from '../../services/reservation.service';
 import { ServiceManagerService } from '../../services/service-manager.service';
-import { Event } from '../../models/event.model';
 import { Reservation } from '../../models/reservation.model';
-import { Service } from '../../models/service.model'; // Import Service model
+import { Service } from '../../models/service.model';
+import { EventCard } from '../../models/event-card.model';
 
 @Component({
   selector: 'app-service-reservation',
@@ -14,11 +14,11 @@ import { Service } from '../../models/service.model'; // Import Service model
 })
 export class ServiceReservationComponent implements OnInit {
   serviceId!: number;
-  serviceProviderId: number = 5;
+  serviceProvider?: string;
   serviceDuration: number | undefined = undefined;
-  events: Event[] = [];
+  events: EventCard[] = [];
   currentReservations: Reservation[] = [];
-  selectedEvent!: Event;
+  selectedEvent!: EventCard;
 
   reservation = {
     date: '',
@@ -47,6 +47,7 @@ export class ServiceReservationComponent implements OnInit {
     this.serviceManagerService.getServiceById(this.serviceId).subscribe({
       next: (service: Service) => {
         this.serviceDuration = service.duration;
+        this.serviceProvider = service.creator;
       },
       error: () => {
         alert('Failed to fetch service details. Please try again later.');
@@ -55,9 +56,8 @@ export class ServiceReservationComponent implements OnInit {
   }
 
   fetchEventsByOrganizer(): void {
-    const organizerId = 4;
-    this.eventService.getEventsByOrganizerId(organizerId).subscribe({
-      next: (result: Event[]) => {
+    this.eventService.getEventsByOrganizerId().subscribe({
+      next: (result: EventCard[]) => {
         this.events = result;
         this.selectedEvent = this.events[0];
       },
@@ -88,9 +88,7 @@ export class ServiceReservationComponent implements OnInit {
         const calculatedToTime = new Date();
         calculatedToTime.setHours(hours + this.serviceDuration, minutes, 0);
 
-        this.reservation.toTime = calculatedToTime
-          .toISOString()
-          .substring(11, 16);
+        this.reservation.toTime = calculatedToTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         this.isToTimeDisabled = true;
       } else {
         this.isToTimeDisabled = false;

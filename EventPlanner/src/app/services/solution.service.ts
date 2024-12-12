@@ -13,9 +13,8 @@ export class SolutionService {
 
   constructor(private router: Router, private httpClient: HttpClient) {}
 
-  getTopFiveSolutions(city: string): Observable<SolutionCard[]> {
-    let params = new HttpParams().set('city', city);
-    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/solutions/top-solutions', { params });
+  getTopFiveSolutions(): Observable<SolutionCard[]> {
+    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/solutions/top-solutions');
   }
 
   getSolutions(eventId: number): Observable<SolutionCard[]> {
