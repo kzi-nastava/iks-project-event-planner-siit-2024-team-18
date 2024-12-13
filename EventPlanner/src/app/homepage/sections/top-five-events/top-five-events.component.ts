@@ -15,7 +15,7 @@ export class TopFiveEventsComponent implements OnInit {
   constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
-    this.eventService.getTopFiveEvents("Paris").subscribe({
+    this.eventService.getTopFiveEvents().subscribe({
       next: (result: EventCard[]) => {
         this.events = result;
       },

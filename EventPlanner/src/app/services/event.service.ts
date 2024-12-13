@@ -73,9 +73,8 @@ export class EventService {
 
   constructor(private router: Router, private httpClient: HttpClient) {}
 
-  getTopFiveEvents(city: string): Observable<EventCard[]> {
-    let params = new HttpParams().set('city', city);
-    return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/events/top-events', { params });
+  getTopFiveEvents(): Observable<EventCard[]> {
+    return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/events/top-events');
   }
 
   getEvents(): Observable<Event[]> {
@@ -164,8 +163,8 @@ export class EventService {
     return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId);
   }
 
-  getEventsByOrganizerId(organizerId: number): Observable<Event[]> {
-    return this.httpClient.get<Event[]>(`${environment.apiHost}/api/events/by-organizer/${organizerId}`);
+  getEventsByOrganizerId(): Observable<EventCard[]> {
+    return this.httpClient.get<EventCard[]>(`${environment.apiHost}/api/events/events-all`);
   }
 
   getById(id: number): Observable<CreateEvent | undefined> {
