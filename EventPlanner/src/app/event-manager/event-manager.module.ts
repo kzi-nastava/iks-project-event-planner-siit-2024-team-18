@@ -5,7 +5,6 @@ import { SharedModule } from '../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
-import { InvitedEventsComponent } from './invited-events/invited-events.component';
 import { CardsModule } from '../cards/cards.module';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { EditEventComponent } from './edit-event/edit-event.component';
@@ -14,7 +13,6 @@ import { EventsComponent } from './events/events.component';
 @NgModule({
   declarations: [
     InviteScreenComponent,
-    InvitedEventsComponent,
     CreateEventComponent,
     EditEventComponent,
     EventsComponent,
@@ -29,7 +27,6 @@ import { EventsComponent } from './events/events.component';
   ],
   exports: [
     InviteScreenComponent,
-    InvitedEventsComponent,
   ],
 })
 export class EventManagerModule {}
