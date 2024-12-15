@@ -10,6 +10,6 @@ export interface Event {
   country: string,
   latitude: number,
   longitude: number,
-  date: Date,
+  startDate: Date,
   images: string[];
 }

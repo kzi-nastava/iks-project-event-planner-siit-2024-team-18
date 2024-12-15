@@ -41,7 +41,7 @@ export class CreateEventComponent implements OnInit {
         Validators.min(1),
         Validators.pattern('^[0-9]*$')
       ]),
-      privacyType: new FormControl('Public', [Validators.required]),
+      privacyType: new FormControl('PUBLIC', [Validators.required]),
       location: new FormControl('', [Validators.required]),
       date: new FormControl('', [Validators.required, this.futureDateValidator()]),
       time: new FormControl('', [Validators.required]),
@@ -153,7 +153,7 @@ export class CreateEventComponent implements OnInit {
         description: formValues.description,
         maxParticipants: formValues.maxParticipants,
         privacyType: formValues.privacyType,
-        date: selectedDate,
+        startDate: selectedDate,
         images: this.selectedImages,
         eventType: formValues.eventTypes,
         locationName: this.selectedLocationDetails?.name || '',

@@ -87,8 +87,8 @@ export class EditEventComponent implements OnInit {
           maxParticipants: event.maxParticipants,
           privacyType: event.privacyType,
           location: event.locationName,
-          date: event.date,
-          time: this.formatTime(new Date(event.date)),
+          date: event.startDate,
+          time: this.formatTime(new Date(event.startDate)),
         });
       },
       error: (err) => {
@@ -196,7 +196,7 @@ export class EditEventComponent implements OnInit {
         description: formValues.description,
         maxParticipants: formValues.maxParticipants,
         privacyType: formValues.privacyType,
-        date: selectedDate,
+        startDate: selectedDate,
         images: this.selectedImages,
         eventType: formValues.eventTypes,
         locationName: this.selectedLocationDetails?.name || '',
