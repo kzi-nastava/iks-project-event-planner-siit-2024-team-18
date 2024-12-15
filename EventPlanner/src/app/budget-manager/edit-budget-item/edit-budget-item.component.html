@@ -1,17 +1,14 @@
 <div class="modal-content">
   <h2 class="modal-title">Edit Budget Item</h2>
 
-  <!-- Category (Read-Only) -->
   <mat-form-field appearance="fill">
     <mat-label> {{ budgetItem.categoryName }} </mat-label>
     <mat-select disabled></mat-select>
   </mat-form-field>
 
-  <!-- Editable Planned Amount Field -->
-  <form [formGroup]="editForm"> <!-- Add formGroup directive here -->
+  <form [formGroup]="editForm">
     <mat-form-field appearance="fill">
       <mat-label>Max Amount</mat-label>
-      <!-- Use formControlName to bind the input with the form control -->
       <input matInput type="number" placeholder="Enter amount" required formControlName="maxAmount" style="width: 100%;" />
       <mat-error *ngIf="editForm.get('maxAmount')?.invalid && editForm.get('maxAmount')?.touched">
         Max Amount is required and must be a valid number.
@@ -19,7 +16,6 @@
     </mat-form-field>
   </form>
 
-  <!-- Modal Actions -->
   <div class="modal-actions">
     <button mat-raised-button color="warn" type="button" (click)="delete()">
       <mat-icon>delete</mat-icon> Delete

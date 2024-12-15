@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductManagerService } from '../../services/product-manager.service';
-import { Product } from '../../models/product.model';  // Use Product model
+import { Product } from '../../models/product.model';
+import { MatDialog } from '@angular/material/dialog';
+import { PurchaseProductDialogComponent } from '../purchase-product-dialog/purchase-product-dialog.component';
+import { BudgetService } from './../../services/budget.service';
 
 @Component({
   selector: 'app-product-details',
@@ -10,7 +13,7 @@ import { Product } from '../../models/product.model';  // Use Product model
 })
 export class ProductDetailsComponent implements OnInit {
   productId!: number;
-  product: Product | null = null;
+  product!: Product;
   currentImageIndex: number = 0; 
   isFavorite: boolean = false; 
   currentIndex: number = 0;
@@ -19,8 +22,10 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductManagerService,
-    private router: Router
-  ) {}
+    private budgetService: BudgetService,
+    private router: Router,
+    private dialog: MatDialog,
+) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -31,6 +36,30 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['']);
       }
     });
+  }
+
+  openBuyProductDialog(): void {
+    if (this.product) {
+      const dialogRef = this.dialog.open(PurchaseProductDialogComponent, {
+        width: '40em',
+        data: { productName: this.product.name }
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.budgetService.buyProduct(this.product, result).subscribe({
+            next(value) {
+                
+            },
+            error(err) {
+              console.error('Failed to do something:', err);
+            },
+          })
+        } else {
+          console.log('Purchase canceled');
+        }
+      });
+    }
   }
 
   prevImage(): void {

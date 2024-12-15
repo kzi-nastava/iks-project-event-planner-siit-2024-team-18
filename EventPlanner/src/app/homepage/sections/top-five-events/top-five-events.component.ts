@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../../services/event.service';
-import { Event } from '../../../models/event.model';
 import { EventCard } from '../../../models/event-card.model';
 
 @Component({
@@ -16,7 +15,7 @@ export class TopFiveEventsComponent implements OnInit {
   constructor(private eventService: EventService) {}
 
   ngOnInit(): void {
-    this.eventService.getTopFiveEvents("Paris").subscribe({
+    this.eventService.getTopFiveEvents().subscribe({
       next: (result: EventCard[]) => {
         this.events = result;
       },

@@ -12,46 +12,16 @@ import { PagedResponse } from '../shared/model/paged-response.model';
 })
 export class EventService {
 
-  private allEvents: Event[] = [
-    {
-      id: 1,
-      eventType: 'Wedding',
-      name: 'John and Jane\'s Wedding',
-      description: 'A beautiful outdoor wedding ceremony.',
-      maxParticipants: 100,
-      privacyType: 'Public',
-      locationName: 'Central Park',
-      city: 'New York',
-      country: 'USA',
-      latitude: -10.6,
-      longitude: 10.1,
-      date: new Date('2024-12-20'),
-      images: ['https://gratisography.com/wp-content/uploads/2024/10/gratisography-cool-cat-800x525.jpg', 'https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg']
-    },
-    {
-      id: 2,
-      eventType: 'Conference',
-      name: 'Tech Conference 2024',
-      description: 'Annual technology conference for developers and entrepreneurs.',
-      maxParticipants: 500,
-      privacyType: 'Private',
-      locationName: 'Tech Hub Center',
-      city: 'San Francisco',
-      country: 'USA',
-      latitude: -60.6,
-      longitude: 12.1,
-      date: new Date('2024-12-15'),
-      images: ['https://static.vecteezy.com/system/resources/thumbnails/009/273/280/small/concept-of-loneliness-and-disappointment-in-love-sad-man-sitting-element-of-the-picture-is-decorated-by-nasa-free-photo.jpg', 'https://tinypng.com/images/social/website.jpg']
-    }
-  ];
-
-  private invitedEventIds: number[] = [1, 3, 5, 7, 9, 10];
+  private eventCards: EventCard[] = [];
 
   constructor(private router: Router, private httpClient: HttpClient) {}
 
-  getTopFiveEvents(city: string): Observable<EventCard[]> {
-    let params = new HttpParams().set('city', city);
-    return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/events/top-events', { params });
+  getTopFiveEvents(): Observable<EventCard[]> {
+    return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/events/top-events');
+  }
+
+  getEvents(): Observable<Event[]> {
+    return this.httpClient.get<Event[]>(environment.apiHost + '/api/events/events-all');
   }
 
   getAllEvents(
@@ -115,9 +85,8 @@ export class EventService {
     return this.httpClient.get<PagedResponse<EventCard>>(`${environment.apiHost}/api/events`, { params });
   }
 
-  getInvitedEvents(): Observable<Event[]> {
-    const invitedEvents = this.allEvents.filter(event => this.invitedEventIds.includes(event.id));
-    return of(invitedEvents);
+  getAllCards(): Observable<EventCard[]>{
+    return of(this.eventCards);
   }
 
   getAllByCreator(): Observable<EventCard[]> {
@@ -133,7 +102,11 @@ export class EventService {
   }
 
   getEventById(eventId: number): Observable<Event> {
-    return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId)
+    return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId);
+  }
+
+  getEventsByOrganizerId(): Observable<EventCard[]> {
+    return this.httpClient.get<EventCard[]>(`${environment.apiHost}/api/events/events-all`);
   }
 
   create(event: Event): Observable<Event> {

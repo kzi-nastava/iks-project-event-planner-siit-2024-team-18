@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SolutionCard } from '../models/solution-card.model';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -13,9 +13,16 @@ export class SolutionService {
 
   constructor(private router: Router, private httpClient: HttpClient) {}
 
-  getTopFiveSolutions(city: string): Observable<SolutionCard[]> {
-    let params = new HttpParams().set('city', city);
-    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/solutions/top-solutions', { params });
+  getTopFiveSolutions(): Observable<SolutionCard[]> {
+    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/solutions/top-solutions');
+  }
+
+  getSolutions(eventId: number): Observable<SolutionCard[]> {
+    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/budget/details/' + eventId);
+  }
+
+  isProduct(solutionId: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(environment.apiHost + '/api/solutions/isProduct/' + solutionId);
   }
 
   getAllSolutions(
@@ -23,6 +30,8 @@ export class SolutionService {
       keyword?: string;
       city?: string;
       isProductOnly?: boolean;
+      startDate?: string;
+      endDate?: string;
       name?: string;
       description?: string;
       price?: number;
@@ -46,6 +55,12 @@ export class SolutionService {
     }
     if (filters?.isProductOnly !== undefined) {
       params = params.set('isProductOnly', filters.isProductOnly.toString());
+    }
+    if (filters?.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+    if (filters?.endDate) {
+      params = params.set('endDate', filters.endDate);
     }
     if (filters?.name) {
       params = params.set('name', filters.name);

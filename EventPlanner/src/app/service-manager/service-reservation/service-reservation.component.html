@@ -1,39 +1,74 @@
 <div class="service-reservation-screen">
-    <div class="reservation-container">
-      <div class="reservation-header">
-        <div class="logo">
-          <img src="../../assets/favicon.ico" alt="Logo" />
-        </div>
-        <h2>Service Reservation</h2>
-        <button class="close-btn" (click)="closeModal()">×</button>
+  <div class="reservation-container">
+    <div class="reservation-header">
+      <div class="logo">
+        <img src="../../assets/favicon.ico" alt="Logo" />
       </div>
-      
-      <div class="reservation-body">
-        <label for="event-select">Select event</label>
-        <select id="event-select" [(ngModel)]="selectedEvent" class="event-select">
-          <option *ngFor="let event of events" [value]="event.id">{{ event.name }}</option>
-        </select>
+      <h2>Service Reservation</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
 
-        <div class="date-time-container">
-          <div>
-            <label for="date">Pick a date</label>
-            <input id="date" type="date" [(ngModel)]="reservation.date" class="date-picker" />
-          </div>
-          <div>
-            <label for="from-time">From</label>
-            <input id="from-time" type="time" [(ngModel)]="reservation.fromTime" class="time-picker" />
-          </div>
-          <div>
-            <label for="to-time">To</label>
-            <input id="to-time" type="time" [(ngModel)]="reservation.toTime" class="time-picker" />
-          </div>
+    <div class="reservation-body">
+      <label for="event-select">Select Event</label>
+      <select id="event-select" [(ngModel)]="selectedEvent" class="event-select">
+        <option *ngFor="let event of events" [ngValue]="event">{{ event.name }}</option>
+      </select>
+
+      <div class="date-time-container">
+        <div>
+          <label for="date">Pick a Date</label>
+          <input
+            id="date"
+            type="date"
+            [(ngModel)]="reservation.date"
+            class="date-picker"
+          />
         </div>
+        <div>
+          <label for="from-time">From</label>
+          <input
+            id="from-time"
+            type="time"
+            [(ngModel)]="reservation.fromTime"
+            class="time-picker"
+            (change)="onFromTimeChange()"
+          />
+        </div>
+        <div>
+          <label for="to-time">To</label>
+          <input
+            id="to-time"
+            type="time"
+            [(ngModel)]="reservation.toTime"
+            class="time-picker"
+            [disabled]="isToTimeDisabled"
+          />
+        </div>
+      </div>
 
-        <button class="book-btn" (click)="bookService()">Book a service</button>
-        <a class="chat-link" [routerLink]="['/chat', serviceProviderId]">
-          Chat with Service Provider
-        </a>
+      <button
+        class="book-btn"
+        (click)="bookService()"
+        [disabled]="isReserving">
+        {{ isReserving ? 'Creating Reservation...' : 'Book a Service' }}
+      </button>
+
+      <a class="chat-link" [routerLink]="['/chat', serviceProvider]">
+        Chat with Service Provider
+      </a>
+
+      <div class="current-reservations">
+        <h3>Current Reservations</h3>
+        <ul *ngIf="currentReservations.length > 0; else noReservations">
+          <li *ngFor="let reservation of currentReservations">
+            <span class="reservation-date">{{ reservation.date }}</span>
+            <span class="reservation-time">{{ reservation.timeFrom }} - {{ reservation.timeTo }}</span>
+          </li>
+        </ul>
+        <ng-template #noReservations>
+          <p>No current reservations for this service.</p>
+        </ng-template>
       </div>
     </div>
   </div>
-  
+</div>

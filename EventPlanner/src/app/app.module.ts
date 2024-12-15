@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SharedModule } from './shared/shared.module';
 import { FormsModule } from '@angular/forms';
-import { DetailsModule } from './details/details.module';
 import { CardsModule } from './cards/cards.module';
 import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
@@ -18,6 +17,7 @@ import { CategoryManagerModule } from './category-manager/category-manager.modul
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { Interceptor } from './auth/interceptor';
 import { BudgetManagerModule } from './budget-manager/budget-manager.module';
+import { DetailsModule } from './details/details.module';
 
 @NgModule({
   declarations: [
@@ -50,7 +50,6 @@ import { BudgetManagerModule } from './budget-manager/budget-manager.module';
     },
     provideClientHydration(),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideHttpClient(withFetch(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]

@@ -36,9 +36,10 @@ export class InviteScreenComponent {
         },
         error: (err) => {
           alert('Failed to send invites. Please try again later.');
+          this.isSending = false;
         },
         complete: () => {
-          this.isSending = false; // Re-enable the button
+          this.isSending = false;
         }
       });
     } else {
