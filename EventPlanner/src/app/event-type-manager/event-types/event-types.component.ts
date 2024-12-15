@@ -18,7 +18,7 @@ export class EventTypesComponent {
   constructor(
     private eventTypeService: EventTypeService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar // Inject MatSnackBar
+    private snackBar: MatSnackBar
   ) {
     this.loadEventTypes();
   }

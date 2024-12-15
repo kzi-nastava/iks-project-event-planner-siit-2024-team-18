@@ -1,14 +1,10 @@
 <div class="center-container">
-    <form [formGroup]="createEventForm" class="event-type-form">
+    <form
+        [formGroup]="createEventForm"
+        class="event-type-form"
+        (ngSubmit)="create()"
+    >
         <div class="form-title">
-            <button
-                type="button"
-                class="close-button"
-                [routerLink]="['/event-types']"
-            >
-                <mat-icon>close</mat-icon>
-            </button>
-
             <h2>Create Event</h2>
         </div>
 
@@ -76,7 +72,7 @@
                     createEventForm.get('maxParticipants')?.touched
                 "
             >
-                Please enter number of max participants.
+                Please enter number of max participants (valid number greater than 0).
             </mat-error>
         </mat-form-field>
 
@@ -86,7 +82,7 @@
                 <label>
                     <input
                         type="radio"
-                        value="Public"
+                        value="PUBLIC"
                         name="privacyType"
                         formControlName="privacyType"
                     />
@@ -95,7 +91,7 @@
                 <label>
                     <input
                         type="radio"
-                        value="Private"
+                        value="PRIVATE"
                         name="privacyType"
                         formControlName="privacyType"
                     />
@@ -105,11 +101,24 @@
         </div>
 
         <mat-form-field>
-            <mat-label>
-                <mat-icon>place</mat-icon>
-                Location
-            </mat-label>
-            <input matInput required formControlName="location" />
+            <input
+                type="text"
+                matInput
+                placeholder="Location"
+                formControlName="location"
+                [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="onLocationSelected($event.option.value)"
+            >
+                <mat-option
+                    *ngFor="let option of autocompleteOptions"
+                    [value]="option"
+                >
+                    {{ option.displayName }}
+                </mat-option>
+            </mat-autocomplete>
             <mat-error
                 *ngIf="
                     createEventForm.get('location')?.invalid &&
@@ -126,6 +135,7 @@
                 matInput
                 [matDatepicker]="reservationPicker"
                 formControlName="date"
+                required
             />
             <mat-datepicker-toggle
                 matSuffix
@@ -134,6 +144,14 @@
             <mat-datepicker #reservationPicker></mat-datepicker>
             <mat-error *ngIf="createEventForm.get('date')?.hasError('date')">
                 Please enter event date.
+            </mat-error>
+            <mat-error
+                *ngIf="
+                    createEventForm.get('date')?.errors?.['pastDate'] &&
+                    createEventForm.get('date')?.touched
+                "
+            >
+                Please enter the date from the future.
             </mat-error>
         </mat-form-field>
 
@@ -211,14 +229,14 @@
                 [routerLink]="['/events/create/invites']"
                 mat-raised-button
                 type="button"
-                *ngIf="createEventForm.get('privacyType')?.value === 'Private'"
+                *ngIf="createEventForm.get('privacyType')?.value === 'PRIVATE'"
             >
                 Send Invites
             </button>
         </div>
 
         <div class="form-buttons form-field">
-            <button [routerLink]="['/events']" mat-raised-button class="cancel">
+            <button mat-raised-button class="cancel" [routerLink]="['/events']">
                 Cancel
             </button>
             <button mat-raised-button class="submit">Submit</button>

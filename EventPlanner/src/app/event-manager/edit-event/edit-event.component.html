@@ -1,15 +1,11 @@
 <div class="center-container">
-    <form [formGroup]="editEventForm" class="event-type-form">
+    <form
+        [formGroup]="editEventForm"
+        class="event-type-form"
+        (ngSubmit)="update()"
+    >
         <div class="form-title">
-            <button
-                type="button"
-                class="close-button"
-                [routerLink]="['/event-types']"
-            >
-                <mat-icon>close</mat-icon>
-            </button>
-
-            <h2>Create Event</h2>
+            <h2>Edit Event</h2>
         </div>
 
         <mat-form-field>
@@ -76,7 +72,8 @@
                     editEventForm.get('maxParticipants')?.touched
                 "
             >
-                Please enter number of max participants.
+                Please enter number of max participants (valid number greater
+                than 0).
             </mat-error>
         </mat-form-field>
 
@@ -86,7 +83,7 @@
                 <label>
                     <input
                         type="radio"
-                        value="Public"
+                        value="PUBLIC"
                         name="privacyType"
                         formControlName="privacyType"
                     />
@@ -95,7 +92,7 @@
                 <label>
                     <input
                         type="radio"
-                        value="Private"
+                        value="PRIVATE"
                         name="privacyType"
                         formControlName="privacyType"
                     />
@@ -105,11 +102,24 @@
         </div>
 
         <mat-form-field>
-            <mat-label>
-                <mat-icon>place</mat-icon>
-                Location
-            </mat-label>
-            <input matInput required formControlName="location" />
+            <input
+                type="text"
+                matInput
+                placeholder="Location"
+                formControlName="location"
+                [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="onLocationSelected($event.option.value)"
+            >
+                <mat-option
+                    *ngFor="let option of autocompleteOptions"
+                    [value]="option"
+                >
+                    {{ option.displayName }}
+                </mat-option>
+            </mat-autocomplete>
             <mat-error
                 *ngIf="
                     editEventForm.get('location')?.invalid &&
@@ -126,6 +136,7 @@
                 matInput
                 [matDatepicker]="reservationPicker"
                 formControlName="date"
+                required
             />
             <mat-datepicker-toggle
                 matSuffix
@@ -134,6 +145,14 @@
             <mat-datepicker #reservationPicker></mat-datepicker>
             <mat-error *ngIf="editEventForm.get('date')?.hasError('date')">
                 Please enter event date.
+            </mat-error>
+            <mat-error
+                *ngIf="
+                editEventForm.get('date')?.errors?.['pastDate'] &&
+                editEventForm.get('date')?.touched
+                "
+            >
+                Please enter the date from the future.
             </mat-error>
         </mat-form-field>
 
@@ -149,9 +168,7 @@
                 [for]="timePicker"
             ></ngx-mat-timepicker-toggle>
             <ngx-mat-timepicker #timePicker></ngx-mat-timepicker>
-            <mat-error
-                *ngIf="editEventForm.get('time')?.hasError('required')"
-            >
+            <mat-error *ngIf="editEventForm.get('time')?.hasError('required')">
                 Please enter event time.
             </mat-error>
         </mat-form-field>
@@ -199,7 +216,7 @@
         </div>
 
         <div class="buttons">
-            <button mat-raised-button type="button">Create Agenda</button>
+            <button mat-raised-button type="button">Update Agenda</button>
             <button
                 [routerLink]="['/events/create/budget-planning']"
                 mat-raised-button
@@ -211,14 +228,14 @@
                 [routerLink]="['/events/create/invites']"
                 mat-raised-button
                 type="button"
-                *ngIf="editEventForm.get('privacyType')?.value === 'Private'"
+                *ngIf="editEventForm.get('privacyType')?.value === 'PRIVATE'"
             >
                 Send Invites
             </button>
         </div>
 
         <div class="form-buttons form-field">
-            <button [routerLink]="['/events']" mat-raised-button class="cancel">
+            <button mat-raised-button class="cancel" [routerLink]="['/events']">
                 Cancel
             </button>
             <button mat-raised-button class="submit">Submit</button>
