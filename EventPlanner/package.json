@@ -24,6 +24,7 @@
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.11",
     "@auth0/angular-jwt": "^5.2.0",
+    "@googlemaps/google-maps-services-js": "^3.4.0",
     "@types/swiper": "^5.4.3",
     "bootstrap": "^5.3.3",
     "express": "^4.18.2",

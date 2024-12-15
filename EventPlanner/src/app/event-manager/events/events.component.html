@@ -1,15 +1,16 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">My Events</h2>
-    <button [routerLink]="['/events/create']" class="create mx-auto d-block">
+    <button class="create mx-auto d-block" [routerLink]="['/events/create']">
         <mat-icon class="custom-add-icon"></mat-icon>
     </button>
     
     <div class="container mt-4">
         <div class="row justify-content-center">
+            <span *ngIf="events && events.length === 0" class="empty">You don't have any events.</span>
             <div *ngFor="let event of events" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
                 <mat-card class="card shadow">
                     <div class="event-settings">
-                        <button class="edit" (click)="edit($event, event.id)">
+                        <button class="edit" [routerLink]="['/events/edit', event.id]">
                             <mat-icon class="custom-edit-icon"></mat-icon>
                         </button>
                         <button class="delete" (click)="delete($event, event.id)">

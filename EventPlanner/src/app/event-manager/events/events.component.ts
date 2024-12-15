@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { Event } from '../../models/event.model';
 import { EventService } from '../../services/event.service';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventCard } from '../../models/event-card.model';
 
 @Component({
@@ -16,19 +15,24 @@ export class EventsComponent {
 
   constructor(
     private eventService: EventService,
-    private router: Router,
-    private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
-    this.eventService.getAllCards().subscribe((data: EventCard[]) => {
-      this.events = data;
-    });
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {
+    this.loadEvents();
   }
 
-  edit(event: MouseEvent, id: number): void {
-    event.stopPropagation();
-    this.router.navigate(['/events/edit', id]);
+  loadEvents() {
+    this.eventService.getAllByCreator().subscribe({
+      next: (data: EventCard[]) => {
+        this.events = data;
+      },
+      error: (err) => {
+        console.error('Error fetching creator events:', err);
+        this.snackBar.open('Failed to load creator events. Please try again later.', 'OK', {
+          duration: 3000,
+        });
+      },
+    });
   }
 
   delete(event: MouseEvent, id: number): void {
@@ -36,12 +40,25 @@ export class EventsComponent {
 
     const dialogRef = this.dialog.open(DeleteFormComponent, {
       width: '27em',
-      data: { message: 'Are you sure you want to delete this event?' }
+      data: { message: 'Are you sure you want to delete this event?' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.eventService.delete(id);
+        this.eventService.delete(id).subscribe({
+          next: () => {
+            this.loadEvents();
+            this.snackBar.open('Event successfully deleted!', 'OK', {
+              duration: 3000,
+            });
+          },
+          error: (err) => {
+            console.error('Error deleting event:', err);
+            this.snackBar.open('An error occurred while deleting the Event.', 'OK', {
+              duration: 3000,
+            });
+          },
+        });
       }
     });
   }
