@@ -86,7 +86,8 @@ export class ServiceReservationComponent implements OnInit {
       if (fromTime) {
         const [hours, minutes] = fromTime.split(':').map(Number);
         const calculatedToTime = new Date();
-        calculatedToTime.setHours(hours + this.serviceDuration, minutes, 0);
+        const totalMinutes = minutes + this.serviceDuration;
+        calculatedToTime.setHours(hours + Math.floor(totalMinutes / 60), totalMinutes % 60, 0);
 
         this.reservation.toTime = calculatedToTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         this.isToTimeDisabled = true;
@@ -97,6 +98,7 @@ export class ServiceReservationComponent implements OnInit {
       this.isToTimeDisabled = false;
     }
   }
+
 
   validateFields(): boolean {
     if (!this.reservation.date || !this.reservation.fromTime || !this.reservation.toTime) {
