@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { EmailService } from '../../services/email.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invite-screen',
@@ -8,6 +10,10 @@ import { Component } from '@angular/core';
 export class InviteScreenComponent {
   email: string = '';
   emailList: string[] = [];
+  eventId: number = 1;
+  isSending: boolean = false;
+
+  constructor(private emailService: EmailService,private router: Router) {}
 
   addEmail() {
     if (this.email && !this.emailList.includes(this.email)) {
@@ -22,14 +28,26 @@ export class InviteScreenComponent {
 
   sendInvites() {
     if (this.emailList.length > 0) {
-      console.log('Sending invites to:', this.emailList);
-      alert('Invites sent!');
+      this.isSending = true;
+      this.emailService.sendEventInvitations(this.eventId, this.emailList).subscribe({
+        next: () => {
+          alert('Invites sent successfully!');
+          this.emailList = [];
+        },
+        error: (err) => {
+          alert('Failed to send invites. Please try again later.');
+          this.isSending = false;
+        },
+        complete: () => {
+          this.isSending = false;
+        }
+      });
     } else {
       alert('No emails to send!');
     }
   }
 
   closeInviteScreen() {
-    console.log('Invite screen closed.');
+    this.router.navigate(['']);
   }
 }

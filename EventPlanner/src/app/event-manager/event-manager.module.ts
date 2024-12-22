@@ -5,15 +5,19 @@ import { SharedModule } from '../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
-import { InvitedEventsComponent } from './invited-events/invited-events.component';
 import { CardsModule } from '../cards/cards.module';
 import { FavouriteEventsComponent } from './favourite-events/favourite-events.component';
+import { CreateEventComponent } from './create-event/create-event.component';
+import { EditEventComponent } from './edit-event/edit-event.component';
+import { EventsComponent } from './events/events.component';
 
 @NgModule({
   declarations: [
     InviteScreenComponent,
-    InvitedEventsComponent,
     FavouriteEventsComponent,
+    CreateEventComponent,
+    EditEventComponent,
+    EventsComponent,
   ],
   imports: [
     CommonModule,
@@ -25,7 +29,6 @@ import { FavouriteEventsComponent } from './favourite-events/favourite-events.co
   ],
   exports: [
     InviteScreenComponent,
-    InvitedEventsComponent,
     FavouriteEventsComponent
   ],
 })

@@ -1,0 +1,213 @@
+mat-form-field {
+    width: 100%;
+    margin-bottom: 0.625rem;
+}
+
+mat-form-field,
+mat-label,
+input {
+    font-family: "Raleway";
+    font-size: 1.25rem;
+}
+
+mat-form-field mat-label mat-icon {
+    margin-right: 0.5rem;
+}
+
+mat-error {
+    font-family: "Raleway";
+    font-size: 1rem;
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #e9ecef;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.event-type-form {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 80em;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1rem; 
+}
+
+.form-title {
+    flex: 1 1 100%;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.form-field {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 300px;
+}
+
+.full-width {
+    flex: 1 1 100%;
+}
+
+.form-buttons {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2em;
+    padding-top: 1em;
+}
+
+button.submit {
+    background-color: #a29bfe;
+    color: white;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button.cancel {
+    background-color: #de4e3ed0;
+    color: white;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button.submit:hover {
+    background-color: #8880ff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+button.cancel:hover {
+    background-color: #de4e3e;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.images-container {
+    display: flex;
+    align-items: start;
+    width: 100%;
+}
+
+.image-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2.1em;
+    padding: 10px 0;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.upload-icon {
+    display: flex;
+    width: 2.1em;
+    justify-content: start;
+    align-items: center;
+    cursor: pointer;
+    font-size: 2rem;
+    color: #a29bfe;
+    border: 2px dashed #a29bfe;
+    border-radius: 12px;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.upload-icon:hover {
+    background-color: #a29bfe2b;
+    color: #a29bfe;
+}
+
+.image-preview {
+    display: flex;
+    align-items: start;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.image-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.image-container img {
+    width: 6em;
+    height: 6em;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    width: 2em;
+    height: 2em;
+}
+
+.remove-button:hover {
+    background-color: #de4e3ed0;
+}
+
+.role-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.radio-group label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.radio-group input[type='radio'] {
+  margin-right: 0.5rem;
+  transform: scale(1.5);
+}
+
+#roleIcon, #roleLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.buttons {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.image-picker-buttons .submit {
+  padding: 8px 16px;
+  font-size: 14px;
+}

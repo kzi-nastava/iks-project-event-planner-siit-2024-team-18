@@ -1,9 +1,9 @@
 <div class="service-card" (click)="onCardClick()">
-    <div class="service-image">
-      <img [src]="service.images[0]" [alt]="service.title" />
-    </div>
-    <div class="service-info">
-      <h3>{{ service.title }}</h3>
-      <p>{{ service.description }}</p>
-    </div>
+  <div class="service-image">
+    <img [src]="service.cardImage" [alt]="service.name" />
   </div>
+  <div class="service-info">
+    <h3>{{ service.name }}</h3>
+    <p>{{ service.description }}</p>
+  </div>
+</div>

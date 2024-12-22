@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Service } from '../../models/service.model';
+import { SolutionCard } from '../../models/solution-card.model';
 
 @Component({
   selector: 'app-service-card',
@@ -7,10 +7,10 @@ import { Service } from '../../models/service.model';
   styleUrl: './service-card.component.css'
 })
 export class ServiceCardComponent {
-  @Input() service!: Service;
+  @Input() service!: SolutionCard;
   @Output() cardClick = new EventEmitter<number>();
 
   onCardClick(): void {
-    this.cardClick.emit(this.service._id);
+    this.cardClick.emit(this.service.id);
   }
 }

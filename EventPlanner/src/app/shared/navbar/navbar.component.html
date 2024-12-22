@@ -12,38 +12,42 @@
     <a class="nav-login" routerLink="/login" *ngIf="!isLoggedIn">
       Sign in
     </a>
-    <a class="nav-login" routerLink="/register" *ngIf="userRole === 'Authenticated User'">
+    <a class="nav-login" routerLink="/register" *ngIf="userRole === 'AUTHENTICATED_USER'">
       Sign up
     </a>
     <a class="nav-item top-border" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <mat-icon>home</mat-icon>
       Home
     </a>
-    <a class="nav-item" routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'Authenticated User'">
+    <a class="nav-item" routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'AUTHENTICATED_USER'">
       <mat-icon>chat</mat-icon>
       Chat
     </a>
-    <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'Authenticated User'">
+    <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'AUTHENTICATED_USER'">
       <mat-icon>notifications</mat-icon>
       Notifications
     </a>
-    <a class="nav-item" routerLink="/events" routerLinkActive="active" *ngIf="userRole === 'Event Organizer'">
+    <a class="nav-item" routerLink="/events" routerLinkActive="active" *ngIf="userRole === 'EVENT_ORGANIZER'">
       <mat-icon>event</mat-icon>
       Events
     </a>
-    <a class="nav-item" routerLink="/services" routerLinkActive="active" *ngIf="userRole === 'Service Product Provider'">
+    <a class="nav-item" routerLink="/services" routerLinkActive="active" *ngIf="userRole === 'SERVICE_PRODUCT_PROVIDER'">
       <mat-icon>build</mat-icon>
       Services
     </a>
-    <a class="nav-item" routerLink="/products" routerLinkActive="active" *ngIf="userRole === 'Service Product Provider'">
+    <a class="nav-item" routerLink="/products" routerLinkActive="active" *ngIf="userRole === 'SERVICE_PRODUCT_PROVIDER'">
       <mat-icon>shopping_cart</mat-icon>
       Products
     </a>
-    <a class="nav-item" routerLink="/invited-events" routerLinkActive="active" *ngIf="isLoggedIn">
-      <mat-icon>event_note</mat-icon>
-      Invited Events
+    <a class="nav-item" routerLink="/event-types" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>event</mat-icon>
+      Event Types
     </a>
-    <a class="nav-item" routerLink="/profile" routerLinkActive="active" *ngIf="isLoggedIn">
+    <a class="nav-item" routerLink="/categories" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>category</mat-icon>
+      Categories
+    </a>
+    <a class="nav-item" routerLink="/users/profile" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>person</mat-icon>
       Profile
     </a>

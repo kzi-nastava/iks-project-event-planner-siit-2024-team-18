@@ -15,8 +15,8 @@ export class FavouriteProductsComponent {
   ) {}
 
   ngOnInit(): void {
-    this.productService.getAllProducts().subscribe((data: Product[]) => {
-      this.products = data;
-    });
+    // this.productService.getAllProducts().subscribe((data: Product[]) => {
+    //   this.products = data;
+    // });
   }
 }

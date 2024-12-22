@@ -40,31 +40,31 @@ export class EditProfileComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.id = +params['id'];
-      this.loadUserData();
+      //this.loadUserData();
     });
   }
 
-  loadUserData() {
-    this.userService.getById(this.id).subscribe((user) => {
-      if (user) {
-        this.editProfileForm.patchValue({
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          companyName: user.companyName,
-          address: user.address,
-          phoneNumber: user.phoneNumber,
-          description: user.description,
-          categories: user.categories,
-          eventTypes: user.eventTypes,
-          profilePhoto: user.profilePhoto,
-          role: user.role
-        });
-      } else {
-        console.error(`User with ID ${this.id} not found.`);
-      }
-    });
-  }
+  // loadUserData() {
+  //   this.userService.getById(this.id).subscribe((user) => {
+  //     if (user) {
+  //       this.editProfileForm.patchValue({
+  //         email: user.email,
+  //         firstName: user.firstName,
+  //         lastName: user.lastName,
+  //         companyName: user.companyName,
+  //         address: user.address,
+  //         phoneNumber: user.phone,
+  //         description: user.description,
+  //         categories: user.categories,
+  //         eventTypes: user.eventTypes,
+  //         profilePhoto: user.image,
+  //         role: user.role
+  //       });
+  //     } else {
+  //       console.error(`User with ID ${this.id} not found.`);
+  //     }
+  //   });
+  // }
 
   onSelectPhoto(): void {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;

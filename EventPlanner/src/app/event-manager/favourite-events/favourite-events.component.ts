@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EventService } from '../../services/event.service';
-import { Event } from '../../models/event.model';
+import { EventCard } from '../../models/event-card.model';
 
 @Component({
   selector: 'app-favourite-events',
@@ -8,15 +8,16 @@ import { Event } from '../../models/event.model';
   styleUrl: './favourite-events.component.css'
 })
 export class FavouriteEventsComponent {
-  events: Event[] = [];
+  events: EventCard[] = [];
 
   constructor(
     private eventService: EventService,
   ) {}
 
   ngOnInit(): void {
-    this.eventService.getAllEvents().subscribe((data: Event[]) => {
+    this.eventService.getFavouriteEvents().subscribe((data: EventCard[]) => {
       this.events = data;
+      console.log(data);
     });
   }
 }

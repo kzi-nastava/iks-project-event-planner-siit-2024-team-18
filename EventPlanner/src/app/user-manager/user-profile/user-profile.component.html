@@ -1,7 +1,7 @@
 <div class="profile-container">
     <div class="profile-header">
         <div class="profile-image">
-            <img src="{{ user.profilePhoto }}" alt="Profile Image" />
+            <img src="{{ user.image }}" alt="Profile Image" />
         </div>
         <div class="profile-details">
             <h1>{{ user.firstName }} {{user.lastName}}</h1>
@@ -13,22 +13,18 @@
                 <mat-icon class="icon">location_on</mat-icon> <b>Address:</b> {{ user.address }}
             </p>
             <p>
-                <mat-icon class="icon">phone</mat-icon> <b>Phone Number:</b> {{ user.phoneNumber }}
+                <mat-icon class="icon">phone</mat-icon> <b>Phone Number:</b> {{ user.phone }}
             </p>
-            <p *ngIf="user.role === 'Service Product Provider'">
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
                 <mat-icon class="icon">business</mat-icon> <b>Company Name:</b> {{ user.companyName }}
             </p>
-            <p *ngIf="user.role === 'Service Product Provider'">
-                <mat-icon class="icon">location_on</mat-icon> <b>Company Address:</b> {{ user.address }}
-                Street New York
-            </p>
-            <p *ngIf="user.role === 'Service Product Provider'">
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
                 <mat-icon class="icon">category</mat-icon> <b>Categories:</b> {{ (user.categories ?? []).join(', ') }}
             </p>
-            <p *ngIf="user.role === 'Service Product Provider'">
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
                 <mat-icon class="icon">event</mat-icon> <b>Event Types:</b> {{ (user.eventTypes ?? []).join(', ') }}
             </p>
-            <p *ngIf="user.role === 'Service Product Provider'" class="description">
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'" class="description">
                 <mat-icon class="icon">description</mat-icon>
                 <b>Description:</b> {{ user.description }}
             </p>
@@ -37,7 +33,7 @@
             <button mat-raised-button class="edit-btn">
                 <mat-icon>edit</mat-icon> Edit Profile
             </button>
-            <button mat-raised-button color="warn" class="deactivate-btn" (click)="deactivate($event, user._id)">
+            <button mat-raised-button color="warn" class="deactivate-btn" (click)="deactivate($event, user.id)">
                 <mat-icon>cancel</mat-icon> Deactivate Profile
             </button>
         </div>

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
@@ -12,34 +11,26 @@ import { DeleteFormComponent } from '../../shared/delete-form/delete-form.compon
 })
 export class UserProfileComponent {
   activeMenu: string = 'calendar';
-  id: number = 0;
   user: User = {
-    _id: 0,
+    id: 0,
     email: '',
     firstName: '',
     lastName: '',
     role: '',
     companyName: '',
-    profilePhoto: '',
+    image: '',
     address: '',
-    phoneNumber: '',
+    phone: '',
     description: '',
     categories: [],
     eventTypes: [],
     password: '',
   }
 
-  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {}
+  constructor(private userService: UserService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.id = +params['id'];
-      this.loadUserData();
-    });
-  }
-
-  loadUserData() {
-    this.userService.getById(this.id).subscribe((user) => {
+    this.userService.getLoggedUser().subscribe((user) => {
       this.user = user!;
     });
   }

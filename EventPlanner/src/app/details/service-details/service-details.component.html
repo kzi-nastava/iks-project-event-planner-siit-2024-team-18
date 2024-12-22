@@ -1,16 +1,79 @@
 <div class="service-details-container" *ngIf="service">
-    <div class="service-image">
-      <img [src]="service.images[0]" alt="{{ service.title }}">
+  <div class="service-image-gallery">
+    <div class="swiper-container" [style.transform]="'translateX(' + swiperOffset + '%)'">
+      <ng-container *ngFor="let image of service.images; let i = index">
+        <div 
+          class="image-item" 
+          [ngClass]="{
+            'focused': i === currentIndex, 
+            'adjacent': i === currentIndex - 1 || i === currentIndex + 1
+          }"
+        >
+          <img [src]="image" alt="service Image" class="carousel-image" />
+        </div>
+      </ng-container>
     </div>
-    <div class="service-info">
-      <h2>{{ service.title }}</h2>
-      <p class="service-description">{{ service.description }}</p>
+
+    <button class="swiper-button-prev" (click)="prevImage()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button class="swiper-button-next" (click)="nextImage()">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+
+    <div class="bullets">
+      <span *ngFor="let image of service.images; let i = index" [class.active]="i === currentIndex" (click)="goToImage(i)"></span>
+    </div>
+  </div>
+
+  <div class="service-info">
+    <div class="header">
+      <div class="header-words">
+        <h3 class="m-0">{{ service.name }}</h3>
+          <span *ngIf="service.isAvailable" class="pt-2">(Available)</span>
+          <span *ngIf="!service.isAvailable">(Unavailable)</span>
+      </div>
+      <button mat-fab class="favourite">
+        <mat-icon>favorite</mat-icon>
+      </button>
+    </div>
+    <div class="rating">
+      <span>⭐⭐⭐⭐⭐</span>
+      <span class="reviews">(42 reviews)</span>
+      <button mat-button class="contact-btn">
+        <mat-icon>chat</mat-icon>
+      </button>
+    </div>
+
+    <p class="service-description">{{ service.description }}</p>
+
+    <div class="service-price">
+      <span>Price: </span>
+      <span class="price" *ngIf="service.discount > 0">
+        <del>{{ service.price | currency }}</del> {{ (service.price - service.discount) | currency }}
+      </span>
+      <span class="price" *ngIf="service.discount === 0">
+        {{ service.price | currency }}
+      </span>
+    </div>
+
+
+    <div class="service-status">
+      <p><strong>Visibility:</strong> {{ service.isVisible ? 'Visible' : 'Hidden' }}</p>
+      <p><strong>Status:</strong> {{ service.isDeleted ? 'Deleted' : 'Active' }}</p>
     </div>
     
-    <button (click)="goBack()">Back</button>
+    <div class="actions">
+      <a>Visit Provider</a>
+      <button mat-button class="buy-btn" (click)="bookService(service.id)">Book a service
+        <mat-icon>
+          shopping_cart
+        </mat-icon>
+      </button>
+    </div>
   </div>
-  
-  <div *ngIf="!service" class="loading">
-    <p>Loading service details...</p>
-  </div>
-  
+</div>
+
+<div *ngIf="!service" class="loading">
+  <p>Loading service details...</p>
+</div>

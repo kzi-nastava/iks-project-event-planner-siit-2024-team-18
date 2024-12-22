@@ -9,33 +9,42 @@ import { EventDetailsComponent } from './details/event-details/event-details.com
 import { LoginComponent } from './auth/login/login.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { InviteScreenComponent } from './event-manager/invite-screen/invite-screen.component';
-import { InvitedEventsComponent } from './event-manager/invited-events/invited-events.component';
 import { ServiceReservationComponent } from './service-manager/service-reservation/service-reservation.component';
 import { ProductDetailsComponent } from './details/product-details/product-details.component';
-import { BudgetPlanningComponent } from './budget-planning/budget-planning.component';
+import { EventsComponent } from './event-manager/events/events.component';
+import { CreateEventComponent } from './event-manager/create-event/create-event.component';
+import { EditEventComponent } from './event-manager/edit-event/edit-event.component';
+import { EventTypesComponent } from './event-type-manager/event-types/event-types.component';
 import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
 import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
 import { UserProfileComponent } from './user-manager/user-profile/user-profile.component';
 import { EditProfileComponent } from './user-manager/edit-profile/edit-profile.component';
+import { BudgetPlanningComponent } from './budget-manager/budget-planning/budget-planning.component';
+import { AuthGuard } from './auth/auth.guard';
+import { PurchasedSolutionDetailsComponent } from './budget-manager/purchased-solution-details/purchased-solution-details.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'event-details/:id', component: EventDetailsComponent },
-  { path: 'event/create/invites', component: InviteScreenComponent },
-  { path: 'invited-events', component: InvitedEventsComponent },
+  { path: 'event/:id', component: EventDetailsComponent },
+  { path: 'events/create/invites', component: InviteScreenComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'product/:id', component: ProductDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
-  { path: 'budget-planning', component: BudgetPlanningComponent },
-  { path: 'services', component: ServicesComponent },
-  { path: 'service/create', component: CreateServiceComponent },
-  { path: 'service/edit/:id', component: EditServiceComponent },
+  { path: 'events/create/budget-planning', component: BudgetPlanningComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
+  { path: 'events/create/budget-planning/details', component: PurchasedSolutionDetailsComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
+  { path: 'services', component: ServicesComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']}},
+  { path: 'service/create', component: CreateServiceComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']} },
+  { path: 'service/edit/:id', component: EditServiceComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']} },
+  { path: 'events', component: EventsComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
+  { path: 'events/create', component: CreateEventComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
+  { path: 'events/edit/:id', component: EditEventComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'service/:id', component: ServiceDetailsComponent },
-  { path: 'service/:id/reserve', component: ServiceReservationComponent },
-  { path: 'users/profile/:id', component: UserProfileComponent },
-  { path: 'users/profile/edit/:id', component: EditProfileComponent },
-  { path: 'categories', component: CategoryManagerComponent },
-  { path: 'categories/review', component: CategoryReviewComponent },
+  { path: 'users/profile', component: UserProfileComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']}},
+  { path: 'users/profile/edit', component: EditProfileComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']}},
+  { path: 'service/:id/reserve', component: ServiceReservationComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']} },
+  { path: 'event-types', component: EventTypesComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
+  { path: 'categories', component: CategoryManagerComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
+  { path: 'categories/review', component: CategoryReviewComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: '**', redirectTo: ''},
 ];
 
