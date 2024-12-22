@@ -1,7 +1,7 @@
 <div class="background">
     <div class="registration">
         <h1>Sign up</h1>
-        <form [formGroup]="registrationForm" #formDirective="ngForm" (ngSubmit)="submit(formDirective)">
+        <form [formGroup]="registrationForm" (ngSubmit)="submit()">
             <div class="role-section">
                 <mat-label id="roleLabel">
                     <mat-icon id="roleIcon">assignment_ind</mat-icon> Role

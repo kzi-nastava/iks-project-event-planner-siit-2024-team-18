@@ -1,23 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormGroupDirective } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
+import { CategoryService } from '../../services/category-service.service';
+import { Category } from '../../models/category.model';
+import { EventTypeService } from '../../services/event-type.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
   registrationForm: FormGroup;
 
-  categoriesList: string[] = ['Category 1', 'Category 2', 'Category 3', 'Category 4'];
-  eventTypesList: string[] = ['Event Type 1', 'Event Type 2', 'Event Type 3', 'Event Type 4'];
+  categoriesList: string[] = [];
+  eventTypesList: string[] = [];
 
-  profilePhoto: string | null = null;
+  profilePhoto: string | null = '';
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private categoryService: CategoryService,
+    private eventTypeService: EventTypeService,
+    private snackBar: MatSnackBar
+  ) {
     this.registrationForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       firstName: new FormControl('', [Validators.required]),
@@ -32,6 +42,31 @@ export class RegistrationComponent {
       password: new FormControl('', [Validators.required]),
       confirmPassword: new FormControl('', [Validators.required, this.matchPasswordValidator.bind(this)]),
       role: new FormControl('Event Organizer')
+    });
+  }
+
+  ngOnInit(): void {
+      this.loadCategories();
+      this.loadEventTypes();
+  }
+  
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data: Category[]) => {
+        this.categoriesList = data.map((category: Category) => category.name);
+      },
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      },
+    });
+  }
+
+  loadEventTypes(): void {
+    this.eventTypeService.getAll().subscribe({
+      next: (data) => {
+        this.eventTypesList = data.map((eventType) => eventType.name);
+      },
+      error: (err) => console.error('Error fetching event types:', err),
     });
   }
 
@@ -82,33 +117,67 @@ export class RegistrationComponent {
     return null;
   }
 
-  registration(): boolean {
+  registration(): void {
     if (this.registrationForm.valid) {
       const user: User = {
-        _id: Math.random(),
+        id: 0,
         email: this.registrationForm.value.email,
         firstName: this.registrationForm.value.firstName,
         lastName: this.registrationForm.value.lastName,
         companyName: this.registrationForm.value.companyName,
         address: this.registrationForm.value.address,
-        phoneNumber: this.registrationForm.value.phoneNumber,
+        phone: this.registrationForm.value.phoneNumber,
         description: this.registrationForm.value.description,
         categories: this.registrationForm.value.categories,
         eventTypes: this.registrationForm.value.eventTypes,
-        profilePhoto: this.registrationForm.value.profilePhoto ?? '',
+        image: this.registrationForm.value.profilePhoto ?? '',
         role: this.registrationForm.value.role,
         password: this.registrationForm.value.password,
       };
 
-      this.userService.signup(user);
-      alert('Successful registration');
-      this.router.navigate(['/login']);
-      return true;
+      if (this.registrationForm.value.role === 'Event Organizer') {
+        this.userService.eventOrganizerRegistration(user).subscribe({
+          next: () => {
+            this.router.navigate(['/login']);
+            this.snackBar.open('A registration confirmation email has been sent to your email address. You can confirm the registration in the next 24 hours after which it is not possible to confirm the registration.', 'OK', {
+              duration: 5000,
+            });
+          },
+          error: (err) => {
+            if (err.status === 400) {
+              this.snackBar.open('User with email ' + this.registrationForm.value.email + ' already exist.', 'OK');
+            } else {
+              console.error('Error creating user:', err);
+              this.snackBar.open('An unexpected error occurred while creating user.', 'OK', {
+                duration: 3000,
+              });
+            }
+          },
+        });
+      } else {
+        this.userService.serviceProductProviderRegistration(user).subscribe({
+          next: () => {
+            this.router.navigate(['/login']);
+            this.snackBar.open('A registration confirmation email has been sent to your email address. You can confirm the registration in the next 24 hours after which it is not possible to confirm the registration.', 'OK', {
+              duration: 5000,
+            });
+          },
+          error: (err) => {
+            if (err.status === 400) {
+              this.snackBar.open('User with email ' + this.registrationForm.value.email + ' already exist.', 'OK');
+            } else {
+              console.error('Error creating user:', err);
+              this.snackBar.open('An unexpected error occurred while creating user.', 'OK', {
+                duration: 3000,
+              });
+            }
+          },
+        });
+      }
     }
-    return false;
   }
 
-  submit(formDirective: FormGroupDirective): void {
+  submit(): void {
     this.registrationForm.markAllAsTouched();
 
     if (this.registrationForm.value.role === 'Event Organizer') {
@@ -121,12 +190,6 @@ export class RegistrationComponent {
       this.registrationForm.markAllAsTouched();
     }
   
-    let successfull: boolean = this.registration();
-    if (successfull) {
-      formDirective.resetForm();
-      this.registrationForm.reset({
-        role: 'Event Organizer'
-      });
-    }
+    this.registration();
   }
 }

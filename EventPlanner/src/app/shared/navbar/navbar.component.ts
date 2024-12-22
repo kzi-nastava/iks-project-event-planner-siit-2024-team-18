@@ -36,6 +36,8 @@ export class NavbarComponent {
   logout(): void {
     localStorage.removeItem('user');
     this.authService.setUser();
-    this.router.navigate(['']);
+    this.router.navigate(['']).then(() => {
+      window.location.reload();
+    });
   }
 }
