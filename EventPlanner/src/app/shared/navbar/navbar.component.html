@@ -12,7 +12,7 @@
     <a class="nav-login" routerLink="/login" *ngIf="!isLoggedIn">
       Sign in
     </a>
-    <a class="nav-login" routerLink="/register" *ngIf="userRole === 'AUTHENTICATED_USER'">
+    <a class="nav-login" routerLink="/fast-register" *ngIf="userRole === 'AUTHENTICATED_USER'">
       Sign up
     </a>
     <a class="nav-item top-border" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
