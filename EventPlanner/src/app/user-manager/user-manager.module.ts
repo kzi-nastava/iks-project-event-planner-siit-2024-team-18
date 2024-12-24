@@ -5,23 +5,23 @@ import { MaterialModule } from '../infrastructure/material/material.module';
 import { CalendarComponent } from './calendar/calendar.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { EventManagerModule } from '../event-manager/event-manager.module';
-import { ServiceManagerModule } from '../service-manager/service-manager.module';
-import { ProductManagerModule } from '../product-manager/product-manager.module';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { FavouriteSolutionsComponent } from './favourite-solutions/favourite-solutions.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     UserProfileComponent,
     CalendarComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    FavouriteSolutionsComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FullCalendarModule,
     EventManagerModule,
-    ServiceManagerModule,
-    ProductManagerModule
+    RouterModule
   ]
 })
 export class UserManagerModule { }

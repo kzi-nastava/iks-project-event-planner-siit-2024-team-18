@@ -1,7 +1,8 @@
 <div class="profile-container">
     <div class="profile-header">
         <div class="profile-image">
-            <img src="{{ user.image }}" alt="Profile Image" />
+            <img *ngIf="user.image != ''" src="{{ user.image }}" alt="Profile Image" />
+            <img *ngIf="user.image === ''" src="assets/images/profile_photo_placeholder.png" alt="Placeholder Image" />
         </div>
         <div class="profile-details">
             <h1>{{ user.firstName }} {{user.lastName}}</h1>
@@ -30,10 +31,10 @@
             </p>
         </div>
         <div class="profile-actions">
-            <button mat-raised-button class="edit-btn">
+            <button mat-raised-button class="edit-btn" [routerLink]="['/users/profile/edit']">
                 <mat-icon>edit</mat-icon> Edit Profile
             </button>
-            <button mat-raised-button color="warn" class="deactivate-btn" (click)="deactivate($event, user.id)">
+            <button mat-raised-button color="warn" class="deactivate-btn" (click)="deactivate($event)">
                 <mat-icon>cancel</mat-icon> Deactivate Profile
             </button>
         </div>
@@ -47,19 +48,15 @@
             <button class="menu-btn" [class.active]="activeMenu === 'favouriteEvents'" (click)="activeMenu = 'favouriteEvents'">
               <mat-icon class="icon">favorite</mat-icon> Favourite Events
             </button>
-            <button class="menu-btn" [class.active]="activeMenu === 'favouriteServices'" (click)="activeMenu = 'favouriteServices'">
-              <mat-icon class="icon">favorite</mat-icon> Favourite Services
-            </button>
-            <button class="menu-btn" [class.active]="activeMenu === 'favouriteProducts'" (click)="activeMenu = 'favouriteProducts'">
-              <mat-icon class="icon">favorite</mat-icon> Favourite Products
+            <button class="menu-btn" [class.active]="activeMenu === 'favouriteSolutions'" (click)="activeMenu = 'favouriteSolutions'">
+              <mat-icon class="icon">favorite</mat-icon> Favourite Solutions
             </button>
           </div>
           
           <div class="section">
             <app-calendar *ngIf="activeMenu === 'calendar'"></app-calendar>
             <app-favourite-events *ngIf="activeMenu === 'favouriteEvents'"></app-favourite-events>
-            <app-favourite-services *ngIf="activeMenu === 'favouriteServices'"></app-favourite-services>
-            <app-favourite-products *ngIf="activeMenu === 'favouriteProducts'"></app-favourite-products>
+            <app-favourite-solutions *ngIf="activeMenu === 'favouriteSolutions'"></app-favourite-solutions>
           </div>
     </div>
 </div>

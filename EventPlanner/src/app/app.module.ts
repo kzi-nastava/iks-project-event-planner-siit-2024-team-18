@@ -10,7 +10,6 @@ import { CardsModule } from './cards/cards.module';
 import { HomePageModule } from './homepage/homepage.module';
 import { AuthModule } from './auth/auth.module';
 import { EventManagerModule } from './event-manager/event-manager.module';
-import { ProductManagerModule } from './product-manager/product-manager.module';
 import { MaterialModule } from './infrastructure/material/material.module';
 import { UserManagerModule } from './user-manager/user-manager.module';
 import { FullCalendarModule } from '@fullcalendar/angular';
@@ -38,7 +37,6 @@ import { DetailsModule } from './details/details.module';
     AuthModule,
     EventManagerModule,
     EventTypeManagerModule,
-    ProductManagerModule,
     CategoryManagerModule,
     BudgetManagerModule,
     MaterialModule,

@@ -6,6 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { EventCard } from '../models/event-card.model';
 import { PagedResponse } from '../shared/model/paged-response.model';
+import { CalendarEvent } from '../models/calendar-event.model';
 
 @Injectable({
   providedIn: 'root'
@@ -123,6 +124,10 @@ export class EventService {
 
   getFavouriteEvents(): Observable<EventCard[]> {
     return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/user-profiles/favourite-events');
+  }
+
+  getAcceptedEvents(): Observable<CalendarEvent[]> {
+    return this.httpClient.get<CalendarEvent[]>(environment.apiHost + '/api/user-profiles/accepted-events');
   }
 
   delete(id: number) {

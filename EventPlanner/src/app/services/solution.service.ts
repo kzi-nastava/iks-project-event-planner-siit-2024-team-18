@@ -113,4 +113,8 @@ export class SolutionService {
   getSolutionById(solutionId: number): Observable<SolutionCard> {
     return this.httpClient.get<SolutionCard>(environment.apiHost + "/api/solutions/" + solutionId)
   }
+
+  getFavouriteSolutions(): Observable<SolutionCard[]> {
+    return this.httpClient.get<SolutionCard[]>(environment.apiHost + '/api/user-profiles/favourite-solutions');
+  }
 }

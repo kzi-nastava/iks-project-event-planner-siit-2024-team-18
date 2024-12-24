@@ -9,7 +9,6 @@ import { RouterModule } from '@angular/router';
 import { EditServiceComponent } from './edit-service/edit-service.component';
 import { ServiceFiltersComponent } from './service-filters/service-filters.component';
 import { ServiceReservationComponent } from './service-reservation/service-reservation.component';
-import { FavouriteServicesComponent } from './favourite-services/favourite-services.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +17,6 @@ import { FavouriteServicesComponent } from './favourite-services/favourite-servi
     EditServiceComponent,
     ServiceFiltersComponent,
     ServiceReservationComponent,
-    FavouriteServicesComponent,
   ],
   imports: [
     CommonModule,
@@ -29,7 +27,6 @@ import { FavouriteServicesComponent } from './favourite-services/favourite-servi
   ],
   exports: [
     ServicesComponent,
-    FavouriteServicesComponent
   ],
 })
 export class ServiceManagerModule {}

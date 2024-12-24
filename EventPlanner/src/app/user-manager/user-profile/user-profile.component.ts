@@ -3,6 +3,9 @@ import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
+import { AuthService } from '../../auth/auth.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-profile',
@@ -27,7 +30,13 @@ export class UserProfileComponent {
     password: '',
   }
 
-  constructor(private userService: UserService, private dialog: MatDialog) {}
+  constructor(
+    private userService: UserService,
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.userService.getLoggedUser().subscribe((user) => {
@@ -35,7 +44,13 @@ export class UserProfileComponent {
     });
   }
 
-  deactivate(event: MouseEvent, id: number): void {
+  private logout(): void {
+    localStorage.removeItem('user');
+    this.authService.setUser();
+    this.router.navigate(['']);
+  }
+
+  deactivate(event: MouseEvent): void {
     event.stopPropagation();
 
     const dialogRef = this.dialog.open(DeleteFormComponent, {
@@ -45,7 +60,14 @@ export class UserProfileComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.userService.delete(id);
+        this.logout();
+        // this.userService.deactivate(this.user.email).subscribe(
+        //   () => {
+        //     this.snackBar.open('Successfully deactivated account', 'OK', {
+        //       duration: 3000,
+        //     });
+        //   }
+        // );
       }
     });
   }
