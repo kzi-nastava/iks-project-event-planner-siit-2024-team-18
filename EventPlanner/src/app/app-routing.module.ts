@@ -22,6 +22,7 @@ import { EditProfileComponent } from './user-manager/edit-profile/edit-profile.c
 import { BudgetPlanningComponent } from './budget-manager/budget-planning/budget-planning.component';
 import { AuthGuard } from './auth/auth.guard';
 import { PurchasedSolutionDetailsComponent } from './budget-manager/purchased-solution-details/purchased-solution-details.component';
+import { FastRegistrationComponent } from './auth/fast-registration/fast-registration.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'product/:id', component: ProductDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
+  { path: 'fast-register', component: FastRegistrationComponent },
   { path: 'events/create/budget-planning', component: BudgetPlanningComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'events/create/budget-planning/details', component: PurchasedSolutionDetailsComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'services', component: ServicesComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']}},

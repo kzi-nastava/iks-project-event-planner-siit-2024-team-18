@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { AuthService } from '../auth/auth.service';
@@ -11,7 +11,7 @@ import { UpdateUser } from '../models/update-user.model';
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
+  constructor(private http: HttpClient) {}
 
   eventOrganizerRegistration(user: User): Observable<User> {
     return this.http.post<User>(environment.apiHost + '/api/event-organizers', user);
@@ -31,5 +31,13 @@ export class UserService {
 
   update(user: UpdateUser): Observable<UpdateUser> {
     return this.http.put<UpdateUser>(environment.apiHost + '/api/user-profiles', user);
+  }
+
+  fastEventOrganizerRegistration(user: User): Observable<User> {
+    return this.http.post<User>(environment.apiHost + '/api/event-organizers/fast-registration', user);
+  }
+
+  fastServiceProductProviderRegistration(user: User): Observable<User> {
+    return this.http.post<User>(environment.apiHost + '/api/service-product-providers/fast-registration', user);
   }
 }
