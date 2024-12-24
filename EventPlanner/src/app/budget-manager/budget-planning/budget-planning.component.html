@@ -23,7 +23,7 @@
         </mat-form-field>
         </form>
     
-        <button class="create" [routerLink]="['/budget-planning/details']">
+        <button class="create" (click)="details()">
           <mat-icon class="custom-info-icon"></mat-icon>
         </button>
         <button class="create" (click)="addItem()"> 

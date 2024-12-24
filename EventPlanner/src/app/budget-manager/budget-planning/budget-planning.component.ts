@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EditBudgetItemComponent } from '../edit-budget-item/edit-budget-item.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoryService } from './../../services/category-service.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from './../../services/event.service';
 import { Category } from '../../models/category.model';
 import { Event } from '../../models/event.model';
@@ -27,6 +27,7 @@ export class BudgetPlanningComponent implements OnInit {
     private eventService: EventService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   budgetForm = new FormGroup({
@@ -126,6 +127,10 @@ export class BudgetPlanningComponent implements OnInit {
         }
       }
     });
+  }
+
+  details() {
+    this.router.navigate(['/events/create/budget-planning/details']);
   }
 
   calculateTotal() {
