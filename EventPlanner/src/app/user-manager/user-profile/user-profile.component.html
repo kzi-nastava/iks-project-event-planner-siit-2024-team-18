@@ -1,0 +1,62 @@
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-image">
+            <img *ngIf="user.image != ''" src="{{ user.image }}" alt="Profile Image" />
+            <img *ngIf="user.image === ''" src="assets/images/profile_photo_placeholder.png" alt="Placeholder Image" />
+        </div>
+        <div class="profile-details">
+            <h1>{{ user.firstName }} {{user.lastName}}</h1>
+            <p><mat-icon class="icon">person</mat-icon> <b>Role:</b> {{ user.role }}</p>
+            <p>
+                <mat-icon class="icon">email</mat-icon> <b>E-mail:</b> {{ user.email }}
+            </p>
+            <p>
+                <mat-icon class="icon">location_on</mat-icon> <b>Address:</b> {{ user.address }}
+            </p>
+            <p>
+                <mat-icon class="icon">phone</mat-icon> <b>Phone Number:</b> {{ user.phone }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
+                <mat-icon class="icon">business</mat-icon> <b>Company Name:</b> {{ user.companyName }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
+                <mat-icon class="icon">category</mat-icon> <b>Categories:</b> {{ (user.categories ?? []).join(', ') }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
+                <mat-icon class="icon">event</mat-icon> <b>Event Types:</b> {{ (user.eventTypes ?? []).join(', ') }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'" class="description">
+                <mat-icon class="icon">description</mat-icon>
+                <b>Description:</b> {{ user.description }}
+            </p>
+        </div>
+        <div class="profile-actions">
+            <button mat-raised-button class="edit-btn" [routerLink]="['/users/profile/edit']">
+                <mat-icon>edit</mat-icon> Edit Profile
+            </button>
+            <button mat-raised-button color="warn" class="deactivate-btn" (click)="deactivate($event)">
+                <mat-icon>cancel</mat-icon> Deactivate Profile
+            </button>
+        </div>
+    </div>
+
+    <div class="profile-menu-section">
+        <div class="profile-menu">
+            <button class="menu-btn" [class.active]="activeMenu === 'calendar'" (click)="activeMenu = 'calendar'">
+              <mat-icon class="icon">calendar_today</mat-icon> Calendar
+            </button>
+            <button class="menu-btn" [class.active]="activeMenu === 'favouriteEvents'" (click)="activeMenu = 'favouriteEvents'">
+              <mat-icon class="icon">favorite</mat-icon> Favourite Events
+            </button>
+            <button class="menu-btn" [class.active]="activeMenu === 'favouriteSolutions'" (click)="activeMenu = 'favouriteSolutions'">
+              <mat-icon class="icon">favorite</mat-icon> Favourite Solutions
+            </button>
+          </div>
+          
+          <div class="section">
+            <app-calendar *ngIf="activeMenu === 'calendar'"></app-calendar>
+            <app-favourite-events *ngIf="activeMenu === 'favouriteEvents'"></app-favourite-events>
+            <app-favourite-solutions *ngIf="activeMenu === 'favouriteSolutions'"></app-favourite-solutions>
+          </div>
+    </div>
+</div>

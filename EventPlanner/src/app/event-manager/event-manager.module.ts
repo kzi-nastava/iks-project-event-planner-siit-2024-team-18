@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InviteScreenComponent } from './invite-screen/invite-screen.component';
 import { CardsModule } from '../cards/cards.module';
+import { FavouriteEventsComponent } from './favourite-events/favourite-events.component';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { EditEventComponent } from './edit-event/edit-event.component';
 import { EventsComponent } from './events/events.component';
@@ -13,6 +14,7 @@ import { EventsComponent } from './events/events.component';
 @NgModule({
   declarations: [
     InviteScreenComponent,
+    FavouriteEventsComponent,
     CreateEventComponent,
     EditEventComponent,
     EventsComponent,
@@ -27,6 +29,7 @@ import { EventsComponent } from './events/events.component';
   ],
   exports: [
     InviteScreenComponent,
+    FavouriteEventsComponent
   ],
 })
 export class EventManagerModule {}

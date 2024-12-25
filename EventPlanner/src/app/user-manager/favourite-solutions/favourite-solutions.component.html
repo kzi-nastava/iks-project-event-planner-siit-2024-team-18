@@ -1,0 +1,31 @@
+<h3>Favourite Solutions</h3>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <p *ngIf="solutions.length === 0" class="text-center">
+            There are no favourite solutions.
+        </p>
+        <div
+            *ngFor="let solution of solutions"
+            class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch"
+        >
+            <mat-card class="card shadow">
+                <img
+                    mat-card-image
+                    class="mat-card-image"
+                    [src]="solution.cardImage"
+                    alt="Solution image"
+                />
+                <mat-card-header>
+                    <mat-card-title class="bold-font">{{
+                        solution.name
+                    }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="margin-top">
+                    <span>{{ solution.description }}</span
+                    ><br />
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

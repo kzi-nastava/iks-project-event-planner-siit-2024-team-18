@@ -26,7 +26,7 @@ import { ServiceReservationComponent } from './service-reservation/service-reser
     RouterModule
   ],
   exports: [
-    ServicesComponent
+    ServicesComponent,
   ],
 })
 export class ServiceManagerModule {}

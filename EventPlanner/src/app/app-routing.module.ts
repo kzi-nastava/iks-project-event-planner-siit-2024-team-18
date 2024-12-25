@@ -17,6 +17,8 @@ import { EditEventComponent } from './event-manager/edit-event/edit-event.compon
 import { EventTypesComponent } from './event-type-manager/event-types/event-types.component';
 import { CategoryManagerComponent } from './category-manager/category-types/category-manager.component';
 import { CategoryReviewComponent } from './category-manager/category-review/category-review.component';
+import { UserProfileComponent } from './user-manager/user-profile/user-profile.component';
+import { EditProfileComponent } from './user-manager/edit-profile/edit-profile.component';
 import { BudgetPlanningComponent } from './budget-manager/budget-planning/budget-planning.component';
 import { AuthGuard } from './auth/auth.guard';
 import { PurchasedSolutionDetailsComponent } from './budget-manager/purchased-solution-details/purchased-solution-details.component';
@@ -39,6 +41,8 @@ const routes: Routes = [
   { path: 'events/create', component: CreateEventComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'events/edit/:id', component: EditEventComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'service/:id', component: ServiceDetailsComponent },
+  { path: 'users/profile', component: UserProfileComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']}},
+  { path: 'users/profile/edit', component: EditProfileComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']}},
   { path: 'service/:id/reserve', component: ServiceReservationComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']} },
   { path: 'event-types', component: EventTypesComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'categories', component: CategoryManagerComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
