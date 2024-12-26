@@ -4,6 +4,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Service } from '../../models/service.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { LocationService } from '../../services/location.service';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { EventTypeService } from '../../services/event-type.service';
+import { CategoryService } from '../../services/category-service.service';
 
 @Component({
   selector: 'app-edit-service',
@@ -15,15 +19,20 @@ export class EditServiceComponent implements OnInit {
   editServiceForm: FormGroup;
 
   images: string[] = [];
-  categories: string[] = ['Photography', 'Catering', 'Decorations', 'DJ Services', 'Lighting Setup', 'Flower Arrangements', 'Videography'];
+  eventTypes: string[] = [];
+  categories: string[] = [];
   filteredCategories: string[] = this.categories.slice();
-  eventTypes: string[] = ['Wedding', 'Birthday', 'Corporate', 'Party', 'Festival'];
   filteredEventTypes: string[] = this.eventTypes.slice();
+  selectedLocationDetails: any = null;
+  autocompleteOptions: any[] = [];
 
   constructor(
     private serviceManagerService: ServiceManagerService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private locationService: LocationService,
+    private eventTypeService: EventTypeService,
+    private categoryService: CategoryService,
   ) {
     this.editServiceForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
@@ -36,14 +45,17 @@ export class EditServiceComponent implements OnInit {
       category: new FormControl('', [Validators.required]),
       eventTypes: new FormControl([], [Validators.required]),
       reservationType: new FormControl('AUTOMATIC', [Validators.required]),
-  
+      location: new FormControl('', [Validators.required]),
+
       specifics: new FormControl('', [Validators.required]),
       duration: new FormControl(15, [Validators.min(15), Validators.max(120)]),
       minEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
       maxEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
       reservationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
       cancellationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
-      });
+      workingHoursStart: new FormControl('', [Validators.required]),
+      workingHoursEnd: new FormControl('', [Validators.required]),
+    });
   }
 
   ngOnInit(): void {
@@ -51,11 +63,28 @@ export class EditServiceComponent implements OnInit {
       this.serviceId = +params['id'];
       this.loadServiceData();
     });
+
+    this.loadCategories();
+    this.loadEventTypes();
+
+    this.editServiceForm.get('location')?.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter((value: string | null): value is string => !!value),
+      switchMap((value: string) => this.locationService.getAutocompleteLocations(value))
+    ).subscribe({
+      next: (results) => {
+        this.autocompleteOptions = results || [];
+      },
+      error: (err) => console.error('Error fetching locations:', err),
+    });
+
   }
 
   loadServiceData(): void {
     this.serviceManagerService.getServiceById(this.serviceId).subscribe({
       next: (data: Service) => {
+        console.log("data.location", data.location);
         const service = data;
         if (service) {
           this.editServiceForm.patchValue({
@@ -65,12 +94,12 @@ export class EditServiceComponent implements OnInit {
             discount: service.discount,
             isVisible: service.isVisible,
             isAvailable: service.isAvailable,
-            category: "Photography",
-            eventTypes: ["Wedding"],
-            location: 'Serbia',
-            creator: 'Mare',
+            category: service.category,
+            eventTypes: service.eventTypes,
+            location: service.location,
+            creator: service.creator,
             isDeleted: service.isDeleted,
-            status: 'ACCPETED',
+            status: service.status,
             reservationType: service.reservationType,
 
             specifics: service.specifics!,
@@ -79,9 +108,10 @@ export class EditServiceComponent implements OnInit {
             maxEngagement: service.maxEngagement!,
             reservationDeadline: service.reservationDeadline!,
             cancellationDeadline: service.cancellationDeadline!,
+            workingHoursStart: this.timeFormat(service.workingHoursStart!),
+            workingHoursEnd: this.timeFormat(service.workingHoursEnd!),
           });
           this.images = service.images;
-    
         }
       },
       error: (err) => {
@@ -99,6 +129,11 @@ export class EditServiceComponent implements OnInit {
 
   edit(): void {
     if (this.editServiceForm.valid) {
+      const formValues = this.editServiceForm.value;
+
+      const workingHoursStart = this.formatTime(formValues.workingHoursStart!);
+      const workingHoursEnd = this.formatTime(formValues.workingHoursEnd!);
+
       const service: Service = {
         id: this.serviceId,
         name: this.editServiceForm.value.name!,
@@ -110,8 +145,8 @@ export class EditServiceComponent implements OnInit {
         isAvailable: this.editServiceForm.value.isAvailable!,
         category: this.editServiceForm.value.category!,
         eventTypes: this.editServiceForm.value.eventTypes!,
-        location: 'Serbia',
-        creator: 'Mare',
+        location: this.selectedLocationDetails?.name || '',
+        creator: '',
         isDeleted: false,
         status: 'PENDING',
         reservationType: this.editServiceForm.value.reservationType as 'AUTOMATIC' | 'MANUAL',
@@ -122,7 +157,14 @@ export class EditServiceComponent implements OnInit {
         maxEngagement: this.editServiceForm.value.maxEngagement!,
         reservationDeadline: this.editServiceForm.value.reservationDeadline!,
         cancellationDeadline: this.editServiceForm.value.cancellationDeadline!,
-        };
+        workingHoursStart: workingHoursStart,
+        workingHoursEnd: workingHoursEnd,
+        
+        city: this.selectedLocationDetails?.city || '',
+        country: this.selectedLocationDetails?.country || '',
+        latitude: this.selectedLocationDetails?.latitude || 0,
+        longitude: this.selectedLocationDetails?.longitude || 0,
+      };
         this.route.params.subscribe((params) => {
           this.serviceManagerService
             .updateService(service, +params['id'])
@@ -163,5 +205,68 @@ export class EditServiceComponent implements OnInit {
     this.filteredEventTypes = this.eventTypes.filter(option =>
       option.toLowerCase().includes(value)
     );
+  }
+
+  formatTime(time: string): string {
+    let hours: number, minutes: number;
+  
+    if (time.includes('AM') || time.includes('PM')) {
+      const [timePart, modifier] = time.split(' ');
+      [hours, minutes] = timePart.split(':').map(Number);
+  
+      if (modifier === 'PM' && hours < 12) {
+        hours += 12;
+      }
+      if (modifier === 'AM' && hours === 12) {
+        hours = 0;
+      }
+    } else {
+      [hours, minutes] = time.split(':').map(Number);
+    }
+  
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+  
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  timeFormat(time: string): string {
+    let [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+  
+    hours = hours % 12 || 12;
+  
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+  
+    return `${formattedHours}:${formattedMinutes} ${period}`;
+  }
+
+  onLocationSelected(selectedLocation: any): void {
+    this.editServiceForm.get('location')?.setValue(selectedLocation.displayName);
+
+    this.locationService
+      .getLocationDetails(selectedLocation.displayName)
+      .subscribe((details) => {
+        this.selectedLocationDetails = details;
+      });
+  }
+
+  loadEventTypes(): void {
+    this.eventTypeService.getAll().subscribe({
+      next: (data) => {
+        this.eventTypes = data.map((eventType) => eventType.name);
+      },
+      error: (err) => console.error('Error fetching event types:', err),
+    });
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data.map((category) => category.name);
+      },
+      error: (err) => console.error('Error fetching categories:', err),
+    });
   }
 }

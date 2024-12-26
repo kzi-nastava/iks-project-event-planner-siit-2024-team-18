@@ -17,7 +17,7 @@ export class ServicesComponent implements OnInit {
   combinedFilters: any = { name: '', filters: {} };
   services: Service[] = [];
   pageSize = 6;
-  currentPage = 0;
+  currentPage = 1;
   totalElements = 0;
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -38,7 +38,7 @@ export class ServicesComponent implements OnInit {
 
   filterServices(searchText: string): void {
     this.combinedFilters.name = searchText;
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.applyCombinedFilters();
   }
 
@@ -48,7 +48,7 @@ export class ServicesComponent implements OnInit {
     dialogRef.afterClosed().subscribe((filters) => {
       if (filters) {
         this.combinedFilters.filters = filters;
-        this.currentPage = 0;
+        this.currentPage = 1;
         this.applyCombinedFilters();
       }
     });

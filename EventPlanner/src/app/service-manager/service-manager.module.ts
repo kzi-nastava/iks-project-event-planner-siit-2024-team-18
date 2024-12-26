@@ -23,7 +23,7 @@ import { ServiceReservationComponent } from './service-reservation/service-reser
     MaterialModule,
     SharedModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
   ],
   exports: [
     ServicesComponent,
