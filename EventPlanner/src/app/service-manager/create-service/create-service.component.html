@@ -162,7 +162,7 @@
 
       <div class="image-preview" *ngIf="images.length > 0">
         <div *ngFor="let image of images; let i = index" class="image-container">
-          <img [src]="image" alt="Preview" />
+          <img [src]="imageToUrl(image)" alt="Preview" />
           <button type="button" class="remove-button" (click)="removeImage(i)">
             <mat-icon>close</mat-icon>
           </button>

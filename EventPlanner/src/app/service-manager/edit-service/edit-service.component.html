@@ -40,7 +40,6 @@
 				formControlName="category"
 				[matAutocomplete]="categoryAuto"
 				(input)="filterCategories($event)"
-				[disabled]="true"
 			/>
 			<mat-autocomplete #categoryAuto="matAutocomplete" class="form-field">
 				<mat-option *ngFor="let option of filteredCategories" [value]="option">
@@ -146,7 +145,6 @@
 					<mat-icon>add_photo_alternate</mat-icon>
 				</label>
 				<input
-					formControlName="images"
 					type="file"
 					id="imageUpload"
 					(change)="onFileSelected($event)"
@@ -154,14 +152,14 @@
 					hidden
 				/>
 				<p>Upload Images</p>
-				<mat-error *ngIf="editServiceForm.get('images')?.hasError('minImages')">
+				<mat-error *ngIf="editServiceForm.get('uploadedFiles')?.hasError('minImages')">
 					At least one image is required.
 				</mat-error>
 			</div>
 
-			<div class="image-preview" *ngIf="images.length > 0">
-				<div *ngFor="let image of images; let i = index" class="image-container">
-					<img [src]="image" alt="Preview" />
+			<div class="image-preview" *ngIf="uploadedFiles.length > 0">
+				<div *ngFor="let image of uploadedFiles; let i = index" class="image-container">
+					<img [src]="imageToUrl(image)" alt="Preview" />
 					<button type="button" class="remove-button" (click)="removeImage(i)">
 						<mat-icon>close</mat-icon>
 					</button>

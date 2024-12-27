@@ -14,14 +14,14 @@ import { CategoryService } from '../../services/category-service.service';
   styleUrls: ['./create-service.component.css']
 })
 export class CreateServiceComponent implements OnInit {
-  images: string[] = [];
-  uploadedFiles: File[] = [];
+  images: File[] = [];
   eventTypes: string[] = [];
   categories: string[] = [];
   filteredCategories: string[] = this.categories.slice();
   filteredEventTypes: string[] = this.eventTypes.slice();
   selectedLocationDetails: any = null;
   autocompleteOptions: any[] = [];
+  fileUrlCache = new Map<File, string>();
 
   constructor(
     private serviceManagerService: ServiceManagerService,
@@ -36,7 +36,7 @@ export class CreateServiceComponent implements OnInit {
     description: new FormControl('', [Validators.required]),
     price: new FormControl(0, [Validators.required, Validators.min(1)]),
     discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-    images: new FormControl<(File | string)[]>([], this.minImagesValidator()),
+    images: new FormControl<File[]>([], this.minImagesValidator()),
     isVisible: new FormControl(false),
     isAvailable: new FormControl(false),
     category: new FormControl('', [Validators.required]),
@@ -112,7 +112,7 @@ export class CreateServiceComponent implements OnInit {
         formData.append('eventTypes', eventType);
       });
   
-      this.uploadedFiles.forEach((file) => {
+      this.images.forEach((file) => {
         formData.append('images', file, file.name);
       });
   
@@ -148,27 +148,17 @@ export class CreateServiceComponent implements OnInit {
   
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-  
-    if (input.files) {
-      const files = Array.from(input.files);
-      files.forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.images.push(e.target.result);
-          this.uploadedFiles.push(file);
-          this.createServiceForm.get('images')?.setValue(this.uploadedFiles.map((file) => file.name));
-        };
-        reader.readAsDataURL(file);
-      });
-  
-      input.value = "";
-    }
+    Array.from(input.files || []).forEach(file => {
+      this.images.push(file);
+    });
+    this.createServiceForm.get('images')?.setValue(this.images);
+    this.createServiceForm.get('images')?.updateValueAndValidity();
   }
   
   removeImage(index: number): void {
     this.images.splice(index, 1);
-    this.uploadedFiles.splice(index, 1);
-    this.createServiceForm.get('images')?.setValue(this.uploadedFiles);
+    this.createServiceForm.get('images')?.setValue(this.images);
+    this.createServiceForm.get('images')?.updateValueAndValidity();
   }
 
   filterCategories(event: any): void {
@@ -211,5 +201,17 @@ export class CreateServiceComponent implements OnInit {
       },
       error: (err) => console.error('Error fetching categories:', err),
     });
+  }
+
+  imageToUrl(file: File): string {
+    if (!this.fileUrlCache.has(file)) {
+      const url = URL.createObjectURL(file);
+      this.fileUrlCache.set(file, url);
+    }
+    return this.fileUrlCache.get(file) as string;
+  }
+  
+  ngOnDestroy(): void {
+    this.fileUrlCache.forEach((url) => URL.revokeObjectURL(url));
   }
 }

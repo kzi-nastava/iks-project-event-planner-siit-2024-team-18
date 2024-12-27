@@ -16,9 +16,7 @@ import { CategoryService } from '../../services/category-service.service';
 })
 export class EditServiceComponent implements OnInit {
   serviceId: number = 0;
-  editServiceForm: FormGroup;
 
-  images: string[] = [];
   uploadedFiles: File[] = [];
   eventTypes: string[] = [];
   categories: string[] = [];
@@ -26,6 +24,7 @@ export class EditServiceComponent implements OnInit {
   filteredEventTypes: string[] = this.eventTypes.slice();
   selectedLocationDetails: any = null;
   autocompleteOptions: any[] = [];
+  fileUrlCache = new Map<File, string>();
 
   constructor(
     private serviceManagerService: ServiceManagerService,
@@ -34,30 +33,7 @@ export class EditServiceComponent implements OnInit {
     private locationService: LocationService,
     private eventTypeService: EventTypeService,
     private categoryService: CategoryService,
-  ) {
-    this.editServiceForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
-      price: new FormControl(0, [Validators.required, Validators.min(1)]),
-      discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-      images: new FormControl<(File | string)[]>([], this.minImagesValidator()),
-      isVisible: new FormControl(false),
-      isAvailable: new FormControl(false),
-      category: new FormControl('', [Validators.required]),
-      eventTypes: new FormControl([], [Validators.required]),
-      reservationType: new FormControl('AUTOMATIC', [Validators.required]),
-      location: new FormControl('', [Validators.required]),
-
-      specifics: new FormControl('', [Validators.required]),
-      duration: new FormControl(15, [Validators.min(15), Validators.max(120)]),
-      minEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
-      maxEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
-      reservationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
-      cancellationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
-      workingHoursStart: new FormControl('', [Validators.required]),
-      workingHoursEnd: new FormControl('', [Validators.required]),
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -67,6 +43,7 @@ export class EditServiceComponent implements OnInit {
 
     this.loadCategories();
     this.loadEventTypes();
+    this.editServiceForm.get('category')?.disable();
 
     this.editServiceForm.get('location')?.valueChanges.pipe(
       debounceTime(300),
@@ -79,8 +56,30 @@ export class EditServiceComponent implements OnInit {
       },
       error: (err) => console.error('Error fetching locations:', err),
     });
-
   }
+
+  editServiceForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required]),
+    price: new FormControl(0, [Validators.required, Validators.min(1)]),
+    discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
+    uploadedFiles: new FormControl<File[]>([], this.minImagesValidator()),
+    isVisible: new FormControl(false),
+    isAvailable: new FormControl(false),
+    category: new FormControl('', [Validators.required]),
+    eventTypes: new FormControl<string[]>([], [Validators.required]),
+    reservationType: new FormControl('AUTOMATIC', [Validators.required]),
+    location: new FormControl('', [Validators.required]),
+
+    specifics: new FormControl('', [Validators.required]),
+    duration: new FormControl(15, [Validators.min(15), Validators.max(120)]),
+    minEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+    maxEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+    reservationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
+    cancellationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
+    workingHoursStart: new FormControl('', [Validators.required]),
+    workingHoursEnd: new FormControl('', [Validators.required]),
+  });
 
   loadServiceData(): void {
     this.serviceManagerService.getServiceById(this.serviceId).subscribe({
@@ -97,9 +96,6 @@ export class EditServiceComponent implements OnInit {
             category: service.category,
             eventTypes: service.eventTypes,
             location: service.location,
-            creator: service.creator,
-            isDeleted: service.isDeleted,
-            status: service.status,
             reservationType: service.reservationType,
 
             specifics: service.specifics!,
@@ -111,7 +107,21 @@ export class EditServiceComponent implements OnInit {
             workingHoursStart: this.timeFormat(service.workingHoursStart!),
             workingHoursEnd: this.timeFormat(service.workingHoursEnd!),
           });
-          this.images = service.images;
+
+          service.images.map((img) => img).forEach((image, index) => {
+            const byteString = atob(image.split(',')[1]);
+            const mimeString = image.split(',')[0].split(':')[1].split(';')[0];
+            const byteArray = new Uint8Array(byteString.length);
+            for (let i = 0; i < byteString.length; i++) {
+              byteArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([byteArray], { type: mimeString });
+            const file = new File([blob], `image_${index}.jpg`, { type: mimeString });
+            this.uploadedFiles.push(file);
+          });
+
+          this.editServiceForm.get('uploadedFiles')?.setValue(this.uploadedFiles);
+          this.editServiceForm.get('uploadedFiles')?.updateValueAndValidity();
         }
       },
       error: (err) => {
@@ -123,7 +133,7 @@ export class EditServiceComponent implements OnInit {
 
   minImagesValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
-      const files = control.value as (File | string)[];
+      const files = control.value as File[];
       return (files && files.length > 0) ? null : { minImages: true };
     };
   }
@@ -166,7 +176,6 @@ export class EditServiceComponent implements OnInit {
       this.uploadedFiles.forEach((file) => {
         formData.append('images', file, file.name);
       });
-  
 
       this.serviceManagerService.updateService(formData, this.serviceId).subscribe({
         next: () => this.router.navigate(['/services']),
@@ -177,27 +186,17 @@ export class EditServiceComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-  
-    if (input.files) {
-      const files = Array.from(input.files);
-      files.forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.images.push(e.target.result);
-          this.uploadedFiles.push(file);
-          this.editServiceForm.get('images')?.setValue(this.uploadedFiles.map((file) => file.name));
-        };
-        reader.readAsDataURL(file);
-      });
-  
-      input.value = "";
-    }
+    Array.from(input.files || []).forEach(file => {
+      this.uploadedFiles.push(file);
+    });
+    this.editServiceForm.get('uploadedFiles')?.setValue(this.uploadedFiles);
+    this.editServiceForm.get('uploadedFiles')?.updateValueAndValidity();
   }
 
   removeImage(index: number): void {
-    this.images.splice(index, 1);
     this.uploadedFiles.splice(index, 1);
-    this.editServiceForm.get('images')?.setValue(this.uploadedFiles);
+    this.editServiceForm.get('uploadedFiles')?.setValue(this.uploadedFiles);
+    this.editServiceForm.get('uploadedFiles')?.updateValueAndValidity();
   }
 
   filterCategories(event: any): void {
@@ -275,5 +274,17 @@ export class EditServiceComponent implements OnInit {
       },
       error: (err) => console.error('Error fetching categories:', err),
     });
+  }
+
+  imageToUrl(file: File): string {
+    if (!this.fileUrlCache.has(file)) {
+      const url = URL.createObjectURL(file);
+      this.fileUrlCache.set(file, url);
+    }
+    return this.fileUrlCache.get(file) as string;
+  }
+  
+  ngOnDestroy(): void {
+    this.fileUrlCache.forEach((url) => URL.revokeObjectURL(url));
   }
 }
