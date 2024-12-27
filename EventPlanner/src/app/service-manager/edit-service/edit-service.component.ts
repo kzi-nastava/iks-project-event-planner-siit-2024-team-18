@@ -19,6 +19,7 @@ export class EditServiceComponent implements OnInit {
   editServiceForm: FormGroup;
 
   images: string[] = [];
+  uploadedFiles: File[] = [];
   eventTypes: string[] = [];
   categories: string[] = [];
   filteredCategories: string[] = this.categories.slice();
@@ -39,7 +40,7 @@ export class EditServiceComponent implements OnInit {
       description: new FormControl('', [Validators.required]),
       price: new FormControl(0, [Validators.required, Validators.min(1)]),
       discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-      images: new FormControl([], this.minImagesValidator()),
+      images: new FormControl<(File | string)[]>([], this.minImagesValidator()),
       isVisible: new FormControl(false),
       isAvailable: new FormControl(false),
       category: new FormControl('', [Validators.required]),
@@ -84,7 +85,6 @@ export class EditServiceComponent implements OnInit {
   loadServiceData(): void {
     this.serviceManagerService.getServiceById(this.serviceId).subscribe({
       next: (data: Service) => {
-        console.log("data.location", data.location);
         const service = data;
         if (service) {
           this.editServiceForm.patchValue({
@@ -123,74 +123,81 @@ export class EditServiceComponent implements OnInit {
 
   minImagesValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
-      return (control.value && control.value.length > 0) ? null : { minImages: true };
+      const files = control.value as (File | string)[];
+      return (files && files.length > 0) ? null : { minImages: true };
     };
   }
 
   edit(): void {
     if (this.editServiceForm.valid) {
       const formValues = this.editServiceForm.value;
+      const formData = new FormData();
+  
+      formData.append('name', formValues.name!);
+      formData.append('description', formValues.description!);
+      formData.append('price', formValues.price!.toString());
+      formData.append('discount', (formValues.discount || 0).toString());
+      formData.append('isVisible', formValues.isVisible!.toString());
+      formData.append('isAvailable', formValues.isAvailable!.toString());
+      formData.append('category', formValues.category!);
+      formData.append('creator', "Mare");
+      formData.append('location', formValues.location!);
+      formData.append('status', "PENDING");
+  
+      formData.append('specifics', formValues.specifics!);
+      formData.append('duration', formValues.duration!.toString());
+      formData.append('minEngagement', formValues.minEngagement!.toString());
+      formData.append('maxEngagement', formValues.maxEngagement!.toString());
+      formData.append('reservationDeadline', formValues.reservationDeadline!.toString());
+      formData.append('cancellationDeadline', formValues.cancellationDeadline!.toString());
+      formData.append('reservationType', formValues.reservationType!);
+      formData.append('workingHoursStart', this.formatTime(formValues.workingHoursStart!));
+      formData.append('workingHoursEnd', this.formatTime(formValues.workingHoursEnd!));
+  
+      formData.append('city', this.selectedLocationDetails?.city || '');
+      formData.append('country', this.selectedLocationDetails?.country || '');
+      formData.append('longitude', this.selectedLocationDetails?.longitude || 0);
+      formData.append('latitude', this.selectedLocationDetails?.latitude || 0);
+  
+      this.editServiceForm.value.eventTypes!.forEach((eventType: string | Blob) => {
+        formData.append('eventTypes', eventType);
+      });
+  
+      this.uploadedFiles.forEach((file) => {
+        formData.append('images', file, file.name);
+      });
+  
 
-      const workingHoursStart = this.formatTime(formValues.workingHoursStart!);
-      const workingHoursEnd = this.formatTime(formValues.workingHoursEnd!);
-
-      const service: Service = {
-        id: this.serviceId,
-        name: this.editServiceForm.value.name!,
-        description: this.editServiceForm.value.description!,
-        price: this.editServiceForm.value.price!,
-        discount: this.editServiceForm.value.discount || 0,
-        images: this.images,
-        isVisible: this.editServiceForm.value.isVisible!,
-        isAvailable: this.editServiceForm.value.isAvailable!,
-        category: this.editServiceForm.value.category!,
-        eventTypes: this.editServiceForm.value.eventTypes!,
-        location: this.selectedLocationDetails?.name || '',
-        creator: '',
-        isDeleted: false,
-        status: 'PENDING',
-        reservationType: this.editServiceForm.value.reservationType as 'AUTOMATIC' | 'MANUAL',
-        
-        specifics: this.editServiceForm.value.specifics!,
-        duration: this.editServiceForm.value.duration!,
-        minEngagement: this.editServiceForm.value.minEngagement!,
-        maxEngagement: this.editServiceForm.value.maxEngagement!,
-        reservationDeadline: this.editServiceForm.value.reservationDeadline!,
-        cancellationDeadline: this.editServiceForm.value.cancellationDeadline!,
-        workingHoursStart: workingHoursStart,
-        workingHoursEnd: workingHoursEnd,
-        
-        city: this.selectedLocationDetails?.city || '',
-        country: this.selectedLocationDetails?.country || '',
-        latitude: this.selectedLocationDetails?.latitude || 0,
-        longitude: this.selectedLocationDetails?.longitude || 0,
-      };
-        this.route.params.subscribe((params) => {
-          this.serviceManagerService
-            .updateService(service, +params['id'])
-            .subscribe(((res: any) => {
-              this.router.navigate(['/services']);
-          }));
+      this.serviceManagerService.updateService(formData, this.serviceId).subscribe({
+        next: () => this.router.navigate(['/services']),
+        error: (err) => console.error('Error creating service:', err),
       });
     }
   }
 
-  onFileSelected(event: any): void {
-    if (event.target.files) {
-      for (let file of event.target.files) {
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+  
+    if (input.files) {
+      const files = Array.from(input.files);
+      files.forEach((file) => {
         const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.result) {
-            this.images.push(reader.result as string);
-          }
+        reader.onload = (e: any) => {
+          this.images.push(e.target.result);
+          this.uploadedFiles.push(file);
+          this.editServiceForm.get('images')?.setValue(this.uploadedFiles.map((file) => file.name));
         };
         reader.readAsDataURL(file);
-      }
+      });
+  
+      input.value = "";
     }
   }
 
   removeImage(index: number): void {
     this.images.splice(index, 1);
+    this.uploadedFiles.splice(index, 1);
+    this.editServiceForm.get('images')?.setValue(this.uploadedFiles);
   }
 
   filterCategories(event: any): void {

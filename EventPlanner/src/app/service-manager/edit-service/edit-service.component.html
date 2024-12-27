@@ -40,6 +40,7 @@
 				formControlName="category"
 				[matAutocomplete]="categoryAuto"
 				(input)="filterCategories($event)"
+				[disabled]="true"
 			/>
 			<mat-autocomplete #categoryAuto="matAutocomplete" class="form-field">
 				<mat-option *ngFor="let option of filteredCategories" [value]="option">

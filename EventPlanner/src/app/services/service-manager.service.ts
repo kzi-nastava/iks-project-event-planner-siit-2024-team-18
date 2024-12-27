@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { PagedResponse } from '../shared/model/paged-response.model';
+import { Form } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -34,12 +35,12 @@ export class ServiceManagerService {
     return this.http.get<Service>(environment.apiHost + "/api/services/details/" + id);
   }
 
-  createService(service: any): Observable<any> {
-    return this.http.post<string>(environment.apiHost + '/api/services/create', service);
+  createService(service: FormData): Observable<void> {
+    return this.http.post<void>(environment.apiHost + '/api/services/create', service);
   }
 
-  updateService(service: any, id: number): Observable<any> {
-    return this.http.put<string>(environment.apiHost + '/api/services/edit/' + id, service);
+  updateService(service: FormData, id: number): Observable<void> {
+    return this.http.put<void>(environment.apiHost + '/api/services/edit/' + id, service);
   }
 
   deleteService(id: number): Observable<void> {
