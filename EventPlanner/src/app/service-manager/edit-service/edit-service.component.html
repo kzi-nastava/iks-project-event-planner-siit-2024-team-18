@@ -51,7 +51,7 @@
 			</mat-error>
 		</mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field full-width">
+		<mat-form-field appearance="fill" class="form-field">
 			<mat-label>Event Type</mat-label>
 			<mat-select formControlName="eventTypes" multiple>
 			  <mat-option *ngFor="let option of eventTypes" [value]="option">
@@ -62,7 +62,38 @@
 			  Event Type is required
 			</mat-error>
 		</mat-form-field>
+
+		<mat-form-field appearance="fill" class="form-field">
+			<mat-label>Location</mat-label>
+			<input type="text" matInput placeholder="Location" formControlName="location" [matAutocomplete]="auto"/>
+			<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLocationSelected($event.option.value)">
+				<mat-option *ngFor="let option of autocompleteOptions" [value]="option">
+					{{ option.displayName }}
+				</mat-option>
+			</mat-autocomplete>
+			<mat-error *ngIf="editServiceForm.get('location')?.invalid && editServiceForm.get('location')?.touched">
+			  Location is required.
+			</mat-error>
+		</mat-form-field>
 	
+		<mat-form-field appearance="fill" class="form-field half-width">
+			<mat-label>Working Hours Start</mat-label>
+			<input matInput [ngxMatTimepicker]="startTimePicker" formControlName="workingHoursStart" />
+			<ngx-mat-timepicker #startTimePicker></ngx-mat-timepicker>
+			<mat-error *ngIf="editServiceForm.get('workingHoursStart')?.invalid && editServiceForm.get('workingHoursStart')?.touched">
+			  Working hours start is required.
+			</mat-error>
+		  </mat-form-field>
+		  
+		  <mat-form-field appearance="fill" class="form-field half-width">
+			<mat-label>Working Hours End</mat-label>
+			<input matInput [ngxMatTimepicker]="endTimePicker" formControlName="workingHoursEnd" />
+			<ngx-mat-timepicker #endTimePicker></ngx-mat-timepicker>
+			<mat-error *ngIf="editServiceForm.get('workingHoursEnd')?.invalid && editServiceForm.get('workingHoursEnd')?.touched">
+			  Working hours end is required.
+			</mat-error>
+		</mat-form-field>
+
 		<mat-form-field appearance="fill" class="form-field">
 		<mat-label>Reservation Deadline (Days)</mat-label>
 		<input 
@@ -114,7 +145,6 @@
 					<mat-icon>add_photo_alternate</mat-icon>
 				</label>
 				<input
-					formControlName="images"
 					type="file"
 					id="imageUpload"
 					(change)="onFileSelected($event)"
@@ -122,14 +152,14 @@
 					hidden
 				/>
 				<p>Upload Images</p>
-				<mat-error *ngIf="editServiceForm.get('images')?.hasError('minImages')">
+				<mat-error *ngIf="editServiceForm.get('uploadedFiles')?.hasError('minImages')">
 					At least one image is required.
 				</mat-error>
 			</div>
 
-			<div class="image-preview" *ngIf="images.length > 0">
-				<div *ngFor="let image of images; let i = index" class="image-container">
-					<img [src]="image" alt="Preview" />
+			<div class="image-preview" *ngIf="uploadedFiles.length > 0">
+				<div *ngFor="let image of uploadedFiles; let i = index" class="image-container">
+					<img [src]="imageToUrl(image)" alt="Preview" />
 					<button type="button" class="remove-button" (click)="removeImage(i)">
 						<mat-icon>close</mat-icon>
 					</button>

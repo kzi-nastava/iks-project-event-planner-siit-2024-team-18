@@ -21,5 +21,12 @@ export interface Service {
   maxEngagement?: number;
   reservationDeadline: number;
   cancellationDeadline: number;
+  workingHoursStart: string;
+  workingHoursEnd: string;
+
+  city: string,
+  country: string,
+  latitude: number,
+  longitude: number,
 }
   
