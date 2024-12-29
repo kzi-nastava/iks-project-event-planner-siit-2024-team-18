@@ -99,7 +99,6 @@
   max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
   justify-content: flex-start;
   min-height: 70vh;
   padding: 20px;
@@ -124,17 +123,17 @@
   gap: 5px;
   font-size: 18px;
   color: #EBEBEB;
+  margin-bottom: 2em;
 }
 
-.product-description {
+.product-item {
+  margin: 0px;
   font-size: 18px;
-  line-height: 1.5;
   color: #EBEBEB;
 }
 
 .product-price {
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 18px;
   color: #EBEBEB;
 }
 

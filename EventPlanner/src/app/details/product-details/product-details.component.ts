@@ -114,4 +114,8 @@ export class ProductDetailsComponent implements OnInit {
   toggleFavorite(): void {
     this.isFavorite = !this.isFavorite;
   }
+
+  getEventTypes() {
+    return this.product.eventTypes;
+  }
 }
