@@ -9,6 +9,7 @@ import { EventService } from './../../services/event.service';
 import { Category } from '../../models/category.model';
 import { Event } from '../../models/event.model';
 import { BudgetItem } from '../../models/budget-item.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-budget-planning',
@@ -16,7 +17,7 @@ import { BudgetItem } from '../../models/budget-item.model';
   styleUrls: ['./budget-planning.component.css']
 })
 export class BudgetPlanningComponent implements OnInit {
-  event: Event | null = null;
+  event!: Event;
   categories$: Category[] = [];
   budgetItems: BudgetItem[] = [];
   totalBudget: number = 0;
@@ -28,6 +29,7 @@ export class BudgetPlanningComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
+    private snackBar: MatSnackBar,
   ) {}
 
   budgetForm = new FormGroup({
@@ -35,22 +37,22 @@ export class BudgetPlanningComponent implements OnInit {
     maxAmount: new FormControl(1, [Validators.required, Validators.min(1)]),
   });
 
-  // TODO: fix fixed event id value
   ngOnInit(): void {
-    // Fetch event based on route params
     this.route.params.subscribe((params) => {
       const eventId = +params['id'];
-      this.eventService.getEventById(1).subscribe({
+      this.eventService.getEventById(eventId).subscribe({
         next: (event) => {
           this.event = event;
           
-          // Load categories from CategoryService
-          this.categoryService.getCategories().subscribe({
+          this.categoryService.getCategoriesByEventId(eventId).subscribe({
             next: (categories) => {
               this.categories$ = categories;
             },
             error: (err) => {
               console.error('Error fetching categories:', err);
+              this.snackBar.open('Error fetching categories.', 'OK', {
+                duration: 3000,
+              });
             }
           });
 
@@ -58,21 +60,27 @@ export class BudgetPlanningComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error fetching event:', err);
+          this.snackBar.open('Error fetching event.', 'OK', {
+            duration: 3000,
+          });
         }
       });
     });
   }
 
   loadBudgetItems() {
-    this.budgetService.getBudgetItems().subscribe({
+    this.budgetService.getBudgetItems(this.event.id).subscribe({
       next: (budgetItems: BudgetItem[]) => {
         this.budgetItems = budgetItems;
         this.calculateTotal();
       },
       error: (err) => {
         console.error('Error fetching budget items:', err);
+        this.snackBar.open('Error fetching budget items.', 'OK', {
+          duration: 3000,
+        });
       },
-    });;
+    });
   }
 
   addItem() {
@@ -83,13 +91,16 @@ export class BudgetPlanningComponent implements OnInit {
         categoryName: this.budgetForm.value.categoryName!,
       };
   
-      this.budgetService.createBudgetItem(budgetItem, 1).subscribe({
+      this.budgetService.createBudgetItem(budgetItem, this.event.id).subscribe({
         next: (savedItem: BudgetItem) => {
           this.budgetItems = [...this.budgetItems, savedItem];
           this.calculateTotal();
         },
         error: (err) => {
           console.error('Error adding budget item:', err);
+          this.snackBar.open('Error adding budget item.', 'OK', {
+            duration: 3000,
+          });
         },
       });
       this.budgetForm.reset();
@@ -113,6 +124,9 @@ export class BudgetPlanningComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error fetching budgetItems:', err);
+              this.snackBar.open('Error fetching budgetItems.', 'OK', {
+                duration: 3000,
+              });
             }
           });
         } else {
@@ -122,6 +136,9 @@ export class BudgetPlanningComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error fetching budgetItems:', err);
+              this.snackBar.open('Error fetching budgetItems.', 'OK', {
+                duration: 3000,
+              });
             }
           });        
         }
@@ -130,17 +147,20 @@ export class BudgetPlanningComponent implements OnInit {
   }
 
   details() {
-    this.router.navigate(['/events/create/budget-planning/details']);
+    this.router.navigate(['/events/edit/budget-planning/' + this.event.id + '/details']);
   }
 
   calculateTotal() {
     if (this.event) {
-      this.budgetService.calculateTotalBudget(1).subscribe({
+      this.budgetService.calculateTotalBudget(this.event.id).subscribe({
         next: (totalBudget: number) => {
           this.totalBudget = totalBudget;
         },
         error: (err) => {
           console.error('Error calculating total budget:', err);
+          this.snackBar.open('Error calculating total budget.', 'OK', {
+            duration: 3000,
+          });
         }
       });
     }

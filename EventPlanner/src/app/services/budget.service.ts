@@ -16,8 +16,8 @@ export class BudgetService {
     return this.http.delete<number>(environment.apiHost + "/api/budget/delete/" + id);
   }
 
-  getBudgetItems(): Observable<BudgetItem[]> {
-    return this.http.get<BudgetItem[]>(environment.apiHost + '/api/budget');
+  getBudgetItems(eventId: number): Observable<BudgetItem[]> {
+    return this.http.get<BudgetItem[]>(environment.apiHost + '/api/budget/' + eventId);
   }
 
   calculateTotalBudget(eventId: number): Observable<number> {

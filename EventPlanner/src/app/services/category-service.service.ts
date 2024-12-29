@@ -14,6 +14,10 @@ export class CategoryService {
     return this.http.get<Category[]>(environment.apiHost + '/api/categories');
   }
 
+  getCategoriesByEventId(eventId: number): Observable<Category[]> {
+    return this.http.get<Category[]>(environment.apiHost + '/api/categories/' +eventId);
+  }
+
   getReviewCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(environment.apiHost + '/api/categories/review');
   }
