@@ -5,6 +5,7 @@ import { CreateCategoryComponent } from '../create-category/create-category.comp
 import { EditCategoryComponent } from '../edit-category/edit-category.component';
 import { CategoryService } from '../../services/category-service.service';
 import { Category } from '../../models/category.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-category-manager',
@@ -14,7 +15,8 @@ import { Category } from '../../models/category.model';
 export class CategoryManagerComponent {
   constructor(
     private dialog: MatDialog,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private snackBar: MatSnackBar
   ) {
     this.loadCategories();
   }
@@ -46,8 +48,11 @@ export class CategoryManagerComponent {
           },
           error: (err) => {
             console.error('Error fetching categories:', err);
+            this.snackBar.open('Error fetching categories!', 'OK', {
+              duration: 3000,
+            });
           },
-        });;
+        });
         this.loadCategories();
       }
     });
@@ -68,8 +73,11 @@ export class CategoryManagerComponent {
           },
           error: (err) => {
             console.error('Error fetching categories:', err);
+            this.snackBar.open('Error fetching categories!', 'OK', {
+              duration: 3000,
+            });
           },
-        });;
+        });
         this.loadCategories();
       }
     });
@@ -89,9 +97,12 @@ export class CategoryManagerComponent {
             this.loadCategories();
           },
           error: (err) => {
-            console.error('Error fetching categories:', err);
+            console.error('Category already in use:', err);
+            this.snackBar.open('Category already in use!', 'OK', {
+              duration: 3000,
+            });
           },
-        });;
+        });
       }
     });
   }
