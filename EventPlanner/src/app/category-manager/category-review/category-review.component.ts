@@ -4,6 +4,7 @@ import { CategoryService } from '../../services/category-service.service';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
 import { Category } from '../../models/category.model';
 import { CategoryReviewEditComponent } from '../category-review-edit/category-review-edit.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-category-review',
@@ -15,7 +16,8 @@ export class CategoryReviewComponent {
 
   constructor(
     private dialog: MatDialog,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private snackBar: MatSnackBar,
   ) {
     this.loadCategories();
   }
@@ -39,7 +41,10 @@ export class CategoryReviewComponent {
         this.loadCategories();
       },
       error: (err) => {
-        console.error('Error fetching categories:', err);
+        console.error('Error approving categories:', err);
+        this.snackBar.open('Error approving categories!', 'OK', {
+          duration: 3000,
+        });
       },
     });
   }
@@ -58,6 +63,9 @@ export class CategoryReviewComponent {
           },
           error: (err) => {
             console.error('Error updating category:', err);
+            this.snackBar.open('Error updating category!', 'OK', {
+              duration: 3000,
+            });
           }
         });
       }
