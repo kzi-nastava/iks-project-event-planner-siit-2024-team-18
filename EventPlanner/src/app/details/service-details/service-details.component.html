@@ -45,7 +45,32 @@
       </button>
     </div>
 
-    <p class="service-description">{{ service.description }}</p>
+    <p class="service-item"> <span>Description: </span> {{ service.description }}</p>
+    <hr>
+
+    <p class="service-item"> <span>Specifics: </span> {{ service.specifics }}</p>
+    <hr>
+
+    <p class="service-item"> <span>Category: </span> {{ service.category }}</p>
+    <hr>
+
+    <p class="service-item"> <span>Event Types: </span> {{ service.eventTypes }}</p>
+    <hr>
+
+    <p class="service-item"> <span>Location: </span> {{ service.location }}</p>
+    <hr>
+
+    <p class="service-item"> <span>Engagement: </span> {{ service.minEngagement }} - {{ service.maxEngagement }} hours</p>
+    <hr>
+
+    <p class="service-item"> <span>Reservation Deadline: </span> {{ service.reservationDeadline }} days</p>
+    <hr>
+
+    <p class="service-item"> <span>Cancellation Deadline: </span> {{ service.cancellationDeadline }} days</p>
+    <hr>
+
+    <p class="service-item"> <span>Working Hours: </span> {{ service.workingHoursStart }} - {{ service.workingHoursEnd }} </p>
+    <hr>
 
     <div class="service-price">
       <span>Price: </span>
@@ -55,12 +80,6 @@
       <span class="price" *ngIf="service.discount === 0">
         {{ service.price | currency }}
       </span>
-    </div>
-
-
-    <div class="service-status">
-      <p><strong>Visibility:</strong> {{ service.isVisible ? 'Visible' : 'Hidden' }}</p>
-      <p><strong>Status:</strong> {{ service.isDeleted ? 'Deleted' : 'Active' }}</p>
     </div>
     
     <div class="actions">

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { EventService } from './../../services/event.service';
-import { Event } from '../../models/event.model';
+import { EventCard } from '../../models/event-card.model';
 
 @Component({
   selector: 'app-purchase-product-dialog',
@@ -10,7 +10,7 @@ import { Event } from '../../models/event.model';
   styleUrls: ['./purchase-product-dialog.component.css']
 })
 export class PurchaseProductDialogComponent implements OnInit {
-  events: Event[] = [];
+  events: EventCard[] = [];
   eventControl: FormControl;
 
   constructor(
@@ -26,7 +26,7 @@ export class PurchaseProductDialogComponent implements OnInit {
   }
 
   loadEvents(): void {
-    this.eventService.getEvents().subscribe({
+    this.eventService.getAllByCreator().subscribe({
       next: (data) => {
         this.events = data;
       },

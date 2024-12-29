@@ -45,7 +45,17 @@
       </button>
     </div>
 
-    <p class="product-description">{{ product.description }}</p>
+    <p class="product-item"> <span>Description: </span> {{ product.description }}</p>
+    <hr>
+
+    <p class="product-item"> <span>Category: </span> {{ product.category }}</p>
+    <hr>
+
+    <p class="product-item"> <span>Event Types: </span> {{ getEventTypes() }}</p>
+    <hr>
+
+    <p class="product-item"> <span>Location: </span> {{ product.location }}</p>
+    <hr>
 
     <div class="product-price">
       <span>Price: </span>
@@ -57,12 +67,6 @@
       </span>
     </div>
 
-
-    <div class="product-status">
-      <p><strong>Visibility:</strong> {{ product.isVisible ? 'Visible' : 'Hidden' }}</p>
-      <p><strong>Status:</strong> {{ product.isDeleted ? 'Deleted' : 'Active' }}</p>
-    </div>
-    
     <div class="actions">
       <a>Visit Provider</a>
       <button mat-button class="buy-btn" (click)="openBuyProductDialog()">Buy Product

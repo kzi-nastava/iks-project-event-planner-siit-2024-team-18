@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ServiceManagerService } from '../../services/service-manager.service';  // Use ServiceManagerService
-import { Service } from '../../models/service.model';  // Use Service model
+import { ServiceManagerService } from '../../services/service-manager.service';
+import { Service } from '../../models/service.model';
 
 @Component({
   selector: 'app-service-details',

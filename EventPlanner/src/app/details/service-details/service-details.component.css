@@ -9,8 +9,8 @@
   width: 100%;
   margin: 0 auto;
   flex-wrap: wrap;
-  min-height: 70vh;
-  margin-top: 5em;
+  min-height: 90vh;
+  margin-top: 3em;
   background: linear-gradient(55deg, rgb(137, 132, 213), rgb(44, 62, 80)); 
   border-radius: 20px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
   position: relative;
   width: 50%;
   max-width: 700px;
-  height: 70vh;
+  height: 80vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -99,7 +99,6 @@
   max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
   justify-content: flex-start;
   min-height: 70vh;
   padding: 20px;
@@ -124,17 +123,15 @@
   gap: 5px;
   font-size: 18px;
   color: #EBEBEB;
+  margin-bottom: 2em;
 }
 
-.service-description {
-  font-size: 18px;
-  line-height: 1.5;
+.service-item {
   color: #EBEBEB;
+  margin: 0px;
 }
 
 .service-price {
-  font-size: 22px;
-  font-weight: bold;
   color: #EBEBEB;
 }
 
@@ -152,7 +149,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  bottom: 4em;
+  bottom: 2em;
   width: 40%;
 }
 

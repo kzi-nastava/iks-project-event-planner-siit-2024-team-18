@@ -3,7 +3,8 @@ import { SolutionCard } from '../../models/solution-card.model';
 import { SolutionService } from '../../services/solution.service';
 import { EventService } from './../../services/event.service';
 import { Event } from '../../models/event.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-purchased-solution-details',
@@ -14,7 +15,9 @@ export class PurchasedSolutionDetailsComponent implements OnInit {
   constructor(
     private solutionService: SolutionService,
     private eventService: EventService,
+    private route: ActivatedRoute,
     private router: Router,
+    private snackBar: MatSnackBar,
   ) {
     this.loadAll();
   }
@@ -26,22 +29,31 @@ export class PurchasedSolutionDetailsComponent implements OnInit {
   }
 
   loadAll() {
-    this.solutionService.getSolutions(1).subscribe({
-      next: (data: SolutionCard[]) => {
-        this.solutions = data;
-      },
-      error: (err) => {
-        console.error('Error fetching solutions:', err);
-      },
-    });
+    this.route.params.subscribe((params) => {
+      const eventId = +params['id'];
+      this.eventService.getEventById(eventId).subscribe({
+        next: (event) => {
+          this.event = event;
 
-    this.eventService.getEventById(1).subscribe({
-      next: (data: Event) => {
-        this.event = data;
-      },
-      error: (err) => {
-        console.error('Error fetching event:', err);
-      },
+          this.solutionService.getSolutions(eventId).subscribe({
+            next: (data: SolutionCard[]) => {
+              this.solutions = data;
+            },
+            error: (err) => {
+              console.error('Error fetching solutions:', err);
+              this.snackBar.open('Error fetching solutions.', 'OK', {
+                duration: 3000,
+              });
+            },
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching event:', err);
+          this.snackBar.open('Error fetching event.', 'OK', {
+            duration: 3000,
+          });
+        }
+      });
     });
   }
 
