@@ -5,6 +5,7 @@ import { Product } from '../../models/product.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PurchaseProductDialogComponent } from '../purchase-product-dialog/purchase-product-dialog.component';
 import { BudgetService } from './../../services/budget.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product-details',
@@ -25,7 +26,8 @@ export class ProductDetailsComponent implements OnInit {
     private budgetService: BudgetService,
     private router: Router,
     private dialog: MatDialog,
-) {}
+    private snackBar: MatSnackBar,
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -48,15 +50,13 @@ export class ProductDetailsComponent implements OnInit {
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           this.budgetService.buyProduct(this.product, result).subscribe({
-            next(value) {
-                
-            },
-            error(err) {
-              console.error('Failed to do something:', err);
+            error: (err) => {
+              console.error('Failed to purchase product. Budget item limit has been reached:', err);
+              this.snackBar.open('Failed to purchase product. Budget item limit has been reached.', 'OK', {
+                duration: 3000,
+              });
             },
           })
-        } else {
-          console.log('Purchase canceled');
         }
       });
     }
