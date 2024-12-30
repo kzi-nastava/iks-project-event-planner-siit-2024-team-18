@@ -1,0 +1,9 @@
+<div class="notification-card" [class.seen]="notification.seen" (click)="onNotificationClick()">
+  <div class="notification-header">
+    <h3 class="notification-title">{{ notification.title }}</h3>
+    <span class="notification-date">{{ notification.date | date: 'mediumDate' }}</span>
+  </div>
+  <div class="notification-content">
+    <p>{{ notification.content }}</p>
+  </div>
+</div>

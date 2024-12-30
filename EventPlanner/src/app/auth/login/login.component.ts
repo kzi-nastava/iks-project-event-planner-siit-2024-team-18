@@ -6,6 +6,8 @@ import { AuthService } from '../auth.service';
 import { Login } from '../model/login.model';
 import { AuthResponse } from '../model/auth-response.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotificationManagerService } from '../../services/notification-manager.service';
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,11 @@ export class LoginComponent {
   private _snackBar = inject(MatSnackBar);
   loginForm: FormGroup;
 
-  constructor(private userService: UserService, private authService: AuthService, private router: Router) {
+  constructor(private userService: UserService,
+              private authService: AuthService,
+              private router: Router,
+              private notificationManager: NotificationManagerService,
+              private navbar: NavbarComponent) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
@@ -41,6 +47,14 @@ export class LoginComponent {
         next: (response: AuthResponse) => {
           localStorage.setItem('user', response.token);
           this.authService.setUser();
+
+          this.userService.getLoggedUser().subscribe(user => {
+            this.notificationManager.fetchNotifications();
+            this.notificationManager.initializeWebSocketConnection(user.id);
+
+            this.navbar.refreshNavbar();
+          });
+
           this.router.navigate(['home']);
         },
         error: (err) => {

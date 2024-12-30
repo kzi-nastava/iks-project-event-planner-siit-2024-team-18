@@ -23,6 +23,7 @@ import { BudgetPlanningComponent } from './budget-manager/budget-planning/budget
 import { AuthGuard } from './auth/auth.guard';
 import { PurchasedSolutionDetailsComponent } from './budget-manager/purchased-solution-details/purchased-solution-details.component';
 import { FastRegistrationComponent } from './auth/fast-registration/fast-registration.component';
+import { NotificationsComponent } from './shared/notifications/notifications.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -47,6 +48,7 @@ const routes: Routes = [
   { path: 'event-types', component: EventTypesComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'categories', component: CategoryManagerComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'categories/review', component: CategoryReviewComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
+  { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']} },
   { path: '**', redirectTo: ''},
 ];
 

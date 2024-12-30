@@ -115,3 +115,18 @@ mat-drawer-content {
 .top-border {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+.notification-badge {
+    background-color: #de4d3e;
+    color: #3f3f3f;
+    font-size: 12px;
+    border-radius: 50%; 
+    padding: 4px;
+    min-width: 26px;
+    min-height: 20px;
+    text-align: center;
+    line-height: 20px;
+    margin-left: 5px;
+    vertical-align: super;
+    display: inline-block;
+  }

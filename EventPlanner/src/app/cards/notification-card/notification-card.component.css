@@ -1,0 +1,66 @@
+.notification-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: #3f3f3f;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.notification-card.seen {
+  background: #d4edda;
+}
+
+.notification-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-title {
+  font-family: 'Merriweather', serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  color: #333333;
+}
+
+.notification-date {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.notification-content {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1rem;
+  color: #555555;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .notification-card {
+    padding: 15px;
+  }
+
+  .notification-title {
+    font-size: 1rem;
+  }
+
+  .notification-content {
+    font-size: 0.9rem;
+  }
+
+  .notification-date {
+    font-size: 0.8rem;
+  }
+}

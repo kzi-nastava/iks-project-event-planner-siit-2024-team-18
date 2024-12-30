@@ -23,9 +23,10 @@
       <mat-icon>chat</mat-icon>
       Chat
     </a>
-    <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'AUTHENTICATED_USER'">
+    <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>notifications</mat-icon>
       Notifications
+      <span *ngIf="unseenNotificationsCount > 0" class="notification-badge">{{ unseenNotificationsCount }}</span>
     </a>
     <a class="nav-item" routerLink="/events" routerLinkActive="active" *ngIf="userRole === 'EVENT_ORGANIZER'">
       <mat-icon>event</mat-icon>

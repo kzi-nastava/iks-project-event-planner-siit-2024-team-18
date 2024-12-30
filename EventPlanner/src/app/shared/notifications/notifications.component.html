@@ -1,0 +1,22 @@
+<div class="notifications-container">
+  <div class="notifications-header">
+    <h1>Notifications</h1>
+    <label class="mute-toggle">
+      <input type="checkbox" [(ngModel)]="isMuted" (change)="toggleMute()" />
+      <span>{{ isMuted ? 'Muted' : 'Unmuted' }}</span>
+    </label>
+  </div>
+
+  <div class="notifications-list">
+    <ng-container *ngIf="notifications.length > 0; else noNotifications">
+      <app-notification-card
+        *ngFor="let notification of notifications"
+        [notification]="notification"
+        (notificationClick)="handleNotificationClick(notification.id)"
+      ></app-notification-card>
+    </ng-container>
+    <ng-template #noNotifications>
+      <p class="no-notifications-message">There are no notifications currently.</p>
+    </ng-template>
+  </div>
+</div>
