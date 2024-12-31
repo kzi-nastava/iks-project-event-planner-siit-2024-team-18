@@ -5,6 +5,7 @@ export interface User {
     lastName: string;
     role: string;
     companyName?: string;
+    notificationStatus?: string;
     image?: string;
     address: string;
     phone: string;

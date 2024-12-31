@@ -150,7 +150,6 @@ export class EditEventComponent implements OnInit {
       .getLocationDetails(selectedLocation.displayName)
       .subscribe((details) => {
         this.selectedLocationDetails = details;
-        console.log('Location Details:', details);
       });
   }
 
