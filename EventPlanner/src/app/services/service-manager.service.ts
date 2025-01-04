@@ -17,6 +17,10 @@ export class ServiceManagerService {
     return this.http.get<Service[]>(environment.apiHost + '/api/services');
   }
 
+  getServicesByCreator(): Observable<Service[]> {
+    return this.http.get<Service[]>(environment.apiHost + '/api/services/creator');
+  }
+
   searchAndFilter(filters: any, page: number, pageSize: number): Observable<PagedResponse<Service>> {
     let params = new HttpParams();
   

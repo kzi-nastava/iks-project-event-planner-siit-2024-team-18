@@ -16,6 +16,10 @@ export class ProductManagerService {
     return this.httpClient.get<Product>(environment.apiHost + "/api/products/details/" + id);
   }
 
+  getProductsByCreator(): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(environment.apiHost + '/api/products/creator');
+  }
+
   openProductDetails(productId: number) {
     this.router.navigate(['/product/', productId]);
   }
