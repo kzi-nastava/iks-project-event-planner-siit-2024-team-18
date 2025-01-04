@@ -6,6 +6,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { MaterialModule } from '../infrastructure/material/material.module';
 import { PurchaseProductDialogComponent } from './purchase-product-dialog/purchase-product-dialog.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
+import { EditPricelistComponent } from './edit-pricelist/edit-pricelist.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { PricelistComponent } from './pricelist/pricelist.component';
     ProductDetailsComponent,
     PurchaseProductDialogComponent,
     PricelistComponent,
+    EditPricelistComponent,
   ],
   imports: [
     CommonModule,

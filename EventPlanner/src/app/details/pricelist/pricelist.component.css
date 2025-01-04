@@ -1,4 +1,5 @@
 .list {
+    position: relative;
     margin: 1.5rem auto;
     max-width: 900px;
     border-radius: 12px;
@@ -83,6 +84,34 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: #f9f9f9;
     padding: 2rem;
+}
+
+.custom-pdf-icon {
+    width: 30px;
+    height: 30px;
+    background-image: url('../../../assets/images/pdf.png');
+    background-size: cover;
+    display: inline-block;
+}
+
+.pdf {
+    position: absolute;
+    top: 1em;
+    right: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #a29bfebe;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 56px;
+    width: 56px;
+}
+  
+.pdf:hover {
+    background-color: #a29bfe;
 }
 
 @media (max-width: 768px) {

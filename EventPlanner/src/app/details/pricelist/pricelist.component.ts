@@ -5,6 +5,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ServiceManagerService } from '../../services/service-manager.service';
 import { ProductManagerService } from '../../services/product-manager.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EditPricelistComponent } from './../edit-pricelist/edit-pricelist.component';
+import { PricelistService } from '../../services/pricelist.service';
+import { HttpClient } from '@angular/common/http';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-pricelist',
@@ -20,8 +24,9 @@ export class PricelistComponent {
     private dialog: MatDialog,
     private serviceService: ServiceManagerService,
     private productService: ProductManagerService,
+    private pricelistService: PricelistService,
     private snackBar: MatSnackBar,
-  ) {
+    private http: HttpClient) {
     this.loadData();
   }
 
@@ -45,23 +50,50 @@ export class PricelistComponent {
     });
   }
 
-  editItem(item: any): void {
-    const updatedPrice = prompt('Enter new price:', item.price);
-    const updatedDiscount = prompt('Enter new discount:', item.discount);
-
-    if (updatedPrice !== null && !isNaN(+updatedPrice)) {
-      item.price = +updatedPrice;
-    }
-    if (updatedDiscount !== null && !isNaN(+updatedDiscount)) {
-      item.discount = +updatedDiscount;
-    }
-  }
-
   getDiscountedPrice(price: number, discount: number): number {
     return price - (price * discount) / 100;
   }
 
   toggleTab(): void {
     this.activeTab = this.activeTab === 'products' ? 'services' : 'products';
+  }
+
+  editItem(item: any) {
+    const dialogRef = this.dialog.open(EditPricelistComponent, {
+      width: '500px',
+      data: { solution: item }
+    });
+  
+    dialogRef.afterClosed().subscribe(updatedSolution => {
+      if (updatedSolution) {
+        this.pricelistService.updatePricelistItem(updatedSolution, updatedSolution.id).subscribe({
+          next: () => {
+            this.loadData();
+          },
+          error: (err) => {
+            console.error('Error updating solution:', err);
+            this.snackBar.open('Error updating solution!', 'OK', {
+              duration: 3000,
+            });
+          }
+        });
+      }
+    });
+  }
+
+  createPDF(): void {
+    const data = this.activeTab === 'products' ? this.products : this.services;
+    const url = "/api/pdf/" + this.activeTab;
+    this.pricelistService.createPdf(data, url).subscribe({
+      next: (response: Blob) => {
+        saveAs(response, `${this.activeTab}_pricelist.pdf`);
+      },
+      error: (err) => {
+        console.error('Error creating PDF:', err);
+        this.snackBar.open('Error creating PDF!', 'OK', {
+          duration: 3000,
+        });
+      }
+    });
   }
 }
