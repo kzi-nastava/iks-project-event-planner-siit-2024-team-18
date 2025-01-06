@@ -1,0 +1,27 @@
+<div class="report-screen">
+    <div class="report-container">
+      <div class="report-header">
+        <div class="logo">
+          <img src="../../assets/favicon.ico" alt="Logo" />
+        </div>
+        <h2>Report User</h2>
+        <button class="close-btn" (click)="closeDialog()">&#10005;</button>
+      </div>
+      <div class="report-body">
+        <textarea
+          [(ngModel)]="reportReason"
+          placeholder="Type your reason for reporting"
+          class="reason-input"
+        ></textarea>
+      </div>
+      <div class="report-footer">
+        <button 
+          class="submit-btn" 
+          [disabled]="!reportReason.trim()" 
+          (click)="submitReport()">
+          Submit Report
+        </button>
+      </div>
+    </div>
+  </div>
+  

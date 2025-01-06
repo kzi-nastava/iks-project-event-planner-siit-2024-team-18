@@ -24,6 +24,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { PurchasedSolutionDetailsComponent } from './budget-manager/purchased-solution-details/purchased-solution-details.component';
 import { FastRegistrationComponent } from './auth/fast-registration/fast-registration.component';
 import { NotificationsComponent } from './shared/notifications/notifications.component';
+import { OtherUserProfileComponent } from './user-manager/other-user-profile/other-user-profile.component';
+import { ReportsComponent } from './user-manager/reports/reports.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -44,10 +46,12 @@ const routes: Routes = [
   { path: 'service/:id', component: ServiceDetailsComponent },
   { path: 'users/profile', component: UserProfileComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']}},
   { path: 'users/profile/edit', component: EditProfileComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']}},
+  { path: 'users/profile/:id', component: OtherUserProfileComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']}},
   { path: 'service/:id/reserve', component: ServiceReservationComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']} },
   { path: 'event-types', component: EventTypesComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'categories', component: CategoryManagerComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'categories/review', component: CategoryReviewComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
+  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']} },
   { path: '**', redirectTo: ''},
 ];
