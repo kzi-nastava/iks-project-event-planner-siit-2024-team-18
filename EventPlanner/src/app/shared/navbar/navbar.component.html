@@ -52,6 +52,10 @@
       <mat-icon>person</mat-icon>
       Profile
     </a>
+    <a class="nav-item" routerLink="/reports" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>report</mat-icon>
+      Report Requests
+    </a>
     <a class="nav-item" routerLink="/logout" routerLinkActive="active" *ngIf="isLoggedIn" (click)="logout()">
       <mat-icon>logout</mat-icon>
       Sign Out

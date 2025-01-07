@@ -1,0 +1,15 @@
+<div class="report-card">
+    <div class="report-header">
+      <h3 class="report-title">{{ report.reportedFirstName + " " + report.reportedLastName }}</h3>
+      <span class="reporter-name">{{ report.reporterFirstName + " " + report.reporterLastName }}</span>
+    </div>
+    <div class="report-content">
+      <p class="report-description">{{ report.description }}</p>
+      <span class="report-date">{{ report.reportedDate | date: 'dd.MM.yyyy' }}</span>
+    </div>
+    <div class="report-actions">
+      <button class="remove-button" (click)="onRemove()">Remove</button>
+      <button class="approve-button" (click)="onApprove()">Approve</button>
+    </div>
+  </div>
+  

@@ -8,6 +8,9 @@ import { AuthResponse } from '../model/auth-response.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationManagerService } from '../../services/notification-manager.service';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { ReportService } from '../../services/report.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SuspensionDialogComponent } from '../../user-manager/suspension-dialog/suspension-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -20,9 +23,11 @@ export class LoginComponent {
 
   constructor(private userService: UserService,
               private authService: AuthService,
+              private reportService: ReportService,
               private router: Router,
               private notificationManager: NotificationManagerService,
-              private navbar: NavbarComponent) {
+              private navbar: NavbarComponent,
+              private dialog: MatDialog) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
@@ -38,36 +43,57 @@ export class LoginComponent {
 
   login() {
     if (this.loginForm.valid) {
-      const login: Login = {
-        email: this.loginForm.value.email || "",
-        password: this.loginForm.value.password || ""
-      };
+      const email = this.loginForm.value.email || "";
   
-      this.authService.login(login).subscribe({
-        next: (response: AuthResponse) => {
-          localStorage.setItem('user', response.token);
-          this.authService.setUser();
-
-          this.userService.getLoggedUser().subscribe(user => {
-            this.notificationManager.fetchNotifications();
-            this.notificationManager.initializeWebSocketConnection(user.id);
-
-            this.navbar.refreshNavbar();
-          });
-
-          this.router.navigate(['home']);
-        },
-        error: (err) => {
-          if (err.status === 404) {
-            this._snackBar.open('User with email ' + this.loginForm.value.email + ' not found.', 'OK');
-          } else if (err.status === 400) {
-            this._snackBar.open('Incorrect password. Please try again.', 'OK');
+      this.reportService.getSuspensionDetails(email).subscribe({
+        next: (suspensions) => {
+          if (suspensions != null) {
+            const suspension = suspensions[0];
+            const endDate = new Date(suspension.suspensionEndDate);
+  
+            this.dialog.open(SuspensionDialogComponent, {
+              width: '400px',
+              data: { suspensionEndDate: suspension.suspensionEndDate }
+            });
           } else {
-            this._snackBar.open('An unexpected error occurred', 'OK');
+            this.attemptLogin();
           }
+        },
+        error: () => {
+          this._snackBar.open('An error occurred while checking suspension details.', 'OK');
         }
       });
     }
+  }
+
+  private attemptLogin(): void {
+    const login: Login = {
+      email: this.loginForm.value.email || "",
+      password: this.loginForm.value.password || ""
+    };
+  
+    this.authService.login(login).subscribe({
+      next: (response: AuthResponse) => {
+        localStorage.setItem('user', response.token);
+        this.authService.setUser();
+  
+        this.userService.getLoggedUser().subscribe(user => {
+          this.notificationManager.fetchNotifications();
+          this.notificationManager.initializeWebSocketConnection(user.id);
+          this.navbar.refreshNavbar();
+          this.router.navigate(['home']);
+        });
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this._snackBar.open('User with email ' + this.loginForm.value.email + ' not found.', 'OK');
+        } else if (err.status === 400) {
+          this._snackBar.open('Incorrect password. Please try again.', 'OK');
+        } else {
+          this._snackBar.open('An unexpected error occurred', 'OK');
+        }
+      }
+    });
   }
 
   submit() {

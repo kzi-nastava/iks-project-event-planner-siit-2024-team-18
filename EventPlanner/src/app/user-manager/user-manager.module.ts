@@ -8,20 +8,32 @@ import { EventManagerModule } from '../event-manager/event-manager.module';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { FavouriteSolutionsComponent } from './favourite-solutions/favourite-solutions.component';
 import { RouterModule } from '@angular/router';
+import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
+import { ConfirmationFormComponent } from './confirmation-form/confirmation-form.component';
+import { SubmitReportComponent } from './submit-report/submit-report.component';
+import { ReportsComponent } from './reports/reports.component';
+import { CardsModule } from "../cards/cards.module";
+import { SuspensionDialogComponent } from './suspension-dialog/suspension-dialog.component';
 
 @NgModule({
   declarations: [
     UserProfileComponent,
     CalendarComponent,
     EditProfileComponent,
-    FavouriteSolutionsComponent
+    FavouriteSolutionsComponent,
+    OtherUserProfileComponent,
+    ConfirmationFormComponent,
+    SubmitReportComponent,
+    ReportsComponent,
+    SuspensionDialogComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FullCalendarModule,
     EventManagerModule,
-    RouterModule
-  ]
+    RouterModule,
+    CardsModule
+]
 })
 export class UserManagerModule { }

@@ -1,0 +1,20 @@
+<div class="reports-container">
+    <div class="reports-header">
+      <h1>Report Requests</h1>
+    </div>
+  
+    <div class="reports-list">
+      <ng-container *ngIf="reports.length > 0; else noReports">
+        <app-report-card
+          *ngFor="let report of reports"
+          [report]="report"
+          (approve)="handleApproveReport(report.id)"
+          (remove)="handleRemoveReport(report.id)"
+        ></app-report-card>
+      </ng-container>
+      <ng-template #noReports>
+        <p class="no-reports-message">There are no pending reports currently.</p>
+      </ng-template>
+    </div>
+  </div>
+  
