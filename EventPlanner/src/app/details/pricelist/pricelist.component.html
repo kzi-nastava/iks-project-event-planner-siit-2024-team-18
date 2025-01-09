@@ -1,0 +1,62 @@
+<div [ngSwitch]="activeTab">
+  <div *ngSwitchCase="'products'" class="list">
+    <h2>Pricelist</h2>
+    <button (click)="createPDF()" class="pdf">
+      <mat-icon class="custom-pdf-icon"></mat-icon>
+    </button>
+    <div class="tabs">
+      <button [class.active]="activeTab === 'products'" (click)="toggleTab()">Products</button>
+      <button [class.active]="activeTab === 'services'" (click)="toggleTab()">Services</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Discount (%)</th>
+          <th>Discounted Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products" (click)="editItem(product)">
+          <td>{{ product.id }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price | currency }}</td>
+          <td>{{ product.discount }}</td>
+          <td>{{ getDiscountedPrice(product.price, product.discount) | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngSwitchCase="'services'" class="list">
+    <h2>Pricelist</h2>
+    <button (click)="createPDF()" class="pdf">
+      <mat-icon class="custom-pdf-icon"></mat-icon>
+    </button><div class="tabs">
+    <button [class.active]="activeTab === 'products'" (click)="toggleTab()">Products</button>
+    <button [class.active]="activeTab === 'services'" (click)="toggleTab()">Services</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Discount (%)</th>
+          <th>Discounted Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let service of services" (click)="editItem(service)">
+          <td>{{ service.id }}</td>
+          <td>{{ service.name }}</td>
+          <td>{{ service.price | currency }}</td>
+          <td>{{ service.discount }}</td>
+          <td>{{ getDiscountedPrice(service.price, service.discount) | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

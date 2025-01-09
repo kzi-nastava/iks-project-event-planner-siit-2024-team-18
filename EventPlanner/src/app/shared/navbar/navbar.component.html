@@ -40,6 +40,10 @@
       <mat-icon>shopping_cart</mat-icon>
       Products
     </a>
+    <a class="nav-item" routerLink="/pricelist" routerLinkActive="active" *ngIf="userRole === 'SERVICE_PRODUCT_PROVIDER'">
+      <mat-icon>money</mat-icon>
+      Pricelist
+    </a>
     <a class="nav-item" routerLink="/event-types" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
       <mat-icon>event</mat-icon>
       Event Types

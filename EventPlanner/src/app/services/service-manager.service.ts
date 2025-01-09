@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { PagedResponse } from '../shared/model/paged-response.model';
-import { Form } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +14,10 @@ export class ServiceManagerService {
 
   getServices(): Observable<Service[]> {
     return this.http.get<Service[]>(environment.apiHost + '/api/services');
+  }
+
+  getServicesByCreator(): Observable<Service[]> {
+    return this.http.get<Service[]>(environment.apiHost + '/api/services/creator');
   }
 
   searchAndFilter(filters: any, page: number, pageSize: number): Observable<PagedResponse<Service>> {

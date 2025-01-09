@@ -1,0 +1,46 @@
+.modal-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-label {
+  font-size: 1rem;
+  color: #666;
+}
+
+mat-error {
+  font-size: 0.875rem;
+  color: #d32f2f;
+}
+
+textarea {
+  resize: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+button {
+  flex: 1;
+  font-size: 1rem;
+}

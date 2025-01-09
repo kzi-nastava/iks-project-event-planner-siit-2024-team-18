@@ -5,6 +5,8 @@ import { ServiceDetailsComponent } from './service-details/service-details.compo
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { MaterialModule } from '../infrastructure/material/material.module';
 import { PurchaseProductDialogComponent } from './purchase-product-dialog/purchase-product-dialog.component';
+import { PricelistComponent } from './pricelist/pricelist.component';
+import { EditPricelistComponent } from './edit-pricelist/edit-pricelist.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +14,8 @@ import { PurchaseProductDialogComponent } from './purchase-product-dialog/purcha
     ServiceDetailsComponent,
     ProductDetailsComponent,
     PurchaseProductDialogComponent,
+    PricelistComponent,
+    EditPricelistComponent,
   ],
   imports: [
     CommonModule,
