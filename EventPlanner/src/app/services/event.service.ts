@@ -102,7 +102,11 @@ export class EventService {
     }
   }
 
-  getEventById(eventId: number): Observable<Event> {
+  getEventById(eventId: number): Observable<Event | null> {
+    return this.httpClient.get<Event | null>(environment.apiHost + "/api/events/" + eventId);
+  }
+
+  getEventByIdForBudget(eventId: number): Observable<Event> {
     return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId);
   }
 

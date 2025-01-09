@@ -9,7 +9,8 @@ import { Event } from '../../models/event.model';
   styleUrls: ['./event-details.component.css']
 })
 export class EventDetailsComponent implements OnInit {
-  event!: Event;
+  event!: Event | null;
+  isBlocked: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,8 +31,12 @@ export class EventDetailsComponent implements OnInit {
 
   fetchEventDetails(eventId: number): void {
     this.eventService.getEventById(eventId).subscribe({
-      next: (data: Event) => {
-        this.event = data;
+      next: (data: Event | null) => {
+        if (data) {
+          this.event = data;
+        } else {
+          this.isBlocked = true;
+        }
       },
       error: (err) => {
         console.error('Failed to fetch event details:', err);

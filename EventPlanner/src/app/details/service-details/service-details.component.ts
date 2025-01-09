@@ -11,6 +11,7 @@ import { Service } from '../../models/service.model';
 export class ServiceDetailsComponent implements OnInit {
   serviceId!: number;
   service: Service | null = null;
+  isBlocked: boolean = false;
   currentImageIndex: number = 0; 
   isFavorite: boolean = false; 
   currentIndex: number = 0;
@@ -38,8 +39,12 @@ export class ServiceDetailsComponent implements OnInit {
 
   fetchServiceDetails(serviceId: number): void {
     this.serviceManager.getServiceById(serviceId).subscribe({
-      next: (data: Service) => {
-        this.service = data;
+      next: (data: Service | null) => {
+        if (data) {
+          this.service = data;
+        } else {
+          this.isBlocked = true;
+        }
       },
       error: (err) => {
         console.error('Failed to fetch service details:', err);

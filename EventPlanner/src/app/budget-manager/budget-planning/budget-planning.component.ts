@@ -40,7 +40,7 @@ export class BudgetPlanningComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const eventId = +params['id'];
-      this.eventService.getEventById(eventId).subscribe({
+      this.eventService.getEventByIdForBudget(eventId).subscribe({
         next: (event) => {
           this.event = event;
           
