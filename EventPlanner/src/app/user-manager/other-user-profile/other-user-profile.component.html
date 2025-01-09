@@ -31,12 +31,15 @@
             </p>
         </div>
         <div class="profile-actions">
-            <button mat-raised-button color="warn" class="block-btn" (click)="blockUser()">
-                <mat-icon>block</mat-icon> Block User
+            <button *ngIf="isBlocked" mat-raised-button color="primary" class="block-btn" (click)="unblockUser()">
+              <mat-icon>block</mat-icon> Unblock User
+            </button>
+            <button *ngIf="!isBlocked" mat-raised-button color="warn" class="block-btn" (click)="blockUser()">
+              <mat-icon>block</mat-icon> Block User
             </button>
             <button mat-raised-button color="warn" class="report-btn" (click)="reportUser()">
-                <mat-icon>report</mat-icon> Report User
+              <mat-icon>report</mat-icon> Report User
             </button>
-        </div>
+          </div>
     </div>
 </div>

@@ -1,4 +1,23 @@
-<div class="product-details-container" *ngIf="product">
+<div *ngIf="isBlocked" class="block-dialog">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <h2>Content Unavailable</h2>
+      <button class="close-btn" (click)="goBack()">×</button>
+    </div>
+    <div class="dialog-content">
+      <p>
+        This product is unavailable because you have blocked the provider.
+        If you believe this is an error, please contact support
+        <a href="mailto:eventplannerteam18@gmail.com" style="color: #a29bfe;">here</a>.
+      </p>
+    </div>
+    <div class="dialog-actions">
+      <button (click)="goBack()">Go Back</button>
+    </div>
+  </div>
+</div>
+
+<div class="product-details-container" *ngIf="!isBlocked && product">
   <div class="product-image-gallery">
     <div class="swiper-container" [style.transform]="'translateX(' + swiperOffset + '%)'">
       <ng-container *ngFor="let image of product.images; let i = index">
@@ -78,6 +97,6 @@
   </div>
 </div>
 
-<div *ngIf="!product" class="loading">
+<div *ngIf="!isBlocked && !product" class="loading">
   <p>Loading product details...</p>
 </div>

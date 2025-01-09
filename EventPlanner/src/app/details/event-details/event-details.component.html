@@ -1,17 +1,35 @@
-<div class="event-details-container" *ngIf="event">
-    <div class="event-image">
-      <img [src]="event.images[0]" alt="{{ event.name }}">
+<div *ngIf="isBlocked" class="block-dialog">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <h2>Content Unavailable</h2>
+      <button class="close-btn" (click)="goBack()">×</button>
     </div>
-    <div class="event-info">
-      <h2>{{ event.name }}</h2>
-      <!-- <p class="event-date">{{ event.date | date:'longDate' }}</p> -->
-      <p class="event-description">{{ event.locationName }}</p>
-      <p class="event-description">{{ event.description }}</p>
+    <div class="dialog-content">
+      <p>
+        This event is unavailable because you have blocked the organizer.
+        If you believe this is an error, please contact support
+        <a href="mailto:eventplannerteam18@gmail.com" style="color: #a29bfe;">here</a>.
+      </p>
     </div>
-    
-    <button (click)="goBack()">Back</button>
+    <div class="dialog-actions">
+      <button (click)="goBack()">Go Back</button>
+    </div>
   </div>
+</div>
 
-  <div *ngIf="!event" class="loading">
-    <p>Loading event details...</p>
+<div class="event-details-container" *ngIf="!isBlocked && event">
+  <div class="event-image">
+    <img [src]="event.images[0]" alt="{{ event.name }}">
   </div>
+  <div class="event-info">
+    <h2>{{ event.name }}</h2>
+    <!-- <p class="event-date">{{ event.date | date:'longDate' }}</p> -->
+    <p class="event-description">{{ event.locationName }}</p>
+    <p class="event-description">{{ event.description }}</p>
+  </div>
+  <button (click)="goBack()">Back</button>
+</div>
+
+<div *ngIf="!isBlocked && !event" class="loading">
+  <p>Loading event details...</p>
+</div>

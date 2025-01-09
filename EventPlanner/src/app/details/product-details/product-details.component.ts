@@ -15,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ProductDetailsComponent implements OnInit {
   productId!: number;
   product!: Product;
+  isBlocked: boolean = false;
   currentImageIndex: number = 0; 
   isFavorite: boolean = false; 
   currentIndex: number = 0;
@@ -97,8 +98,12 @@ export class ProductDetailsComponent implements OnInit {
 
   fetchProductDetails(productId: number): void {
     this.productService.getProductById(productId).subscribe({
-      next: (data: Product) => {
-        this.product = data;
+      next: (data: Product | null) => {
+        if (data) {
+          this.product = data;
+        } else {
+          this.isBlocked = true;
+        }
       },
       error: (err) => {
         console.error('Failed to fetch product details:', err);

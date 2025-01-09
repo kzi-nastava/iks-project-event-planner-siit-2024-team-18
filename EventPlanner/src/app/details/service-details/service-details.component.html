@@ -1,4 +1,23 @@
-<div class="service-details-container" *ngIf="service">
+<div *ngIf="isBlocked" class="block-dialog">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <h2>Content Unavailable</h2>
+      <button class="close-btn" (click)="goBack()">×</button>
+    </div>
+    <div class="dialog-content">
+      <p>
+        This service is unavailable because you have blocked the provider.
+        If you believe this is an error, please contact support
+        <a href="mailto:eventplannerteam18@gmail.com" style="color: #a29bfe;">here</a>.
+      </p>
+    </div>
+    <div class="dialog-actions">
+      <button (click)="goBack()">Go Back</button>
+    </div>
+  </div>
+</div>
+
+<div class="service-details-container" *ngIf="!isBlocked && service">
   <div class="service-image-gallery">
     <div class="swiper-container" [style.transform]="'translateX(' + swiperOffset + '%)'">
       <ng-container *ngFor="let image of service.images; let i = index">
@@ -93,6 +112,6 @@
   </div>
 </div>
 
-<div *ngIf="!service" class="loading">
+<div *ngIf="!isBlocked && !service" class="loading">
   <p>Loading service details...</p>
 </div>
