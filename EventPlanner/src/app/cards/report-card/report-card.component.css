@@ -1,0 +1,108 @@
+.report-card {
+    background: #7e79d7;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  
+  .report-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .report-title {
+    font-family: 'Merriweather', serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .reporter-name {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    color: #dcdcdc;
+  }
+  
+  .report-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .report-description {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  .report-date {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.85rem;
+    color: #eaeaea;
+  }
+  
+  .report-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .approve-button {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+  }
+  
+  .approve-button:hover {
+    background: #218838;
+  }
+  
+  .remove-button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+  }
+  
+  .remove-button:hover {
+    background: #c82333;
+  }
+  
+  @media (max-width: 600px) {
+    .report-card {
+      padding: 15px;
+    }
+  
+    .report-title {
+      font-size: 1rem;
+    }
+  
+    .report-description {
+      font-size: 0.9rem;
+    }
+  
+    .report-date {
+      font-size: 0.8rem;
+    }
+  }
+  
