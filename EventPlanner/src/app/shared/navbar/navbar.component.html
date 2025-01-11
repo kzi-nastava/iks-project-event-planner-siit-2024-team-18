@@ -60,6 +60,10 @@
       <mat-icon>report</mat-icon>
       Report Requests
     </a>
+    <a class="nav-item" routerLink="/comments" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>comments</mat-icon>
+      Comment Requests
+    </a>
     <a class="nav-item" routerLink="/logout" routerLinkActive="active" *ngIf="isLoggedIn" (click)="logout()">
       <mat-icon>logout</mat-icon>
       Sign Out

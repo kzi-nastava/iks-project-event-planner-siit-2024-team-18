@@ -32,7 +32,6 @@ export class ReportsComponent implements OnInit {
     this.reportService.approveReport(reportId).subscribe({
       next: (data: Report) => {
         this.reports = this.reports.filter(report => report.id !== reportId);
-        console.log(`Report with ID ${reportId} approved.`);
       },
       error: (error) => {
         console.error('Failed to approve report:', error);
@@ -44,7 +43,6 @@ export class ReportsComponent implements OnInit {
     this.reportService.removeReport(reportId).subscribe({
       next: (data: Report) => {
         this.reports = this.reports.filter(report => report.id !== reportId);
-        console.log(`Report with ID ${reportId} removed.`);
       },
       error: (error) => {
         console.error('Failed to remove report:', error);
