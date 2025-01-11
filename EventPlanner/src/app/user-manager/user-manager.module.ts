@@ -14,6 +14,7 @@ import { SubmitReportComponent } from './submit-report/submit-report.component';
 import { ReportsComponent } from './reports/reports.component';
 import { CardsModule } from "../cards/cards.module";
 import { SuspensionDialogComponent } from './suspension-dialog/suspension-dialog.component';
+import { CommentRequestsComponent } from './comment-requests/comment-requests.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SuspensionDialogComponent } from './suspension-dialog/suspension-dialog
     ConfirmationFormComponent,
     SubmitReportComponent,
     ReportsComponent,
-    SuspensionDialogComponent
+    SuspensionDialogComponent,
+    CommentRequestsComponent
   ],
   imports: [
     CommonModule,

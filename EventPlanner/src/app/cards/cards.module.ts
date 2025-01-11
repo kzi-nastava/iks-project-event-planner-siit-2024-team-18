@@ -5,6 +5,7 @@ import { ProductCardComponent } from './product-card/product-card.component';
 import { ServiceCardComponent } from './service-card/service-card.component';
 import { NotificationCardComponent } from './notification-card/notification-card.component';
 import { ReportCardComponent } from './report-card/report-card.component';
+import { CommentRequestCardComponent } from './comment-request-card/comment-request-card.component';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { ReportCardComponent } from './report-card/report-card.component';
     ProductCardComponent,
     ServiceCardComponent,
     NotificationCardComponent,
-    ReportCardComponent
+    ReportCardComponent,
+    CommentRequestCardComponent
   ],
   imports: [
     CommonModule
@@ -22,7 +24,8 @@ import { ReportCardComponent } from './report-card/report-card.component';
     ProductCardComponent,
     ServiceCardComponent,
     NotificationCardComponent,
-    ReportCardComponent
+    ReportCardComponent,
+    CommentRequestCardComponent
   ]
 })
 export class CardsModule { }
