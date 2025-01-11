@@ -19,6 +19,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptorsFromDi
 import { Interceptor } from './auth/interceptor';
 import { BudgetManagerModule } from './budget-manager/budget-manager.module';
 import { DetailsModule } from './details/details.module';
+import { ChatModule } from './chat/chat.module';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { DetailsModule } from './details/details.module';
     MaterialModule,
     UserManagerModule,
     FullCalendarModule,
+    ChatModule,
   ],
   providers: [
     provideAnimationsAsync(),
