@@ -1,45 +1,46 @@
 <div class="chat-container">
-    <div class="chat-list">
-      <input
-        type="text"
-        placeholder="Search"
-        class="search-input"
-        (input)="loadChats()"
-      />
-      <ul>
-        <li
-          *ngFor="let chat of chats"
-          [class.selected]="chat.id === selectedChatId"
-          (click)="loadMessages(chat.id)"
-        >
-          <div class="chat-item">
-            <h3>{{ chat.user1 }} & {{ chat.user2 }}</h3>
-            <p *ngIf="chat.isDeleted">This chat has been deleted.</p>
-            <p *ngIf="!chat.isDeleted">Last message here...</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-  
-    <div class="chat-window" *ngIf="selectedChatId">
-      <div class="messages">
-        <div
-          *ngFor="let message of messages"
-          [class.sent]="message.chatId === selectedChatId"
-          [class.received]="message.chatId !== selectedChatId"
-        >
-          {{ message.content }}
+  <div class="chat-list">
+    <input
+      type="text"
+      placeholder="Search"
+      class="search-input"
+      (input)="loadChats()"
+    />
+    <ul>
+      <li
+        *ngFor="let chat of chats"
+        [class.selected]="chat.id === selectedChatId"
+        (click)="loadMessages(chat.id)"
+      >
+        <div class="chat-item">
+          <h3>{{ loggedUser?.firstName != chat.user1 ? chat.user1 : chat.user2 }}</h3>
+          <p *ngIf="chat.isDeleted">This chat has been deleted.</p>
+          <p *ngIf="!chat.isDeleted">Last message here...</p>
         </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="chat-window" *ngIf="selectedChatId">
+    <div class="messages">
+      <div
+        *ngFor="let message of messages"
+        [ngClass]="{
+          'sent': isOwnMessage(message),
+          'received': !isOwnMessage(message)
+        }"
+      >
+        {{ message.content }}
       </div>
-  
-      <div class="message-input">
-        <input
-          [(ngModel)]="newMessage"
-          placeholder="Start typing..."
-          (keyup.enter)="sendMessage()"
-        />
-        <button (click)="sendMessage()">Send</button>
-      </div>
+    </div>
+
+    <div class="message-input">
+      <input
+        [(ngModel)]="newMessage"
+        placeholder="Start typing..."
+        (keyup.enter)="sendMessage()"
+      />
+      <button (click)="sendMessage()">Send</button>
     </div>
   </div>
-  
+</div>

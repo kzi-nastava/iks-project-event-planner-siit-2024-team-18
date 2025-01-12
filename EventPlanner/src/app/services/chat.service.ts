@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ChatService {
   private apiUrl = `${environment.apiHost}/api/chat`;
-  private websocketUrl = `${environment.apiHost}/chat`;  // WebSocket URL
+  private websocketUrl = `${environment.apiHost}/chat`;
   private stompClient: any;
   private messageSubject = new BehaviorSubject<Message[]>([]);
 
@@ -29,27 +29,41 @@ export class ChatService {
     return this.http.get<Message[]>(`${this.apiUrl}/messages/${chatId}`);
   }
 
-  sendMessage(chatId: number, content: string): Observable<Message> {
-    return this.http.post<Message>(`${this.apiUrl}/app/send`, { chatId, content });
+  sendMessage(chatId: number, content: string, senderUsername: string): void {
+    if (this.stompClient && this.stompClient.connected) {
+      const messagePayload = { chatId, content, senderUsername };
+      this.stompClient.send('/app/send', {}, JSON.stringify(messagePayload));
+    } else {
+      console.error('WebSocket is not connected.');
+    }
   }
 
-  initializeWebSocketConnection(): void {
-    if (this.stompClient) return;
+  initializeWebSocketConnection(chatId: number): void {
+    if (this.stompClient) {
+      console.log('WebSocket is already connected.');
+      return;
+    }
+
     const ws = new SockJS(this.websocketUrl);
     this.stompClient = Stomp.over(ws);
-    
-    this.stompClient.connect({}, () => {
-      this.subscribeToMessages();
-    }, (error: any) => {
-      console.error('WebSocket connection error:', error);
-    });
+
+    this.stompClient.connect(
+      {},
+      () => {
+        this.subscribeToMessages(chatId);
+        console.log(`WebSocket connected for chatId: ${chatId}`);
+      },
+      (error: any) => {
+        console.error('WebSocket connection error:', error);
+      }
+    );
   }
-  
-  private subscribeToMessages(): void {
-    this.stompClient.subscribe('/topic/messages', (message: { body: string }) => {
+
+  private subscribeToMessages(chatId: number): void {
+    this.stompClient.subscribe(`/topic/messages/${chatId}`, (message: { body: string }) => {
       const newMessage: Message = JSON.parse(message.body);
       const currentMessages = this.messageSubject.getValue();
-      this.messageSubject.next([newMessage, ...currentMessages]);
+      this.messageSubject.next([...currentMessages, newMessage]);
     });
   }
 
