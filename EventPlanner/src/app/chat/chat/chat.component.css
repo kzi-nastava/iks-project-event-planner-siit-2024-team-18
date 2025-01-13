@@ -109,3 +109,15 @@
 .message-input button:hover {
   background-color: #776dff;
 }
+
+.notification-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  width: 25px;
+  background-color: #A29BFE;
+  color: #ddd;
+  font-size: 12px;
+  border-radius: 100%;
+}

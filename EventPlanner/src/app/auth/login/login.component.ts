@@ -11,6 +11,7 @@ import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { ReportService } from '../../services/report.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuspensionDialogComponent } from '../../user-manager/suspension-dialog/suspension-dialog.component';
+import { ChatService } from './../../services/chat.service';
 
 @Component({
   selector: 'app-login',
@@ -21,19 +22,21 @@ export class LoginComponent {
   private _snackBar = inject(MatSnackBar);
   loginForm: FormGroup;
 
-  constructor(private userService: UserService,
-              private authService: AuthService,
-              private reportService: ReportService,
-              private router: Router,
-              private notificationManager: NotificationManagerService,
-              private navbar: NavbarComponent,
-              private dialog: MatDialog) {
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private reportService: ReportService,
+    private router: Router,
+    private notificationManager: NotificationManagerService,
+    private chatService: ChatService,
+    private navbar: NavbarComponent,
+    private dialog: MatDialog
+  ) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
     });
   }
-  
 
   passwordHidden = true;
 
@@ -80,6 +83,7 @@ export class LoginComponent {
         this.userService.getLoggedUser().subscribe(user => {
           this.notificationManager.fetchNotifications();
           this.notificationManager.initializeWebSocketConnection(user.id);
+          this.chatService.initializeWebSocketConnection(user);
           this.navbar.refreshNavbar();
           this.router.navigate(['home']);
         });

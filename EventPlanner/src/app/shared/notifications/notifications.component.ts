@@ -67,7 +67,7 @@ export class NotificationsComponent implements OnInit {
           next: (data: NotificationCard) => {
             this.notification = data;
             const { itemId, notificationType } = this.notification;
-        
+
             if (notificationType === 'EVENT') {
               this.eventService.openEventDetails(itemId);
             } else if (notificationType === 'SERVICE') {
