@@ -18,8 +18,7 @@ export class ChatService {
   private messagesPerChatSubject = new BehaviorSubject<Message[]>([]);
   private activeChatSubscriptions: Set<number> = new Set();
   private unseenMessagesPerChatSubject = new BehaviorSubject<Map<number, number>>(new Map());
-  private lastMessagesSubject = new BehaviorSubject<{ [chatId: number]: Message }>({});
-
+  
   loggedUser: User | null = null;
 
   constructor(
@@ -42,10 +41,6 @@ export class ChatService {
 
   get unseenMessagesPerChat$(): Observable<Map<number, number>> {
     return this.unseenMessagesPerChatSubject.asObservable();
-  }
-
-  get lastMessages$(): Observable<{ [chatId: number]: Message }> {
-    return this.lastMessagesSubject.asObservable();
   }
 
   public updateUnseenMessagesCount(): void {
@@ -103,10 +98,6 @@ export class ChatService {
     return this.http.get<Message[]>(`${this.apiUrl}/messages/${chatId}`);
   }
 
-  getLastMessageForChat(chatId: number): Observable<Message> {
-    return this.http.get<Message>(`${this.apiUrl}/messages/last/${chatId}`);
-  }
-
   updateMessagesBackend(updatedMessages: Message[]): void {
     this.http.put<void>(`${this.apiUrl}/messages/update`, updatedMessages)
       .subscribe({
@@ -126,14 +117,25 @@ export class ChatService {
         return updatedMessage ? { ...msg, ...updatedMessage } : msg;
     });
 
-    this.messagesSubject.next(updatedMessageList);
-    this.messagesPerChatSubject.next(updatedMessages);
+    const isUnchanged = currentMessages.length === updatedMessageList.length &&
+                        currentMessages.every((msg, index) =>
+                            (Object.keys(msg) as Array<keyof Message>).every(key =>
+                                msg[key] === updatedMessageList[index][key]
+                            )
+                        );
+
+    if (!isUnchanged) {
+      this.messagesSubject.next(updatedMessageList);
+      this.messagesPerChatSubject.next(updatedMessages);
+    }
+
     this.updateUnseenMessagesCount();
     this.updateMessagesBackend(updatedMessageList);
   }
 
   sendMessage(chatId: number, content: string, senderUsername: string): void {
     if (this.stompClient && this.stompClient.connected) {
+      
       const messagePayload = { chatId, content, senderUsername };
       this.stompClient.send('/app/send', {}, JSON.stringify(messagePayload));
     } else {
@@ -186,18 +188,9 @@ export class ChatService {
   
         this.messagesSubject.next([...currentMessages, newMessage]);
         this.messagesPerChatSubject.next([...this.messagesPerChatSubject.getValue(), newMessage]);
-  
-        this.updateLastMessageForChat(chatId, newMessage);
-  
         this.updateUnseenMessagesCount();
       }
     });
-  }
-  
-  private updateLastMessageForChat(chatId: number, message: Message): void {
-    const currentLastMessages = this.lastMessagesSubject.getValue();
-    const updatedLastMessages = { ...currentLastMessages, [chatId]: message };
-    this.lastMessagesSubject.next(updatedLastMessages);
   }
   
   disconnectWebSocket(): void {
@@ -208,12 +201,5 @@ export class ChatService {
         this.activeChatSubscriptions.clear();
       });
     }
-  }
-
-  updateLastMessagesForChat(chatId: number, message: Message): void {
-    const currentLastMessages = this.lastMessagesSubject.getValue();
-    currentLastMessages[chatId] = message;
-    
-    this.lastMessagesSubject.next(currentLastMessages);
   }
 }
