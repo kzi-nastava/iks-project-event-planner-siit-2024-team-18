@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
 import { Chat, Message } from '../../models/chat.model';
 import { UserService } from '../../services/user.service';
@@ -10,7 +10,11 @@ import { Subscription } from 'rxjs';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit {
+  
+  private messagesSubscription: Subscription | null = null;
+  private chatSubscription: Subscription | null = null;
+  
   chats: Chat[] = [];
   unseenMessagesPerChat = new Map<number, number>();
   messages: Message[] = [];
@@ -18,9 +22,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   newMessage: string = '';
   loggedUser: User | null = null;
   unseenMessagesCount: number = 0;
-
-  private messagesSubscription: Subscription | null = null;
-  private chatSubscription: Subscription | null = null;
+  lastMessages: { [chatId: number]: Message | undefined } = {}; 
 
   constructor(
     private chatService: ChatService,
@@ -32,10 +34,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.unseenMessagesPerChat$.subscribe((unseenCounts) => {
       this.unseenMessagesPerChat = unseenCounts;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribeMessages();
+  
+    this.chatService.lastMessages$.subscribe((updatedLastMessages) => {
+      this.lastMessages = updatedLastMessages;
+    });
   }
 
   loadData(): void {
@@ -54,44 +56,55 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.getChats(this.loggedUser!.id).subscribe({
       next: (data: Chat[]) => {
         this.chats = data;
-        this.chats.forEach((chat) => this.chatService.fetchMessagesForChat(chat.id));
+  
+        this.chats.forEach((chat) => {
+          this.chatService.getLastMessageForChat(chat.id).subscribe({
+            next: (lastMessage: Message) => {
+              const message: Message = lastMessage || { id: -1, content: "Start chatting!", seen: true, chatId: chat.id, isDeleted: false, senderUsername: "null" };
+              
+              this.lastMessages[chat.id] = message;
+            },
+            error: (err) => {
+              console.error(`Error fetching last message for chat ${chat.id}:`, err);
+            },
+          });
+        });
       },
       error: (err) => {
         console.error('Error fetching chats:', err);
       },
     });
   }
-
+  
   loadMessages(chatId: number): void {
     this.unsubscribeMessages();
+  
     this.selectedChatId = chatId;
+    const selectedChat = this.chats.find(chat => chat.id === chatId) || null;
+  
+    this.chatService.setCurrentChat(selectedChat);
+  
     this.chatSubscription = this.chatService.getMessages(chatId).subscribe({
       next: (data: Message[]) => {
         this.messages = data;
-        // const updatedMessages = this.messages.map((m) =>
-        //   m.chatId === chatId && m.senderUsername !== this.loggedUser?.firstName ? { ...m, seen: true } : m
-        // );
-        // this.chatService.updateMessages(updatedMessages);
+        const updatedMessages = this.messages.map((m) =>
+          m.chatId === chatId && m.senderUsername !== this.loggedUser?.firstName ? { ...m, seen: true } : m
+        );
+        this.chatService.updateMessages(updatedMessages);
       },
       error: (err) => {
         console.error('Error fetching messages:', err);
       },
     });
 
-
-    // Unsubscribe from any previous message subscription
-
-    // Subscribe to messages for the selected chat
+    // listen to messages send by recipient
     this.messagesSubscription = this.chatService.messagesPerChat$.subscribe({
-      next: (data: Message[]) => {
-        this.messages = [
-          ...this.messages,
-          ...data.filter((m) => !this.messages.some((existing) => existing.id === m.id)),
-        ];
-        this.messages.sort((a, b) => a.id - b.id);
+      next: (newMessages: Message[]) => {
+        this.messages = [...this.messages, ...newMessages.filter(m => 
+          !this.messages.some(existing => existing.id === m.id)
+        )];
       },
     });
-    
   }
 
   sendMessage(): void {

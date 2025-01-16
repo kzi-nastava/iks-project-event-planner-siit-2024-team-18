@@ -15,7 +15,7 @@
         <div class="chat-item">
           <h3>{{ loggedUser?.firstName != chat.user1 ? chat.user1 : chat.user2 }} <span *ngIf="getUnseenMessageCount(chat.id) > 0" class="notification-badge">{{ getUnseenMessageCount(chat.id) }} </span> </h3>
           <p *ngIf="chat.isDeleted">This chat has been deleted.</p>
-          <p *ngIf="!chat.isDeleted">Last message here...</p>
+          {{ lastMessages[chat.id]?.content || 'No messages yet...' }}
         </div>
       </li>
     </ul>
