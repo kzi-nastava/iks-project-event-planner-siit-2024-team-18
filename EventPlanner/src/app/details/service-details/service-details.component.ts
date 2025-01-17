@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServiceManagerService } from '../../services/service-manager.service';
 import { Service } from '../../models/service.model';
+import { ChatService } from '../../services/chat.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-service-details',
@@ -20,7 +22,9 @@ export class ServiceDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private serviceManager: ServiceManagerService,
-    private router: Router
+    private chatService: ChatService,
+    private router: Router,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +52,9 @@ export class ServiceDetailsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to fetch service details:', err);
+        this.snackBar.open('Failed to fetch service details.', 'OK', {
+          duration: 3000,
+        });
         this.router.navigate(['']);
       }
     });
@@ -99,6 +106,23 @@ export class ServiceDetailsComponent implements OnInit {
       this.router.navigate([`/service/${serviceId}/reserve`]);
     } else {
       console.error('Service ID is not available');
+      this.snackBar.open('Service ID is not available.', 'OK', {
+        duration: 3000,
+      });
     }
+  }
+  
+  chat() {
+    this.chatService.createServiceChat(this.service!.id).subscribe({
+      next: (data: number) => {
+        this.router.navigate(['chat/']);
+      }, 
+      error: (err) => {
+        console.error('Failed to open chat:', err);
+        this.snackBar.open('Failed to open chat.', 'OK', {
+          duration: 3000,
+        });
+      },
+    });
   }
 }

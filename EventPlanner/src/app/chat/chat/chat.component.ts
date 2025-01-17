@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
 import { Chat, Message } from '../../models/chat.model';
 import { UserService } from '../../services/user.service';
@@ -10,12 +10,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit {
-  
+export class ChatComponent implements OnInit, OnDestroy {
   private messagesSubscription: Subscription | null = null;
   private chatSubscription: Subscription | null = null;
   
   chats: Chat[] = [];
+  filteredChats: Chat[] = [];
   unseenMessagesPerChat = new Map<number, number>();
   messages: Message[] = [];
   selectedChatId: number | null = null;
@@ -23,20 +23,27 @@ export class ChatComponent implements OnInit {
   loggedUser: User | null = null;
   unseenMessagesCount: number = 0;
   lastMessages: { [chatId: number]: Message | undefined } = {}; 
+  searchQuery: string = '';
 
   constructor(
     private chatService: ChatService,
     private userService: UserService,
   ) {}
 
+  ngOnDestroy(): void {
+    this.chatService.setCurrentChat({ id: -1, user1: "null", user2: "null", isDeleted: false });
+  }
+
   ngOnInit(): void {
     this.loadData();
+
     this.chatService.unseenMessagesPerChat$.subscribe((unseenCounts) => {
       this.unseenMessagesPerChat = unseenCounts;
     });
   
     this.chatService.lastMessages$.subscribe((updatedLastMessages) => {
       this.lastMessages = updatedLastMessages;
+      this.sortChatsByLastMessage();
     });
   }
 
@@ -56,18 +63,19 @@ export class ChatComponent implements OnInit {
     this.chatService.getChats(this.loggedUser!.id).subscribe({
       next: (data: Chat[]) => {
         this.chats = data;
+        this.filteredChats = [...this.chats];
+
+        const fetchPromises = this.chats.map((chat) =>
+          this.chatService.getLastMessageForChat(chat.id).toPromise()
+        );
   
-        this.chats.forEach((chat) => {
-          this.chatService.getLastMessageForChat(chat.id).subscribe({
-            next: (lastMessage: Message) => {
-              const message: Message = lastMessage || { id: -1, content: "Start chatting!", seen: true, chatId: chat.id, isDeleted: false, senderUsername: "null" };
-              
-              this.lastMessages[chat.id] = message;
-            },
-            error: (err) => {
-              console.error(`Error fetching last message for chat ${chat.id}:`, err);
-            },
+        Promise.all(fetchPromises).then((lastMessages) => {
+          lastMessages.forEach((message, index) => {
+            const chatId = this.chats[index].id;
+            this.lastMessages[chatId] = message || { id: -1, content: "Start chatting!", seen: true, chatId, isDeleted: false, senderUsername: "null" };
           });
+  
+          this.sortChatsByLastMessage();
         });
       },
       error: (err) => {
@@ -76,21 +84,35 @@ export class ChatComponent implements OnInit {
     });
   }
   
+  filterChats(): void {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredChats = this.chats.filter(chat =>
+      (chat.user1.toLowerCase().includes(query) || chat.user2.toLowerCase().includes(query))
+    );
+  }
+  
   loadMessages(chatId: number): void {
     this.unsubscribeMessages();
-  
     this.selectedChatId = chatId;
     const selectedChat = this.chats.find(chat => chat.id === chatId) || null;
-  
+
     this.chatService.setCurrentChat(selectedChat);
   
+    if (!this.chatService.activeChatSubscriptions.has(chatId)) {
+      this.chatService.subscribeToChat(chatId);
+    }
+
     this.chatSubscription = this.chatService.getMessages(chatId).subscribe({
       next: (data: Message[]) => {
         this.messages = data;
+
+        this.messages.sort((a, b) => b.id - a.id);
+
         const updatedMessages = this.messages.map((m) =>
           m.chatId === chatId && m.senderUsername !== this.loggedUser?.firstName ? { ...m, seen: true } : m
         );
         this.chatService.updateMessages(updatedMessages);
+        this.chatService.updateUnseenMessagesBackend(updatedMessages);
       },
       error: (err) => {
         console.error('Error fetching messages:', err);
@@ -103,6 +125,7 @@ export class ChatComponent implements OnInit {
         this.messages = [...this.messages, ...newMessages.filter(m => 
           !this.messages.some(existing => existing.id === m.id)
         )];
+        this.messages.sort((a, b) => b.id - a.id);
       },
     });
   }
@@ -120,6 +143,22 @@ export class ChatComponent implements OnInit {
 
   getUnseenMessageCount(chatId: number): number {
     return this.unseenMessagesPerChat.get(chatId) || 0;
+  }
+
+  sortChatsByLastMessage(): void {
+    this.chats.sort((a, b) => {
+      const lastMessageIdA = this.lastMessages[a.id]!.id;
+      const lastMessageIdB = this.lastMessages[b.id]!.id;
+  
+      return lastMessageIdB - lastMessageIdA;
+    });
+
+    this.filteredChats.sort((a, b) => {
+      const lastMessageIdA = this.lastMessages[a.id]!.id;
+      const lastMessageIdB = this.lastMessages[b.id]!.id;
+  
+      return lastMessageIdB - lastMessageIdA;
+    });
   }
 
   private unsubscribeMessages(): void {

@@ -47,16 +47,14 @@
   flex-direction: column;
   justify-content: flex-end;
   background-color: #ececec;
-  padding: 1rem;
 }
 
 .messages {
   flex: 1;
-  overflow-y: auto;
+  flex-direction: column-reverse;
+  overflow-y: scroll;
   display: flex;
-  flex-direction: column;
   padding: 0 10em;
-  justify-content: flex-end;
 }
 
 .messages div {
@@ -79,6 +77,13 @@
   background-color: #ddd;
   align-self: flex-start;
   max-width: 70%;
+}
+
+.user-chat {
+  display: flex;
+  padding: 1rem;
+  font-size: 30px;
+  background-color: white;
 }
 
 .message-input {

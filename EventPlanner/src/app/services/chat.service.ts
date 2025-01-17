@@ -16,19 +16,10 @@ export class ChatService {
   private stompClient: any;
   private allMessagesSubject = new BehaviorSubject<Message[]>([]);
   private messagesPerChatSubject = new BehaviorSubject<Message[]>([]);
-  private activeChatSubscriptions: Set<number> = new Set();
   private unseenMessagesPerChatSubject = new BehaviorSubject<Map<number, number>>(new Map());
   private lastMessagesSubject = new BehaviorSubject<{ [chatId: number]: Message }>({});
   private currentChatSubject = new BehaviorSubject<Chat | null>(null);
-
-  get currentChat$(): Observable<Chat | null> {
-    return this.currentChatSubject.asObservable();
-  }
-  
-  setCurrentChat(chat: Chat | null): void {
-    this.currentChatSubject.next(chat);
-  }
-  
+  activeChatSubscriptions: Set<number> = new Set();
   loggedUser: User | null = null;
 
   constructor(
@@ -44,8 +35,14 @@ export class ChatService {
   }
 
   get unseenMessagesCount$(): Observable<number> {
-    return this.allMessages$.pipe(
-      map((messages) => messages.filter((m) => !m.seen && m.senderUsername != this.loggedUser?.firstName).length)
+    return this.unseenMessagesPerChatSubject.asObservable().pipe(
+      map((unseenMessagesPerChat) => {
+        let totalUnseenCount = 0;
+        unseenMessagesPerChat.forEach((count) => {
+          totalUnseenCount += count;
+        });
+        return totalUnseenCount;
+      })
     );
   }
 
@@ -57,6 +54,10 @@ export class ChatService {
     return this.lastMessagesSubject.asObservable();
   }
   
+  get currentChat$(): Observable<Chat | null> {
+    return this.currentChatSubject.asObservable();
+  }
+
   initializeWebSocketConnection(user: User): void {
     if (this.stompClient) {
       console.log('WebSocket is already connected.');
@@ -83,6 +84,8 @@ export class ChatService {
   private loadInitialChatSubscriptions(userId: number): void {
     this.getChats(userId).subscribe((chats) => {
       chats.forEach(chat => {
+        this.loadMessages(chat);
+
         if (!this.activeChatSubscriptions.has(chat.id)) {
           this.subscribeToChat(chat.id);
         }
@@ -90,30 +93,40 @@ export class ChatService {
     });
   }
 
+  private loadMessages(chat: Chat) {
+    this.getMessages(chat.id).subscribe({
+      next: (data: Message[]) => {
+        this.allMessagesSubject.next([...this.allMessagesSubject.getValue(), ...data]);
+        this.updateUnseenMessagesCount();
+      }
+    })
+  }
+
   // triggers when message is received
-  private subscribeToChat(chatId: number): void {
-    const subscription = this.stompClient.subscribe(`/topic/messages/${chatId}`, (message: { body: string }) => {
+  subscribeToChat(chatId: number): void {
+    this.stompClient.subscribe(`/topic/messages/${chatId}`, (message: { body: string }) => {
       const newMessage: Message = JSON.parse(message.body);
       const currentMessages = this.allMessagesSubject.getValue();
-  
-      if (!currentMessages.some(msg => msg.id === newMessage.id)) {
-        if (newMessage.senderUsername === this.loggedUser!.firstName) {
-          newMessage.seen = true;
-        }
-  
-        this.allMessagesSubject.next([...currentMessages, newMessage]);
 
+      // different outcomes depending on who is logged in
+      if (newMessage.senderUsername === this.loggedUser!.firstName) {
+        this.updateMessages([...this.messagesPerChatSubject.getValue(), newMessage]);
+      } else {
+        // if receiver has the chat already opened
         if (this.currentChatSubject.getValue()?.id == newMessage.chatId) {
           newMessage.seen = true;
-          this.messagesPerChatSubject.next([...this.messagesPerChatSubject.getValue(), newMessage]);
-          this.updateMessages([newMessage]);
+          this.updateMessages([...this.messagesPerChatSubject.getValue(), newMessage]);
+          this.updateUnseenMessagesBackend([newMessage]);
         } else {
+          this.allMessagesSubject.next([...currentMessages, newMessage]);
           this.updateUnseenMessagesCount();
         }
-  
-        this.updateLastMessageForChat(chatId, newMessage);
       }
+
+      this.updateLastMessageForChat(chatId, newMessage);
     });
+
+    this.activeChatSubscriptions.add(chatId);
   }
   
   private updateLastMessageForChat(chatId: number, message: Message): void {
@@ -133,13 +146,15 @@ export class ChatService {
   }
 
   updateMessages(updatedMessages: Message[]): void {
-    const currentMessages = this.allMessagesSubject.getValue();
-    const updatedMessageList = currentMessages.map((msg) => {
+    this.messagesPerChatSubject.next(updatedMessages);
+
+    const currentMessagesAll = this.allMessagesSubject.getValue();
+    const updatedMessageAllList = currentMessagesAll.map((msg) => {
       const updatedMessage = updatedMessages.find((updated) => updated.id === msg.id);
       return updatedMessage ? { ...msg, ...updatedMessage } : msg;
     });
     
-    this.allMessagesSubject.next(updatedMessageList);
+    this.allMessagesSubject.next(updatedMessageAllList);
     this.messagesPerChatSubject.next(updatedMessages);
     this.updateUnseenMessagesCount();
   }
@@ -165,6 +180,22 @@ export class ChatService {
       console.error('WebSocket is not connected.');
     }
   }
+  
+  setCurrentChat(chat: Chat | null): void {
+    this.currentChatSubject.next(chat);
+  }
+
+  updateUnseenMessagesBackend(updatedMessageList: Message[]): void {
+    this.http.put<void>(`${this.apiUrl}/messages/update`, updatedMessageList)
+      .subscribe({
+        next: () => {
+          console.log('Messages updated successfully.');
+        },
+        error: (err) => {
+          console.error('Failed to update messages:', err);
+        }
+      });
+  }
 
   getChats(userId: number): Observable<Chat[]> {
     return this.http.get<Chat[]>(`${this.apiUrl}/chats/${userId}`);
@@ -176,5 +207,17 @@ export class ChatService {
 
   getLastMessageForChat(chatId: number): Observable<Message> {
     return this.http.get<Message>(`${this.apiUrl}/messages/last/${chatId}`);
+  }
+
+  createProductChat(productId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/chat/create/product/${productId}`);
+  }
+  
+  createServiceChat(serviceId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/chat/create/service/${serviceId}`);
+  }
+  
+  createEventChat(eventId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/chat/create/event/${eventId}`);
   }
 }
