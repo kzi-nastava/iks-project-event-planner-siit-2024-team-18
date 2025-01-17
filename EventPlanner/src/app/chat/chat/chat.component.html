@@ -1,22 +1,31 @@
 <div class="chat-container">
   <div class="chat-list">
-    <!-- Search input field -->
-    <mat-form-field class="search-input">
-      <mat-label>Search</mat-label>
-      <input matInput [(ngModel)]="searchQuery" (input)="filterChats()" placeholder="Search">
-    </mat-form-field>
+    <div class="messages-logo">Messages</div>
+    <div class="search-input">
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchQuery" (input)="filterChats()" placeholder="Search" />
+      </mat-form-field>
+    </div>
     <ul>
       <li
         *ngFor="let chat of filteredChats"
         [class.selected]="chat.id === selectedChatId"
         (click)="loadMessages(chat.id)"
+        class="chat"
       >
         <div class="chat-item">
-          <h3>{{ loggedUser?.firstName != chat.user1 ? chat.user1 : chat.user2 }} 
-            <span *ngIf="getUnseenMessageCount(chat.id) > 0" class="notification-badge">{{ getUnseenMessageCount(chat.id) }} </span>
-          </h3>
-          <p *ngIf="chat.isDeleted">This chat has been deleted.</p>
-          {{ lastMessages[chat.id]?.content || 'No messages yet...' }}
+          <div class="user-field">
+            <img class="user-image" [src]="loggedUser?.image || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
+            <div class="user-info">
+              <p class="user-name m-0">{{ loggedUser?.firstName != chat.user1 ? chat.user1 : chat.user2 }} 
+                <span *ngIf="getUnseenMessageCount(chat.id) > 0" class="notification-badge">{{ getUnseenMessageCount(chat.id) }} </span>
+              </p>
+              <p class="last-message m-0">{{ lastMessages[chat.id]?.content || 'No messages yet...' }}</p>
+            </div>
+          </div>
+          <p class="date"> {{ formatDateOrTime(lastMessages[chat.id]!.date) }} </p>
         </div>
       </li>
     </ul>
@@ -24,7 +33,8 @@
 
   <div class="chat-window" *ngIf="selectedChatId">
     <div class="user-chat">
-      <span>USER</span>
+      <img class="user-chat-image" [src]="loggedUser?.image || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
+      <p class="user-chat-name m-0">User</p>
     </div>
 
     <div class="messages">
@@ -35,7 +45,8 @@
           'received': !isOwnMessage(message)
         }"
       >
-        {{ message.content }}
+        <p class="message-content">{{ message.content }}</p>
+        <span class="message-time">{{ formatDateOrTime(message.date) }}</span>
       </div>
     </div>
 
@@ -45,7 +56,9 @@
         placeholder="Start typing..."
         (keyup.enter)="sendMessage()"
       />
-      <button (click)="sendMessage()">Send</button>
+      <button mat-icon-button color="primary" (click)="sendMessage()">
+        <mat-icon>send</mat-icon>
+      </button>
     </div>
   </div>
 </div>

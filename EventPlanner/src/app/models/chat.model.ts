@@ -11,5 +11,6 @@ export interface Message {
     seen: boolean;
     chatId: number;
     senderUsername: string;
+    date: Date;
     isDeleted: boolean;
 }

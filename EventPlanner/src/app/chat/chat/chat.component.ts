@@ -4,6 +4,7 @@ import { Chat, Message } from '../../models/chat.model';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { Subscription } from 'rxjs';
+import { Time } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
@@ -16,13 +17,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   
   chats: Chat[] = [];
   filteredChats: Chat[] = [];
-  unseenMessagesPerChat = new Map<number, number>();
   messages: Message[] = [];
+  unseenMessagesPerChat = new Map<number, number>();
+  lastMessages: { [chatId: number]: Message | undefined } = {}; 
   selectedChatId: number | null = null;
-  newMessage: string = '';
   loggedUser: User | null = null;
   unseenMessagesCount: number = 0;
-  lastMessages: { [chatId: number]: Message | undefined } = {}; 
+  newMessage: string = '';
   searchQuery: string = '';
 
   constructor(
@@ -72,7 +73,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         Promise.all(fetchPromises).then((lastMessages) => {
           lastMessages.forEach((message, index) => {
             const chatId = this.chats[index].id;
-            this.lastMessages[chatId] = message || { id: -1, content: "Start chatting!", seen: true, chatId, isDeleted: false, senderUsername: "null" };
+            this.lastMessages[chatId] = message || { id: -1, content: "Start chatting!", seen: true, chatId, date: new Date(), isDeleted: false, senderUsername: "null" };
           });
   
           this.sortChatsByLastMessage();
@@ -159,6 +160,21 @@ export class ChatComponent implements OnInit, OnDestroy {
   
       return lastMessageIdB - lastMessageIdA;
     });
+  }
+
+  formatDateOrTime(date: Date): string {
+    if (!date) return '';
+    const now = new Date();
+    const parsedDate = new Date(date);
+  
+    const oneDay = 24 * 60 * 60 * 1000;
+    const isOlderThanOneDay = (now.getTime() - parsedDate.getTime()) > oneDay;
+  
+    if (isOlderThanOneDay) {
+      return parsedDate.toLocaleDateString();
+    } else {
+      return parsedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    }
   }
 
   private unsubscribeMessages(): void {
