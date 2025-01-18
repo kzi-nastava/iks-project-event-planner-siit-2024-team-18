@@ -17,15 +17,15 @@
       >
         <div class="chat-item">
           <div class="user-field">
-            <img class="user-image" [src]="loggedUser?.image || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
+            <img class="user-image" [src]="getUserPicture(loggedUser!.id !== chat.user1 ? chat.user1 : chat.user2) || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
             <div class="user-info">
-              <p class="user-name m-0">{{ loggedUser?.firstName != chat.user1 ? chat.user1 : chat.user2 }} 
+              <p class="user-name m-0"> {{ getUserFullName(loggedUser!.id !== chat.user1 ? chat.user1 : chat.user2) }}
                 <span *ngIf="getUnseenMessageCount(chat.id) > 0" class="notification-badge">{{ getUnseenMessageCount(chat.id) }} </span>
               </p>
               <p class="last-message m-0">{{ lastMessages[chat.id]?.content || 'No messages yet...' }}</p>
             </div>
           </div>
-          <p class="date"> {{ formatDateOrTime(lastMessages[chat.id]!.date) }} </p>
+          <p class="date"> {{ lastMessages[chat.id]?.content === 'Start chatting!' ? '' : (lastMessages[chat.id]?.date ? formatDateOrTime(lastMessages[chat.id]!.date) : '') }} </p>
         </div>
       </li>
     </ul>
@@ -33,8 +33,8 @@
 
   <div class="chat-window" *ngIf="selectedChatId">
     <div class="user-chat">
-      <img class="user-chat-image" [src]="loggedUser?.image || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
-      <p class="user-chat-name m-0">User</p>
+      <img class="user-image" [src]="getUserPictureInChat(selectedChatId) || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
+      <p class="user-chat-name m-0">{{ getUserInChat(selectedChatId) }}</p>
     </div>
 
     <div class="messages">

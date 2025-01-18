@@ -6,6 +6,7 @@ import { environment } from '../../env/environment';
 import { Message, Chat } from '../models/chat.model';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,8 @@ export class ChatService {
   loggedUser: User | null = null;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
   ) {}
 
   get allMessages$(): Observable<Message[]> {
@@ -193,6 +195,9 @@ export class ChatService {
         },
         error: (err) => {
           console.error('Failed to update messages:', err);
+          this.snackBar.open('Error fetching messages!', 'OK', {
+            duration: 3000,
+          }); 
         }
       });
   }

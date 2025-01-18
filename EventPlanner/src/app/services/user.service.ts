@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { UpdateUser } from '../models/update-user.model';
@@ -33,6 +33,10 @@ export class UserService {
     return this.http.get<User>(environment.apiHost + '/api/user-profiles/other-user/' + otherUserId);
   }
 
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(environment.apiHost + '/api/user-profiles/all');
+  }
+  
   deactivate(email: string): Observable<any> {
     return this.http.delete(environment.apiHost + '/api/user-profiles/deactivate/' + email);
   }

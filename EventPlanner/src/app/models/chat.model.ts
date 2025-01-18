@@ -1,7 +1,7 @@
 export interface Chat {
     id: number;
-    user1: string;
-    user2: string;
+    user1: number;
+    user2: number;
     isDeleted: boolean;
 }
 

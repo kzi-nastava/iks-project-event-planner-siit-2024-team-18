@@ -4,7 +4,7 @@ import { Chat, Message } from '../../models/chat.model';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { Subscription } from 'rxjs';
-import { Time } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-chat',
@@ -19,6 +19,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   filteredChats: Chat[] = [];
   messages: Message[] = [];
   unseenMessagesPerChat = new Map<number, number>();
+  usersMap: Map<number, User> = new Map();
   lastMessages: { [chatId: number]: Message | undefined } = {}; 
   selectedChatId: number | null = null;
   loggedUser: User | null = null;
@@ -29,10 +30,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private chatService: ChatService,
     private userService: UserService,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnDestroy(): void {
-    this.chatService.setCurrentChat({ id: -1, user1: "null", user2: "null", isDeleted: false });
+    this.chatService.setCurrentChat({ id: -1, user1: -1, user2: -1, isDeleted: false });
   }
 
   ngOnInit(): void {
@@ -56,6 +58,23 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error fetching user:', err);
+        this.snackBar.open('Error fetching user!', 'OK', {
+          duration: 3000,
+        });
+      },
+    });
+
+    this.userService.getAllUsers().subscribe({
+      next: (users: User[]) => {
+        users.forEach(user => {
+          this.usersMap.set(user.id, user);
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+        this.snackBar.open('Error fetching users!', 'OK', {
+          duration: 3000,
+        });
       },
     });
   }
@@ -65,32 +84,43 @@ export class ChatComponent implements OnInit, OnDestroy {
       next: (data: Chat[]) => {
         this.chats = data;
         this.filteredChats = [...this.chats];
-
+        
         const fetchPromises = this.chats.map((chat) =>
           this.chatService.getLastMessageForChat(chat.id).toPromise()
         );
-  
+        
         Promise.all(fetchPromises).then((lastMessages) => {
           lastMessages.forEach((message, index) => {
             const chatId = this.chats[index].id;
-            this.lastMessages[chatId] = message || { id: -1, content: "Start chatting!", seen: true, chatId, date: new Date(), isDeleted: false, senderUsername: "null" };
-          });
-  
-          this.sortChatsByLastMessage();
+              this.lastMessages[chatId] = message || { id: -1, content: "Start chatting!", seen: true, chatId, date: new Date(), isDeleted: false, senderUsername: "null" };
+            });
+    
+            this.sortChatsByLastMessage();
         });
       },
       error: (err) => {
         console.error('Error fetching chats:', err);
+        this.snackBar.open('Error fetching chats!', 'OK', {
+          duration: 3000,
+        });
       },
     });
   }
   
   filterChats(): void {
     const query = this.searchQuery.toLowerCase();
-    this.filteredChats = this.chats.filter(chat =>
-      (chat.user1.toLowerCase().includes(query) || chat.user2.toLowerCase().includes(query))
-    );
+  
+    this.filteredChats = this.chats.filter(chat => {
+      const user1 = this.usersMap.get(chat.user1);
+      const user2 = this.usersMap.get(chat.user2);
+  
+      const fullName1 = user1 ? `${user1.firstName} ${user1.lastName}`.toLowerCase() : '';
+      const fullName2 = user2 ? `${user2.firstName} ${user2.lastName}`.toLowerCase() : '';
+  
+      return fullName1.includes(query) || fullName2.includes(query);
+    });
   }
+  
   
   loadMessages(chatId: number): void {
     this.unsubscribeMessages();
@@ -117,6 +147,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error fetching messages:', err);
+        this.snackBar.open('Error fetching messages!', 'OK', {
+          duration: 3000,
+        }); 
       },
     });
 
@@ -175,6 +208,40 @@ export class ChatComponent implements OnInit, OnDestroy {
     } else {
       return parsedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     }
+  }
+
+  getUserFullName(userId: number): string {
+    const user = this.usersMap.get(userId);
+    return user ? `${user.firstName} ${user.lastName}` : 'Unknown User';
+  }
+
+  getUserPicture(userId: number): string {
+    const user = this.usersMap.get(userId);
+    return user!.image!;
+  }
+
+  getUserPictureInChat(chatId: number): string {
+    let currentChat: Chat;
+    this.filteredChats.forEach(chat => {
+      if (chat.id == chatId) {
+        currentChat = chat;
+        return;
+      }
+    });
+
+    return this.usersMap.get(this.loggedUser!.id !== currentChat!.user1 ? currentChat!.user1 : currentChat!.user2)!.image!;
+  }
+
+  getUserInChat(chatId: number): string {
+    let currentChat: Chat;
+    this.filteredChats.forEach(chat => {
+      if (chat.id == chatId) {
+        currentChat = chat;
+        return;
+      }
+    });
+
+    return this.getUserFullName(this.loggedUser!.id !== currentChat!.user1 ? currentChat!.user1 : currentChat!.user2);
   }
 
   private unsubscribeMessages(): void {
