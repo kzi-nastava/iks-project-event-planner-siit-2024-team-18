@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -31,6 +32,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     private userService: UserService,
     private snackBar: MatSnackBar,
+    private router: Router,
   ) {}
 
   ngOnDestroy(): void {
@@ -92,7 +94,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         Promise.all(fetchPromises).then((lastMessages) => {
           lastMessages.forEach((message, index) => {
             const chatId = this.chats[index].id;
-              this.lastMessages[chatId] = message || { id: -1, content: "Start chatting!", seen: true, chatId, date: new Date(), isDeleted: false, senderUsername: "null" };
+              this.lastMessages[chatId] = message || { id: -1, content: "Start chatting!", seen: true, chatId, date: new Date(), isDeleted: false, senderId: -1 };
             });
     
             this.sortChatsByLastMessage();
@@ -140,7 +142,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages.sort((a, b) => b.id - a.id);
 
         const updatedMessages = this.messages.map((m) =>
-          m.chatId === chatId && m.senderUsername !== this.loggedUser?.firstName ? { ...m, seen: true } : m
+          m.chatId === chatId && m.senderId !== this.loggedUser?.id ? { ...m, seen: true } : m
         );
         this.chatService.updateMessages(updatedMessages);
         this.chatService.updateUnseenMessagesBackend(updatedMessages);
@@ -166,13 +168,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendMessage(): void {
     if (this.newMessage.trim() && this.selectedChatId !== null) {
-      this.chatService.sendMessage(this.selectedChatId, this.newMessage, this.loggedUser!.firstName);
+      this.chatService.sendMessage(this.selectedChatId, this.newMessage, this.loggedUser!.id);
       this.newMessage = '';
     }
   }
 
   isOwnMessage(message: Message): boolean {
-    return message.senderUsername === this.loggedUser?.firstName;
+    return message.senderId === this.loggedUser?.id;
   }
 
   getUnseenMessageCount(chatId: number): number {
@@ -230,6 +232,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     return this.usersMap.get(this.loggedUser!.id !== currentChat!.user1 ? currentChat!.user1 : currentChat!.user2)!.image!;
+  }
+
+  goToUserProfile(chatId: number) {
+    let currentChat: Chat;
+    this.filteredChats.forEach(chat => {
+      if (chat.id == chatId) {
+        currentChat = chat;
+        return;
+      }
+    });
+
+    const recipient = this.usersMap.get(this.loggedUser!.id !== currentChat!.user1 ? currentChat!.user1 : currentChat!.user2)!;
+    this.router.navigate(['/users/profile/', recipient.id]);
   }
 
   getUserInChat(chatId: number): string {

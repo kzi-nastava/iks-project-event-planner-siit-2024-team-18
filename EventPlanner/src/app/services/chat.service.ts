@@ -111,7 +111,7 @@ export class ChatService {
       const currentMessages = this.allMessagesSubject.getValue();
 
       // different outcomes depending on who is logged in
-      if (newMessage.senderUsername === this.loggedUser!.firstName) {
+      if (newMessage.senderId === this.loggedUser!.id) {
         this.updateMessages([...this.messagesPerChatSubject.getValue(), newMessage]);
       } else {
         // if receiver has the chat already opened
@@ -166,7 +166,7 @@ export class ChatService {
     const unseenCounts = new Map<number, number>();
 
     messages.forEach((message) => {
-      if (!message.seen && message.senderUsername != this.loggedUser!.firstName) {
+      if (!message.seen && message.senderId != this.loggedUser!.id) {
         unseenCounts.set(message.chatId, (unseenCounts.get(message.chatId) || 0) + 1);
       }
     });
@@ -174,9 +174,9 @@ export class ChatService {
     this.unseenMessagesPerChatSubject.next(unseenCounts);
   }
 
-  sendMessage(chatId: number, content: string, senderUsername: string): void {
+  sendMessage(chatId: number, content: string, senderId: number): void {
     if (this.stompClient && this.stompClient.connected) {
-      const messagePayload = { chatId, content, senderUsername };
+      const messagePayload = { chatId, content, senderId };
       this.stompClient.send('/app/send', {}, JSON.stringify(messagePayload));
     } else {
       console.error('WebSocket is not connected.');

@@ -10,7 +10,7 @@ export interface Message {
     content: string;
     seen: boolean;
     chatId: number;
-    senderUsername: string;
+    senderId: number;
     date: Date;
     isDeleted: boolean;
 }
