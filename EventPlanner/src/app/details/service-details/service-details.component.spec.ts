@@ -1,14 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ServiceDetailsComponent } from './service-details.component';
+import { RouterModule } from '@angular/router';
+import { ServiceManagerService } from '../../services/service-manager.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-describe('ServiceDetailComponent', () => {
+describe('ServiceDetailsComponent', () => {
   let component: ServiceDetailsComponent;
   let fixture: ComponentFixture<ServiceDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ServiceDetailsComponent]
+      imports: [
+                  RouterModule.forRoot([]),
+                ],
+      declarations: [ServiceDetailsComponent],
+      providers: [
+                    ServiceManagerService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                  ],
     })
     .compileComponents();
 

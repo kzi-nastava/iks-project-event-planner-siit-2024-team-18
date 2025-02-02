@@ -1,21 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { AuthService } from './auth.service';
+import { PricelistService } from './pricelist.service';
 
-describe('AuthService', () => {
-  let service: AuthService;
+describe('PricelistService', () => {
+  let service: PricelistService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        AuthService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
-    });
-
-    service = TestBed.inject(AuthService);
+          providers: [
+            PricelistService,
+            provideHttpClient(),
+            provideHttpClientTesting(),
+          ],
+        });
+    service = TestBed.inject(PricelistService);
   });
 
   it('should be created', () => {

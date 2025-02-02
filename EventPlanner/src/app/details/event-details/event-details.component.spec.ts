@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EventDetailsComponent } from './event-details.component';
+import { RouterModule } from '@angular/router';
+import { EventService } from '../../services/event.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('EventDetailsComponent', () => {
   let component: EventDetailsComponent;
@@ -8,7 +12,15 @@ describe('EventDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EventDetailsComponent]
+      imports: [
+                  RouterModule.forRoot([]),
+                ],
+      declarations: [EventDetailsComponent],
+      providers: [
+                    EventService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                  ],
     })
     .compileComponents();
 
