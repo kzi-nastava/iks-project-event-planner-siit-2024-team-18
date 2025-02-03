@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateCategoryComponent } from './create-category.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CreateCategoryComponent', () => {
   let component: CreateCategoryComponent;
@@ -8,7 +10,12 @@ describe('CreateCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateCategoryComponent]
+      declarations: [CreateCategoryComponent],
+      providers: [
+              { provide: MatDialogRef, useValue: { close: jasmine.createSpy('close') } },
+              { provide: MAT_DIALOG_DATA, useValue: {} }
+            ],
+            schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

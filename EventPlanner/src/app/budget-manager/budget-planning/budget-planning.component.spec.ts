@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BudgetPlanningComponent } from './budget-planning.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { BudgetService } from '../../services/budget.service';
+import { RouterModule } from '@angular/router';
 
 describe('BudgetPlanningComponent', () => {
   let component: BudgetPlanningComponent;
@@ -8,7 +12,15 @@ describe('BudgetPlanningComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BudgetPlanningComponent]
+      imports: [
+                    RouterModule.forRoot([]),
+                  ],
+      declarations: [BudgetPlanningComponent],
+      providers: [
+              BudgetService,
+              provideHttpClient(),
+              provideHttpClientTesting(),
+            ],
     })
     .compileComponents();
 

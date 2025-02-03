@@ -37,10 +37,16 @@ export class ServiceReservationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.serviceId = +this.route.snapshot.paramMap.get('id')!;
-    this.fetchServiceDetails();
-    this.fetchEventsByOrganizer();
-    this.fetchCurrentReservations();
+    const serviceIdParam = this.route.snapshot.paramMap.get('id');
+    if (serviceIdParam) {
+      this.serviceId = +serviceIdParam;
+      this.fetchServiceDetails();
+      this.fetchEventsByOrganizer();
+      this.fetchCurrentReservations();
+    } else {
+      alert('Service ID is missing.');
+      this.router.navigate(['/']);
+    }
   }
 
   fetchServiceDetails(): void {
@@ -59,7 +65,11 @@ export class ServiceReservationComponent implements OnInit {
     this.eventService.getEventsByOrganizerId().subscribe({
       next: (result: EventCard[]) => {
         this.events = result;
-        this.selectedEvent = this.events[0];
+        if (this.events.length > 0) {
+          this.selectedEvent = this.events[0]; // safely select the first event
+        } else {
+          alert('No events found for this organizer.');
+        }
       },
       error: () => {
         alert('Failed to fetch events by organizer. Please try again later.');

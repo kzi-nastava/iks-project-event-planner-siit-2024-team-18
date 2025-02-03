@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class InviteScreenComponent {
   email: string = '';
   emailList: string[] = [];
-  eventId: number = 12;
+  eventId: number = 14;
   isSending: boolean = false;
 
   constructor(private emailService: EmailService,private router: Router) {}

@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommentRequestsComponent } from './comment-requests.component';
+import { CommentService } from '../../services/comment.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('CommentRequestsComponent', () => {
   let component: CommentRequestsComponent;
@@ -8,7 +11,12 @@ describe('CommentRequestsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CommentRequestsComponent]
+      declarations: [CommentRequestsComponent],
+      providers: [
+                    CommentService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                  ],
     })
     .compileComponents();
 

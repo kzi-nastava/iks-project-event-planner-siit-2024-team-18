@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as Stomp from 'stompjs';
+import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { environment } from '../../env/environment';
 import { NotificationCard } from '../models/notification-card.model';
@@ -12,7 +12,7 @@ import { NotificationService } from './notification.service';
 })
 export class NotificationManagerService {
   private notificationsSubject = new BehaviorSubject<NotificationCard[]>([]);
-  private stompClient: any;
+  private stompClient!: Client;
   private serverUrl = `${environment.apiHost}/notifications`;
 
   constructor(private notificationService: NotificationService) {}
@@ -43,21 +43,22 @@ export class NotificationManagerService {
   }
 
   initializeWebSocketConnection(userId: number): void {
-    if (this.stompClient) return;
+    if (this.stompClient && this.stompClient.active) return;
 
-    const ws = new SockJS(this.serverUrl);
-    this.stompClient = Stomp.over(ws);
-
-    this.stompClient.connect({}, () => {
-      this.subscribeToNotifications(userId);
-    }, (error: any) => {
-      console.error('WebSocket connection error:', error);
+    this.stompClient = new Client({
+      webSocketFactory: () => new SockJS(this.serverUrl),
+      debug: (msg) => console.log(msg),
+      reconnectDelay: 5000,
+      onConnect: () => this.subscribeToNotifications(userId),
+      onStompError: (error) => console.error('WebSocket error:', error),
     });
+
+    this.stompClient.activate();
   }
 
   private subscribeToNotifications(userId: number): void {
     if (userId) {
-      this.stompClient.subscribe(`/topic/notifications/${userId}`, (message: { body: string }) => {
+      this.stompClient.subscribe(`/topic/notifications/${userId}`, (message) => {
         const notification: NotificationCard = JSON.parse(message.body);
         const currentNotifications = this.notificationsSubject.getValue();
         this.notificationsSubject.next([notification, ...currentNotifications]);
@@ -66,11 +67,8 @@ export class NotificationManagerService {
   }
 
   disconnectWebSocket(): void {
-    if (this.stompClient) {
-      this.stompClient.disconnect(() => {
-        console.log('WebSocket connection closed');
-        this.stompClient = null;
-      });
+    if (this.stompClient && this.stompClient.active) {
+      this.stompClient.deactivate();
     }
   }
 }
