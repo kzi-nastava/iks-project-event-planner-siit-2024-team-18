@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoryManagerComponent } from './category-manager.component';
+import { CategoryService } from '../../services/category-service.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { RouterModule } from '@angular/router';
+import { MaterialModule } from '../../infrastructure/material/material.module';
 
 describe('CategoryManagerComponent', () => {
   let component: CategoryManagerComponent;
@@ -8,7 +13,16 @@ describe('CategoryManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CategoryManagerComponent]
+      imports: [
+              RouterModule.forRoot([]),
+              MaterialModule
+            ],
+      declarations: [CategoryManagerComponent],
+      providers: [
+        CategoryService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     })
     .compileComponents();
 

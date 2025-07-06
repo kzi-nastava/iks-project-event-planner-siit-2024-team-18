@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditEventTypeComponent } from './edit-event-type.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CategoryService } from '../../services/category-service.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('EditEventTypeComponent', () => {
   let component: EditEventTypeComponent;
@@ -8,7 +13,15 @@ describe('EditEventTypeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditEventTypeComponent]
+      declarations: [EditEventTypeComponent],
+      providers: [
+                    { provide: MatDialogRef, useValue: { close: jasmine.createSpy('close') } },
+                    { provide: MAT_DIALOG_DATA, useValue: {} },
+                    CategoryService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                  ],
+                  schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

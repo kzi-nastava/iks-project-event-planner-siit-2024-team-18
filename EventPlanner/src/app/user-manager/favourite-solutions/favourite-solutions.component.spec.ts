@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FavouriteSolutionsComponent } from './favourite-solutions.component';
+import { SolutionService } from '../../services/solution.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('FavouriteSolutionsComponent', () => {
   let component: FavouriteSolutionsComponent;
@@ -8,7 +11,12 @@ describe('FavouriteSolutionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FavouriteSolutionsComponent]
+      declarations: [FavouriteSolutionsComponent],
+      providers: [
+                    SolutionService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                  ],
     })
     .compileComponents();
 

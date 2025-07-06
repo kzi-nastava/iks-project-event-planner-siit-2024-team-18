@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationsComponent } from './notifications.component';
+import { NotificationService } from '../../services/notification.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { MaterialModule } from '../../infrastructure/material/material.module';
 
 describe('NotificationsComponent', () => {
   let component: NotificationsComponent;
@@ -8,7 +12,15 @@ describe('NotificationsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NotificationsComponent]
+      imports: [
+                    MaterialModule
+                  ],
+      declarations: [NotificationsComponent],
+      providers: [
+              NotificationService,
+              provideHttpClient(),
+              provideHttpClientTesting(),
+            ],
     })
     .compileComponents();
 

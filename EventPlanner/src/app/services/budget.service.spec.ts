@@ -1,21 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { AuthService } from './auth.service';
+import { BudgetService } from './budget.service';
 
-describe('AuthService', () => {
-  let service: AuthService;
+describe('BudgetService', () => {
+  let service: BudgetService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        AuthService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
-    });
-
-    service = TestBed.inject(AuthService);
+          providers: [
+            BudgetService,
+            provideHttpClient(),
+            provideHttpClientTesting(),
+          ],
+        });
+    service = TestBed.inject(BudgetService);
   });
 
   it('should be created', () => {

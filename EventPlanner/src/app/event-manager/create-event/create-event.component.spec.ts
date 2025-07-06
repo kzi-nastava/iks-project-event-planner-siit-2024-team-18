@@ -1,6 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateEventComponent } from './create-event.component';
+import { EventTypeService } from '../../services/event-type.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { MaterialModule } from '../../infrastructure/material/material.module';
+import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CreateEventComponent', () => {
   let component: CreateEventComponent;
@@ -8,7 +14,17 @@ describe('CreateEventComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateEventComponent]
+      imports: [
+                  RouterModule.forRoot([]),
+                  MaterialModule,
+                  BrowserAnimationsModule
+                ],
+      declarations: [CreateEventComponent],
+      providers: [
+                    EventTypeService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                  ],
     })
     .compileComponents();
 

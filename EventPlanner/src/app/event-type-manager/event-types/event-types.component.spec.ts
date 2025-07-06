@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EventTypesComponent } from './event-types.component';
+import { EventTypeService } from '../../services/event-type.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { MaterialModule } from '../../infrastructure/material/material.module';
 
 describe('EventTypesComponent', () => {
   let component: EventTypesComponent;
@@ -8,7 +12,15 @@ describe('EventTypesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EventTypesComponent]
+      imports: [
+                        MaterialModule
+                      ],
+      declarations: [EventTypesComponent],
+      providers: [
+                    EventTypeService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                  ],
     })
     .compileComponents();
 
