@@ -114,12 +114,12 @@ export class EventService {
     return this.httpClient.get<EventCard[]>(`${environment.apiHost}/api/events/events-all`);
   }
 
-  create(event: Event): Observable<Event> {
-    return this.httpClient.post<Event>(environment.apiHost + '/api/events/create', event);
+  create(event: FormData): Observable<void> {
+    return this.httpClient.post<void>(environment.apiHost + '/api/events/create', event);
   }
 
-  update(event: Event, id: number): Observable<Event> {
-    return this.httpClient.put<Event>(environment.apiHost + '/api/events/edit/' + id, event);
+  update(event: FormData, id: number): Observable<void> {
+    return this.httpClient.put<void>(environment.apiHost + '/api/events/edit/' + id, event);
   }
 
   getEventForUpdate(id: number): Observable<Event> {

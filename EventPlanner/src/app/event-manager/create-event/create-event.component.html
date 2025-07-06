@@ -72,7 +72,8 @@
                     createEventForm.get('maxParticipants')?.touched
                 "
             >
-                Please enter number of max participants (valid number greater than 0).
+                Please enter number of max participants (valid number greater
+                than 0).
             </mat-error>
         </mat-form-field>
 
@@ -180,31 +181,28 @@
                     <mat-icon>add_photo_alternate</mat-icon>
                 </label>
                 <input
-                    formControlName="selectedImages"
                     type="file"
                     id="imageUpload"
+                    multiple
                     (change)="onFileSelected($event)"
+                    accept="image/*"
                     multiple
                     hidden
                 />
                 <p>Upload Images</p>
                 <mat-error
-                    *ngIf="
-                        createEventForm
-                            .get('selectedImages')
-                            ?.hasError('minImages')
-                    "
+                    *ngIf="createEventForm.get('images')?.hasError('minImages')"
                 >
                     At least one image is required.
                 </mat-error>
             </div>
 
-            <div class="image-preview" *ngIf="selectedImages.length > 0">
+            <div class="image-preview" *ngIf="images.length > 0">
                 <div
-                    *ngFor="let image of selectedImages; let i = index"
+                    *ngFor="let image of images; let i = index"
                     class="image-container"
                 >
-                    <img [src]="image" alt="Preview" />
+                    <img [src]="imageToUrl(image)" alt="Preview" />
                     <button
                         type="button"
                         class="remove-button"
