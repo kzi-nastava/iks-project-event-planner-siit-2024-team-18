@@ -9,7 +9,9 @@ import { UpdateUser } from '../models/update-user.model';
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   eventOrganizerRegistration(user: User): Observable<User> {
     return this.http.post<User>(environment.apiHost + '/api/event-organizers', user);
@@ -23,10 +25,18 @@ export class UserService {
     return this.http.get<User>(environment.apiHost + '/api/user-profiles');
   }
 
+  getRecipient(chatId: number, loggedUserId: number): Observable<User> {
+    return this.http.get<User>(environment.apiHost + `/api/user-profiles/recipient/${chatId}/${loggedUserId}`);
+  }
+
   getOtherUser(otherUserId: number): Observable<User> {
     return this.http.get<User>(environment.apiHost + '/api/user-profiles/other-user/' + otherUserId);
   }
 
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(environment.apiHost + '/api/user-profiles/all');
+  }
+  
   deactivate(email: string): Observable<any> {
     return this.http.delete(environment.apiHost + '/api/user-profiles/deactivate/' + email);
   }

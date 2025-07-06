@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PurchaseProductDialogComponent } from '../purchase-product-dialog/purchase-product-dialog.component';
 import { BudgetService } from './../../services/budget.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-product-details',
@@ -23,9 +24,10 @@ export class ProductDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private productService: ProductManagerService,
     private budgetService: BudgetService,
-    private router: Router,
+    private chatService: ChatService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) {}
@@ -122,5 +124,19 @@ export class ProductDetailsComponent implements OnInit {
 
   getEventTypes() {
     return this.product.eventTypes;
+  }
+
+  chat() {
+    this.chatService.createProductChat(this.product.id).subscribe({
+      next: (data: number) => {
+        this.router.navigate(['chat/']);
+      }, 
+      error: (err) => {
+        console.error('Failed to open chat:', err);
+        this.snackBar.open('Failed to open chat.', 'OK', {
+          duration: 3000,
+        });
+      },
+    });
   }
 }

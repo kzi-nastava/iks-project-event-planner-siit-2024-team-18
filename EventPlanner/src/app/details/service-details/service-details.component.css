@@ -9,8 +9,8 @@
   width: 100%;
   margin: 0 auto;
   flex-wrap: wrap;
-  min-height: 90vh;
-  margin-top: 3em;
+  min-height: 95vh;
+  margin-top: 10px;
   background: linear-gradient(55deg, rgb(137, 132, 213), rgb(44, 62, 80)); 
   border-radius: 20px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
   position: relative;
   width: 50%;
   max-width: 700px;
-  height: 80vh;
+  height: 85vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -165,7 +165,18 @@
   align-items: center;
 }
 
-.contact-btn, .provider-link {
+.chat {
+  cursor: pointer;
+  color: #A29BFE;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.chat:hover {
+  color: #8c84fc;
+}
+
+.contact-btn {
   color: #EBEBEB !important;
   font-weight: bold;
   text-decoration: none;

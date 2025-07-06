@@ -160,14 +160,18 @@
   color: #EBEBEB !important;
 }
 
-.contact-info {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
+.chat {
+  cursor: pointer;
+  color: #A29BFE;
+  margin-top: 10px;
+  text-decoration: none;
 }
 
-.contact-btn, .provider-link {
+.chat:hover {
+  color: #8c84fc;
+}
+
+.contact-btn {
   color: #EBEBEB !important;
   font-weight: bold;
   text-decoration: none;

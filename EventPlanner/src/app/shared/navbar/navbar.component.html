@@ -19,9 +19,10 @@
       <mat-icon>home</mat-icon>
       Home
     </a>
-    <a class="nav-item" routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn && userRole !== 'AUTHENTICATED_USER'">
+    <a class="nav-item" routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>chat</mat-icon>
       Chat
+      <span *ngIf="unseenMessagesCount > 0" class="notification-badge">{{ unseenMessagesCount }}</span>
     </a>
     <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>notifications</mat-icon>

@@ -28,6 +28,7 @@ import { PricelistComponent } from './details/pricelist/pricelist.component';
 import { OtherUserProfileComponent } from './user-manager/other-user-profile/other-user-profile.component';
 import { ReportsComponent } from './user-manager/reports/reports.component';
 import { CommentRequestsComponent } from './user-manager/comment-requests/comment-requests.component';
+import { ChatComponent } from './chat/chat/chat.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -56,6 +57,7 @@ const routes: Routes = [
   { path: 'categories/review', component: CategoryReviewComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
   { path: 'comments', component: CommentRequestsComponent, canActivate: [AuthGuard], data: {role: ['ADMIN']} },
+  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']} },
   { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER', 'SERVICE_PRODUCT_PROVIDER', 'ADMIN', 'AUTHENTICATED_USER']} },
   { path: '**', redirectTo: ''},
 ];
