@@ -1,0 +1,42 @@
+<div class="dialog-container">
+    <div class="success-fade">
+        <div class="success-icon">✔</div>
+    </div>
+
+    <h2 class="success-title">Purchase Success!</h2>
+    <h3 class="price">EUR {{ product.price }}</h3>
+
+    <hr class="line" />
+
+    <div class="info-row">
+        <span>Service</span>
+        <span>{{ product.category }}</span>
+    </div>
+
+    <hr class="dashed" />
+
+    <div class="rating-section">
+        <label>Rate us:</label>
+        <div class="stars">
+            <mat-icon
+                *ngFor="let star of [1, 2, 3, 4, 5]"
+                (click)="setRating(star)"
+                [class.filled]="star <= selectedRating"
+                >star</mat-icon
+            >
+        </div>
+    </div>
+
+    <div class="comment-section">
+        <label>Leave a comment:</label>
+        <input
+            matInput
+            [formControl]="commentControl"
+            placeholder="E.g. Best purchase of my life!"
+        />
+    </div>
+
+    <button mat-raised-button class="done-button" (click)="onDone()">
+        Done
+    </button>
+</div>

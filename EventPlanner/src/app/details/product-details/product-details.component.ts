@@ -7,6 +7,8 @@ import { PurchaseProductDialogComponent } from '../purchase-product-dialog/purch
 import { BudgetService } from './../../services/budget.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChatService } from '../../services/chat.service';
+import { Grade } from '../../models/grade.model';
+import { RatingDialogComponent } from '../rating/rating-dialog.component';
 
 @Component({
   selector: 'app-product-details',
@@ -16,6 +18,8 @@ import { ChatService } from '../../services/chat.service';
 export class ProductDetailsComponent implements OnInit {
   productId!: number;
   product!: Product;
+  grade!: Grade;
+  reviews: number = 0;
   isBlocked: boolean = false;
   currentImageIndex: number = 0; 
   isFavorite: boolean = false; 
@@ -47,12 +51,15 @@ export class ProductDetailsComponent implements OnInit {
     if (this.product) {
       const dialogRef = this.dialog.open(PurchaseProductDialogComponent, {
         width: '40em',
-        data: { productName: this.product.name }
+        data: { product: this.product }
       });
   
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           this.budgetService.buyProduct(this.product, result).subscribe({
+            next: () => {
+              this.openRatingDialog();
+            },
             error: (err) => {
               console.error('Failed to purchase product. Budget item limit has been reached:', err);
               this.snackBar.open('Failed to purchase product. Budget item limit has been reached.', 'OK', {
@@ -63,6 +70,21 @@ export class ProductDetailsComponent implements OnInit {
         }
       });
     }
+  }
+
+  openRatingDialog() {
+    const dialogRef = this.dialog.open(RatingDialogComponent, {
+      width: '25em',
+      data: { product: this.product }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        setTimeout(() => {
+          this.fetchRating(this.product.id);
+        }, 500);
+      }
+    });
   }
 
   prevImage(): void {
@@ -112,6 +134,32 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['']);
       }
     });
+
+    this.fetchRating(productId);
+  }
+
+  fetchRating(productId: number) {
+    this.productService.getProductGrade(productId).subscribe({
+      next: (data: Grade | null) => {
+        if (data) {
+          this.grade = data;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch product grade:', err);
+      }
+    });
+
+    this.productService.getNumberOfReviews(productId).subscribe({
+      next: (data: number | null) => {
+        if (data) {
+          this.reviews = data;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch product reviews:', err);
+      }
+    });
   }
 
   goBack(): void {
@@ -122,8 +170,16 @@ export class ProductDetailsComponent implements OnInit {
     this.isFavorite = !this.isFavorite;
   }
 
+  calculateRating(): string {
+    return "★".repeat(this.grade.value) + "✰".repeat(5-this.grade.value);
+  }
+
   getEventTypes() {
     return this.product.eventTypes;
+  }
+
+  comments() {
+    // open comments
   }
 
   chat() {
@@ -140,3 +196,4 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 }
+
