@@ -20,6 +20,7 @@ import { Interceptor } from './auth/interceptor';
 import { BudgetManagerModule } from './budget-manager/budget-manager.module';
 import { DetailsModule } from './details/details.module';
 import { ChatModule } from './chat/chat.module';
+import { ProductManagerModule } from './product-manager/product-manager.module';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ChatModule } from './chat/chat.module';
     BrowserModule,
     AppRoutingModule,
     ServiceManagerModule,
+    ProductManagerModule,
     SharedModule,
     FormsModule,
     AppRoutingModule,
