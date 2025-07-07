@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Products</h2>
+  <div>
+    <div class="search align-items-stretch">
+      <app-search-bar class="search-bar" (searchChanged)="filterProducts($event)"></app-search-bar>
+      <button class="filters" (click)="toggleFilters()">
+        <mat-icon class="custom-filter-icon"></mat-icon>
+      </button>
+      <button [routerLink]="['/product/create']" class="create">
+        <mat-icon class="custom-add-icon"></mat-icon>
+      </button>
+    </div>
+    
+    <div class="row justify-content-center">
+      <div *ngFor="let product of products" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
+        <mat-card class="card shadow" (click)="goToProductDetails(product.id)">
+          <div class="product-settings">
+            <button class="edit" (click)="editProduct($event, product.id)">
+              <mat-icon class="custom-edit-icon"></mat-icon>
+            </button>
+            <button class="delete" (click)="deleteProduct($event, product.id)">
+              <mat-icon class="custom-delete-icon"></mat-icon>
+            </button>
+          </div>
+          <img mat-card-image class="mat-card-image"
+          [src]="product.images[0]"
+          alt="{{ product.name }}" />
+          <mat-card-header>
+            <mat-card-title>{{ product.name }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ product.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[3, 6, 9]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</div>

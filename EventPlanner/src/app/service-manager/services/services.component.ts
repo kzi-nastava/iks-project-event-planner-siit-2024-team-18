@@ -60,7 +60,7 @@ export class ServicesComponent implements OnInit {
       .searchAndFilter(filters, this.currentPage, this.pageSize)
       .subscribe({
         next: (response: PagedResponse<Service>) => {
-          this.services = response.content.slice(0, this.pageSize);
+          this.services = response.content;
           this.totalElements = response.totalElements;
         },
         error: (err) => {
@@ -71,7 +71,7 @@ export class ServicesComponent implements OnInit {
 
   onPageChange(event: PageEvent): void {
     this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex;
+    this.currentPage = event.pageIndex + 1;
     this.applyCombinedFilters();
   }
 
