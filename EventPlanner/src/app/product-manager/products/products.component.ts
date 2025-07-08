@@ -2,20 +2,20 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { ServiceManagerService } from '../../services/service-manager.service';
-import { Service } from '../../models/service.model';
-import { ServiceFiltersComponent } from '../service-filters/service-filters.component';
+import { ProductManagerService } from '../../services/product-manager.service';
+import { Product } from '../../models/product.model';
+import { ProductFiltersComponent } from '../product-filters/product-filters.component';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
 import { PagedResponse } from '../../shared/model/paged-response.model';
 
 @Component({
-  selector: 'app-services',
-  templateUrl: './services.component.html',
-  styleUrls: ['./services.component.css'],
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css'],
 })
-export class ServicesComponent implements OnInit {
+export class ProductsComponent implements OnInit {
   combinedFilters: any = { name: '', filters: {} };
-  services: Service[] = [];
+  products: Product[] = [];
   pageSize = 6;
   currentPage = 1;
   totalElements = 0;
@@ -23,7 +23,7 @@ export class ServicesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   
   constructor(
-    private serviceManagerService: ServiceManagerService,
+    private productManagerService: ProductManagerService,
     private router: Router,
     private dialog: MatDialog
   ) {}
@@ -36,14 +36,14 @@ export class ServicesComponent implements OnInit {
     this.applyCombinedFilters();
   }
 
-  filterServices(searchText: string): void {
+  filterProducts(searchText: string): void {
     this.combinedFilters.name = searchText;
     this.currentPage = 1;
     this.applyCombinedFilters();
   }
 
   toggleFilters(): void {
-    const dialogRef = this.dialog.open(ServiceFiltersComponent, { width: '25em' });
+    const dialogRef = this.dialog.open(ProductFiltersComponent, { width: '25em' });
 
     dialogRef.afterClosed().subscribe((filters) => {
       if (filters) {
@@ -56,15 +56,15 @@ export class ServicesComponent implements OnInit {
 
   private applyCombinedFilters(): void {
     const filters = { ...this.combinedFilters.filters, name: this.combinedFilters.name };
-    this.serviceManagerService
+    this.productManagerService
       .searchAndFilter(filters, this.currentPage, this.pageSize)
       .subscribe({
-        next: (response: PagedResponse<Service>) => {
-          this.services = response.content;
+        next: (response: PagedResponse<Product>) => {
+          this.products = response.content;
           this.totalElements = response.totalElements;
         },
         error: (err) => {
-          console.error('Error fetching services:', err);
+          console.error('Error fetching products:', err);
         },
       });
   }
@@ -75,26 +75,26 @@ export class ServicesComponent implements OnInit {
     this.applyCombinedFilters();
   }
 
-  goToServiceDetails(serviceId: number): void {
-    this.router.navigate(['/service', serviceId]);
+  goToProductDetails(productId: number): void {
+    this.router.navigate(['/product', productId]);
   }
 
-  editService(event: MouseEvent, serviceId: number): void {
+  editProduct(event: MouseEvent, productId: number): void {
     event.stopPropagation();
-    this.router.navigate(['/service/edit', serviceId]);
+    this.router.navigate(['/product/edit', productId]);
   }
 
-  deleteService(event: MouseEvent, serviceId: number): void {
+  deleteProduct(event: MouseEvent, productId: number): void {
     event.stopPropagation();
 
     const dialogRef = this.dialog.open(DeleteFormComponent, {
       width: '25em',
-      data: { message: 'Are you sure you want to delete this service?' },
+      data: { message: 'Are you sure you want to delete this product?' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.serviceManagerService.deleteService(serviceId).subscribe(() => {
+        this.productManagerService.deleteProduct(productId).subscribe(() => {
           this.applyCombinedFilters();
         });
       }
