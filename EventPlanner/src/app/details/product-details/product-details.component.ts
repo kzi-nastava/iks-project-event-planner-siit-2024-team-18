@@ -11,189 +11,197 @@ import { Grade } from '../../models/grade.model';
 import { RatingDialogComponent } from '../rating/rating-dialog.component';
 
 @Component({
-  selector: 'app-product-details',
-  templateUrl: './product-details.component.html',
-  styleUrls: ['./product-details.component.css']
+    selector: 'app-product-details',
+    templateUrl: './product-details.component.html',
+    styleUrls: ['./product-details.component.css'],
 })
 export class ProductDetailsComponent implements OnInit {
-  productId!: number;
-  product!: Product;
-  grade!: Grade;
-  reviews: number = 0;
-  isBlocked: boolean = false;
-  currentImageIndex: number = 0; 
-  isFavorite: boolean = false; 
-  currentIndex: number = 0;
-  swiperOffset: number = 0;
+    productId!: number;
+    product!: Product;
+    grade!: Grade;
+    reviews: number = 0;
+    isBlocked: boolean = false;
+    currentImageIndex: number = 0;
+    isFavorite: boolean = false;
+    currentIndex: number = 0;
+    swiperOffset: number = 0;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private productService: ProductManagerService,
-    private budgetService: BudgetService,
-    private chatService: ChatService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-  ) {}
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private productService: ProductManagerService,
+        private budgetService: BudgetService,
+        private chatService: ChatService,
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar
+    ) {}
 
-  ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const id = +params['id'];
-      if (!isNaN(id)) {
-        this.fetchProductDetails(id);
-      } else {
-        this.router.navigate(['']);
-      }
-    });
-  }
+    ngOnInit(): void {
+        this.route.params.subscribe((params) => {
+            const id = +params['id'];
+            if (!isNaN(id)) {
+                this.fetchProductDetails(id);
+            } else {
+                this.router.navigate(['']);
+            }
+        });
+    }
 
-  openBuyProductDialog(): void {
-    if (this.product) {
-      const dialogRef = this.dialog.open(PurchaseProductDialogComponent, {
-        width: '40em',
-        data: { product: this.product }
-      });
-  
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.budgetService.buyProduct(this.product, result).subscribe({
-            next: () => {
-              this.openRatingDialog();
+    openBuyProductDialog(): void {
+        if (this.product) {
+            const dialogRef = this.dialog.open(PurchaseProductDialogComponent, {
+                width: '40em',
+                data: { product: this.product },
+            });
+
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.budgetService
+                        .buyProduct(this.product, result)
+                        .subscribe({
+                            next: () => {
+                                this.openRatingDialog();
+                            },
+                            error: (err) => {
+                                console.error(
+                                    'Failed to purchase product. Budget item limit has been reached:',
+                                    err
+                                );
+                                this.snackBar.open(
+                                    'Failed to purchase product. Budget item limit has been reached.',
+                                    'OK',
+                                    {
+                                        duration: 3000,
+                                    }
+                                );
+                            },
+                        });
+                }
+            });
+        }
+    }
+
+    openRatingDialog() {
+        const dialogRef = this.dialog.open(RatingDialogComponent, {
+            width: '25em',
+            data: { product: this.product },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                setTimeout(() => {
+                    this.fetchRating(this.product.id);
+                }, 500);
+            }
+        });
+    }
+
+    prevImage(): void {
+        if (this.product?.images) {
+            if (this.currentIndex > 0) {
+                this.currentIndex--;
+            } else {
+                this.currentIndex = this.product.images.length - 1;
+            }
+            this.updateSwiperPosition();
+        }
+    }
+
+    nextImage(): void {
+        if (this.product?.images) {
+            if (this.currentIndex < this.product.images.length - 1) {
+                this.currentIndex++;
+            } else {
+                this.currentIndex = 0;
+            }
+            this.updateSwiperPosition();
+        }
+    }
+
+    goToImage(index: number): void {
+        if (this.product?.images) {
+            this.currentIndex = index;
+            this.updateSwiperPosition();
+        }
+    }
+
+    private updateSwiperPosition(): void {
+        this.swiperOffset = -this.currentIndex * 100;
+    }
+
+    fetchProductDetails(productId: number): void {
+        this.productService.getProductById(productId).subscribe({
+            next: (data: Product | null) => {
+                if (data) {
+                    this.product = data;
+                } else {
+                    this.isBlocked = true;
+                }
             },
             error: (err) => {
-              console.error('Failed to purchase product. Budget item limit has been reached:', err);
-              this.snackBar.open('Failed to purchase product. Budget item limit has been reached.', 'OK', {
-                duration: 3000,
-              });
+                console.error('Failed to fetch product details:', err);
+                this.router.navigate(['']);
             },
-          })
-        }
-      });
-    }
-  }
-
-  openRatingDialog() {
-    const dialogRef = this.dialog.open(RatingDialogComponent, {
-      width: '25em',
-      data: { product: this.product }
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        setTimeout(() => {
-          this.fetchRating(this.product.id);
-        }, 500);
-      }
-    });
-  }
-
-  prevImage(): void {
-    if (this.product?.images) {
-      if (this.currentIndex > 0) {
-        this.currentIndex--;
-      } else {
-        this.currentIndex = this.product.images.length - 1;
-      }
-      this.updateSwiperPosition();
-    }
-  }
-
-  nextImage(): void {
-    if (this.product?.images) {
-      if (this.currentIndex < this.product.images.length - 1) {
-        this.currentIndex++;
-      } else {
-        this.currentIndex = 0;
-      }
-      this.updateSwiperPosition();
-    }
-  }
-
-  goToImage(index: number): void {
-    if (this.product?.images) {
-      this.currentIndex = index;
-      this.updateSwiperPosition();
-    }
-  }
-
-  private updateSwiperPosition(): void {
-    this.swiperOffset = -this.currentIndex * 100;
-  }
-
-  fetchProductDetails(productId: number): void {
-    this.productService.getProductById(productId).subscribe({
-      next: (data: Product | null) => {
-        if (data) {
-          this.product = data;
-        } else {
-          this.isBlocked = true;
-        }
-      },
-      error: (err) => {
-        console.error('Failed to fetch product details:', err);
-        this.router.navigate(['']);
-      }
-    });
-
-    this.fetchRating(productId);
-  }
-
-  fetchRating(productId: number) {
-    this.productService.getProductGrade(productId).subscribe({
-      next: (data: Grade | null) => {
-        if (data) {
-          this.grade = data;
-        }
-      },
-      error: (err) => {
-        console.error('Failed to fetch product grade:', err);
-      }
-    });
-
-    this.productService.getNumberOfReviews(productId).subscribe({
-      next: (data: number | null) => {
-        if (data) {
-          this.reviews = data;
-        }
-      },
-      error: (err) => {
-        console.error('Failed to fetch product reviews:', err);
-      }
-    });
-  }
-
-  goBack(): void {
-    this.router.navigate(['']);
-  }
-
-  toggleFavorite(): void {
-    this.isFavorite = !this.isFavorite;
-  }
-
-  calculateRating(): string {
-    return "★".repeat(this.grade.value) + "✰".repeat(5-this.grade.value);
-  }
-
-  getEventTypes() {
-    return this.product.eventTypes;
-  }
-
-  comments() {
-    // open comments
-  }
-
-  chat() {
-    this.chatService.createProductChat(this.product.id).subscribe({
-      next: (data: number) => {
-        this.router.navigate(['chat/']);
-      }, 
-      error: (err) => {
-        console.error('Failed to open chat:', err);
-        this.snackBar.open('Failed to open chat.', 'OK', {
-          duration: 3000,
         });
-      },
-    });
-  }
-}
 
+        this.fetchRating(productId);
+    }
+
+    fetchRating(productId: number) {
+        this.productService.getProductGrade(productId).subscribe({
+            next: (data: Grade | null) => {
+                if (data) {
+                    this.grade = data;
+                }
+            },
+            error: (err) => {
+                console.error('Failed to fetch product grade:', err);
+            },
+        });
+
+        this.productService.getNumberOfReviews(productId).subscribe({
+            next: (data: number | null) => {
+                if (data) {
+                    this.reviews = data;
+                }
+            },
+            error: (err) => {
+                console.error('Failed to fetch product reviews:', err);
+            },
+        });
+    }
+
+    goBack(): void {
+        this.router.navigate(['']);
+    }
+
+    toggleFavorite(): void {
+        this.isFavorite = !this.isFavorite;
+    }
+
+    calculateRating(): string {
+        return '★'.repeat(this.grade.value) + '✰'.repeat(5 - this.grade.value);
+    }
+
+    getEventTypes() {
+        return this.product.eventTypes;
+    }
+
+    comments() {
+        // open comments
+    }
+
+    chat() {
+        this.chatService.createProductChat(this.product.id).subscribe({
+            next: (data: number) => {
+                this.router.navigate(['chat/']);
+            },
+            error: (err) => {
+                console.error('Failed to open chat:', err);
+                this.snackBar.open('Failed to open chat.', 'OK', {
+                    duration: 3000,
+                });
+            },
+        });
+    }
+}
