@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { EventService } from './../../services/event.service';
 import { EventCard } from '../../models/event-card.model';
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-purchase-product-dialog',
@@ -12,13 +13,15 @@ import { EventCard } from '../../models/event-card.model';
 export class PurchaseProductDialogComponent implements OnInit {
   events: EventCard[] = [];
   eventControl: FormControl;
+  product: Product;
 
   constructor(
     private eventService: EventService,
     public dialogRef: MatDialogRef<PurchaseProductDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { productName: string }
+    @Inject(MAT_DIALOG_DATA) public data: { product: Product }
   ) {
     this.eventControl = new FormControl(null, [Validators.required]);
+    this.product = data.product;
   }
 
   ngOnInit(): void {

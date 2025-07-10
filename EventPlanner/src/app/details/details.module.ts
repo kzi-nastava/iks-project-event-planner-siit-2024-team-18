@@ -7,6 +7,7 @@ import { MaterialModule } from '../infrastructure/material/material.module';
 import { PurchaseProductDialogComponent } from './purchase-product-dialog/purchase-product-dialog.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
 import { EditPricelistComponent } from './edit-pricelist/edit-pricelist.component';
+import { RatingDialogComponent } from './rating/rating-dialog.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { EditPricelistComponent } from './edit-pricelist/edit-pricelist.componen
     ServiceDetailsComponent,
     ProductDetailsComponent,
     PurchaseProductDialogComponent,
+    RatingDialogComponent,
     PricelistComponent,
     EditPricelistComponent,
   ],
@@ -25,7 +27,8 @@ import { EditPricelistComponent } from './edit-pricelist/edit-pricelist.componen
     EventDetailsComponent,
     ProductDetailsComponent,
     ServiceDetailsComponent,
-    PurchaseProductDialogComponent
+    PurchaseProductDialogComponent,
+    RatingDialogComponent,
   ]
 })
 export class DetailsModule { }

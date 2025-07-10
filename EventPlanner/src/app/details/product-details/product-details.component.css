@@ -126,6 +126,10 @@
   margin-bottom: 2em;
 }
 
+.rating span:nth-child(1) {
+  font-size: 24px;
+}
+
 .product-item {
   margin: 0px;
   font-size: 18px;
