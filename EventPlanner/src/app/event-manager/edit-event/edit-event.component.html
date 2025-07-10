@@ -213,7 +213,13 @@
         </div>
 
         <div class="buttons">
-            <button mat-raised-button type="button">Update Agenda</button>
+            <button
+                [routerLink]="['/events/edit/agenda/' + id]"
+                mat-raised-button
+                type="button"
+            >
+                Agenda
+            </button>
             <button
                 [routerLink]="['/events/edit/budget-planning/' + id]"
                 mat-raised-button

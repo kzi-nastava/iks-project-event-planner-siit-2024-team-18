@@ -32,6 +32,7 @@ import { ChatComponent } from './chat/chat/chat.component';
 import { EditProductComponent } from './product-manager/edit-product/edit-product.component';
 import { CreateProductComponent } from './product-manager/create-product/create-product.component';
 import { ProductsComponent } from './product-manager/products/products.component';
+import { AgendaComponent } from './agenda-manager/agenda/agenda.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'fast-register', component: FastRegistrationComponent },
   { path: 'events/edit/budget-planning/:id', component: BudgetPlanningComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'events/edit/budget-planning/:id/details', component: PurchasedSolutionDetailsComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
+  { path: 'events/edit/agenda/:id', component: AgendaComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'services', component: ServicesComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']}},
   { path: 'service/create', component: CreateServiceComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']} },
   { path: 'service/edit/:id', component: EditServiceComponent, canActivate: [AuthGuard], data: {role: ['SERVICE_PRODUCT_PROVIDER']} },

@@ -10,7 +10,7 @@
             <div *ngFor="let event of events" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
                 <mat-card class="card shadow">
                     <div class="event-settings">
-                        <button class="edit" [routerLink]="['/events/edit', event.id]">
+                        <button class="edit" (click)="editEvent(event.id)" [disabled]="isInPast(event.startDate)">
                             <mat-icon class="custom-edit-icon"></mat-icon>
                         </button>
                         <button class="delete" (click)="delete($event, event.id)">
