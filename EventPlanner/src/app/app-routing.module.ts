@@ -37,7 +37,7 @@ import { AgendaComponent } from './agenda-manager/agenda/agenda.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'event/:id', component: EventDetailsComponent },
-  { path: 'events/create/invites', component: InviteScreenComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
+  { path: 'events/create/invites/:id', component: InviteScreenComponent, canActivate: [AuthGuard], data: {role: ['EVENT_ORGANIZER']}},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'fast-register', component: FastRegistrationComponent },

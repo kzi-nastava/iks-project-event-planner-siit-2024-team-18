@@ -97,20 +97,29 @@ export class EditEventComponent implements OnInit {
                     time: this.formatTime(new Date(event.startDate)),
                 });
 
-                event.images.map((img) => img).forEach((image, index) => {
-                const byteString = atob(image.split(',')[1]);
-                const mimeString = image.split(',')[0].split(':')[1].split(';')[0];
-                const byteArray = new Uint8Array(byteString.length);
-                for (let i = 0; i < byteString.length; i++) {
-                  byteArray[i] = byteString.charCodeAt(i);
-                }
-                const blob = new Blob([byteArray], { type: mimeString });
-                const file = new File([blob], `image_${index}.jpg`, { type: mimeString });
-                this.images.push(file);
-              });
+                event.images
+                    .map((img) => img)
+                    .forEach((image, index) => {
+                        const byteString = atob(image.split(',')[1]);
+                        const mimeString = image
+                            .split(',')[0]
+                            .split(':')[1]
+                            .split(';')[0];
+                        const byteArray = new Uint8Array(byteString.length);
+                        for (let i = 0; i < byteString.length; i++) {
+                            byteArray[i] = byteString.charCodeAt(i);
+                        }
+                        const blob = new Blob([byteArray], {
+                            type: mimeString,
+                        });
+                        const file = new File([blob], `image_${index}.jpg`, {
+                            type: mimeString,
+                        });
+                        this.images.push(file);
+                    });
 
-              this.editEventForm.get('images')?.setValue(this.images);
-              this.editEventForm.get('images')?.updateValueAndValidity();
+                this.editEventForm.get('images')?.setValue(this.images);
+                this.editEventForm.get('images')?.updateValueAndValidity();
             },
             error: (err) => {
                 console.error('Error fetching event details:', err);
@@ -232,15 +241,29 @@ export class EditEventComponent implements OnInit {
             formData.append('maxParticipants', formValues.maxParticipants);
             formData.append('privacyType', formValues.privacyType);
 
-            const formattedDate = selectedDate.toLocaleString('sv-SE').replace(' ', 'T');
+            const formattedDate = selectedDate
+                .toLocaleString('sv-SE')
+                .replace(' ', 'T');
             formData.append('startDate', formattedDate);
-            
+
             formData.append('eventType', formValues.eventTypes);
-            formData.append('locationName', this.selectedLocationDetails?.name || '');
+            formData.append(
+                'locationName',
+                this.selectedLocationDetails?.name || ''
+            );
             formData.append('city', this.selectedLocationDetails?.city || '');
-            formData.append('country', this.selectedLocationDetails?.country || '');
-            formData.append('latitude', (this.selectedLocationDetails?.latitude || 0).toString());
-            formData.append('longitude', (this.selectedLocationDetails?.longitude || 0).toString());
+            formData.append(
+                'country',
+                this.selectedLocationDetails?.country || ''
+            );
+            formData.append(
+                'latitude',
+                (this.selectedLocationDetails?.latitude || 0).toString()
+            );
+            formData.append(
+                'longitude',
+                (this.selectedLocationDetails?.longitude || 0).toString()
+            );
 
             this.images.forEach((file) => {
                 formData.append('images', file, file.name);
@@ -265,5 +288,16 @@ export class EditEventComponent implements OnInit {
                 },
             });
         }
+    }
+
+    downloadGuestList(): void {
+        this.eventService.downloadGuestPdf(this.id).subscribe((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `event_${this.id}_guests.pdf`;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        });
     }
 }
