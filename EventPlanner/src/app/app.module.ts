@@ -21,6 +21,7 @@ import { BudgetManagerModule } from './budget-manager/budget-manager.module';
 import { DetailsModule } from './details/details.module';
 import { ChatModule } from './chat/chat.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
+import { AgendaManagerModule } from './agenda-manager/agenda-manager.module';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { ProductManagerModule } from './product-manager/product-manager.module';
     EventTypeManagerModule,
     CategoryManagerModule,
     BudgetManagerModule,
+    AgendaManagerModule,
     MaterialModule,
     UserManagerModule,
     FullCalendarModule,

@@ -213,7 +213,13 @@
         </div>
 
         <div class="buttons">
-            <button mat-raised-button type="button">Update Agenda</button>
+            <button
+                [routerLink]="['/events/edit/agenda/' + id]"
+                mat-raised-button
+                type="button"
+            >
+                Agenda
+            </button>
             <button
                 [routerLink]="['/events/edit/budget-planning/' + id]"
                 mat-raised-button
@@ -222,12 +228,19 @@
                 Plan Budget
             </button>
             <button
-                [routerLink]="['/events/create/invites']"
+                [routerLink]="['/events/create/invites', id]"
                 mat-raised-button
                 type="button"
                 *ngIf="editEventForm.get('privacyType')?.value === 'PRIVATE'"
             >
                 Send Invites
+            </button>
+            <button
+                mat-raised-button
+                type="button"
+                (click)="downloadGuestList()"
+            >
+                Download Guest List (PDF)
             </button>
         </div>
 

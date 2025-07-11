@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Event } from '../models/event.model';
 import { Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { EventCard } from '../models/event-card.model';
 import { PagedResponse } from '../shared/model/paged-response.model';
@@ -137,4 +137,13 @@ export class EventService {
   delete(id: number) {
     return this.httpClient.delete<void>(environment.apiHost + '/api/events/delete/' + id);
   }
+
+  downloadGuestPdf(eventId: number): Observable<Blob> {
+  return this.httpClient.get(environment.apiHost + `/api/pdf/event-guests/` + eventId, {
+    responseType: 'blob',
+    headers: new HttpHeaders({
+      'Accept': 'application/pdf'
+    })
+  });
+}
 }

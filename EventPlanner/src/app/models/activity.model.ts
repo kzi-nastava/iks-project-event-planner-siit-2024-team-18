@@ -1,8 +1,8 @@
-export interface EventCard {
+export interface Activity {
     id: number;
     name: string;
     description: string;
-    locationName: string;
-    cardImage: string;
+    location: string;
     startDate: Date;
+    endDate: Date;
 }
