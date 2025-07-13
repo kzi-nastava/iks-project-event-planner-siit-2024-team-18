@@ -27,13 +27,24 @@
     <div class="actions">
         <button (click)="goBack()"><mat-icon>arrow_back</mat-icon> Back</button>
         <button
-            *ngIf="isLoggedIn && !isJoined && event.privacyType === 'PUBLIC' && isUpcoming()  && event.creator != loggedUserEmail"
+            *ngIf="
+                isLoggedIn &&
+                !isJoined &&
+                event.privacyType === 'PUBLIC' &&
+                isUpcoming() &&
+                event.creator != loggedUserEmail
+            "
             (click)="joinEvent()"
         >
             <mat-icon>person_add</mat-icon> Join Event
         </button>
         <button
-            *ngIf="isLoggedIn && isJoined && isUpcoming() && event.creator != loggedUserEmail"
+            *ngIf="
+                isLoggedIn &&
+                isJoined &&
+                isUpcoming() &&
+                event.creator != loggedUserEmail
+            "
             (click)="leaveEvent()"
         >
             <mat-icon>person_remove</mat-icon> Leave Event
@@ -191,6 +202,22 @@
     >
         <p>There is no budget plan for this event.</p>
     </div>
+    <app-chart
+        *ngIf="
+            isLoggedIn &&
+            (loggedUserEmail === event.creator || loggedUserRole === 'ADMIN')
+        "
+        [eventId]="event.id"
+    ></app-chart>
+    <button
+        *ngIf="
+            isLoggedIn &&
+            (loggedUserEmail === event.creator || loggedUserRole === 'ADMIN')
+        "
+        (click)="downloadAttendanceStatsReport()"
+    >
+        <mat-icon>download</mat-icon> Download Attendance Stats PDF Report
+    </button>
 </div>
 
 <div *ngIf="!isBlocked && !event" class="loading">

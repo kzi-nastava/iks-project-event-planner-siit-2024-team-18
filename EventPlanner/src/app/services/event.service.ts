@@ -8,6 +8,7 @@ import { EventCard } from '../models/event-card.model';
 import { PagedResponse } from '../shared/model/paged-response.model';
 import { CalendarEvent } from '../models/calendar-event.model';
 import { EventDetails } from '../models/event-details.model';
+import { AttendanceStat } from '../models/attendance-stat.model';
 
 @Injectable({
     providedIn: 'root',
@@ -198,6 +199,24 @@ export class EventService {
                     Accept: 'application/pdf',
                 }),
             }
+        );
+    }
+
+    downloadAttendanceStatsReport(eventId: number): Observable<Blob> {
+        return this.httpClient.get(
+            environment.apiHost + `/api/pdf/attendance/` + eventId,
+            {
+                responseType: 'blob',
+                headers: new HttpHeaders({
+                    Accept: 'application/pdf',
+                }),
+            }
+        );
+    }
+
+    getAttendanceStats(eventId: number): Observable<AttendanceStat[]> {
+        return this.httpClient.get<AttendanceStat[]>(
+            `${environment.apiHost}/api/events/attendance-stats/${eventId}`
         );
     }
 }

@@ -253,7 +253,18 @@ export class EventDetailsComponent implements OnInit {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `event_${this.event!.id}_guests.pdf`;
+            link.download = `event_${this.event!.id}.pdf`;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        });
+    }
+
+    downloadAttendanceStatsReport(): void {
+        this.eventService.downloadAttendanceStatsReport(this.event!.id).subscribe((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `attendance_${this.event!.id}.pdf`;
             link.click();
             window.URL.revokeObjectURL(url);
         });
