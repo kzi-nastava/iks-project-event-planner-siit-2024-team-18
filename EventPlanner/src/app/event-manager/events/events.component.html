@@ -8,7 +8,7 @@
         <div class="row justify-content-center">
             <span *ngIf="events && events.length === 0" class="empty">You don't have any events.</span>
             <div *ngFor="let event of events" class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
-                <mat-card class="card shadow">
+                <mat-card class="card shadow" (click)="openEventDetails(event.id)">
                     <div class="event-settings">
                         <button class="edit" (click)="editEvent(event.id)" [disabled]="isInPast(event.startDate)">
                             <mat-icon class="custom-edit-icon"></mat-icon>
