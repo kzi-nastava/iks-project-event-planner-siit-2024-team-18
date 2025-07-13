@@ -7,143 +7,197 @@ import { environment } from '../../env/environment';
 import { EventCard } from '../models/event-card.model';
 import { PagedResponse } from '../shared/model/paged-response.model';
 import { CalendarEvent } from '../models/calendar-event.model';
+import { EventDetails } from '../models/event-details.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class EventService {
+    private eventCards: EventCard[] = [];
 
-  private eventCards: EventCard[] = [];
+    constructor(private router: Router, private httpClient: HttpClient) {}
 
-  constructor(private router: Router, private httpClient: HttpClient) {}
-
-  getTopFiveEvents(): Observable<EventCard[]> {
-    return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/events/top-events');
-  }
-
-  getEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>(environment.apiHost + '/api/events/events-all');
-  }
-
-  getAllEvents(
-    filters?: {
-      keyword?: string;
-      city?: string;
-      startDate?: string;
-      endDate?: string;
-      country?: string;
-      maxParticipants?: number;
-      budget?: number;
-      eventType?: string;
-      organizerFirstName?: string;
-      sortBy?: string;
-      sortDirection?: 'ASC' | 'DESC';
-      page?: number;
-      pageSize?: number;
+    getTopFiveEvents(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            environment.apiHost + '/api/events/top-events'
+        );
     }
-  ): Observable<PagedResponse<EventCard>> {
-    let params = new HttpParams();
-  
-    if (filters?.keyword) {
-      params = params.set('keyword', filters.keyword);
-    }
-    if (filters?.city) {
-      params = params.set('city', filters.city);
-    }
-    if (filters?.startDate) {
-      params = params.set('startDate', filters.startDate);
-    }
-    if (filters?.endDate) {
-      params = params.set('endDate', filters.endDate);
-    }
-    if (filters?.country) {
-      params = params.set('country', filters.country);
-    }
-    if (filters?.maxParticipants) {
-      params = params.set('maxParticipants', filters.maxParticipants.toString());
-    }
-    if (filters?.budget) {
-      params = params.set('budget', filters.budget.toString());
-    }
-    if (filters?.eventType) {
-      params = params.set('eventType', filters.eventType);
-    }
-    if (filters?.organizerFirstName) {
-      params = params.set('organizerFirstName', filters.organizerFirstName);
-    }
-    if (filters?.sortBy) {
-      params = params.set('sortBy', filters.sortBy);
-    }
-    if (filters?.sortDirection) {
-      params = params.set('sortDirection', filters.sortDirection);
-    }
-    if (filters?.page !== undefined) {
-      params = params.set('page', filters.page.toString());
-    }
-    if (filters?.pageSize !== undefined) {
-      params = params.set('size', filters.pageSize.toString());
-    }
-    return this.httpClient.get<PagedResponse<EventCard>>(`${environment.apiHost}/api/events`, { params });
-  }
 
-  getAllCards(): Observable<EventCard[]>{
-    return of(this.eventCards);
-  }
-
-  getAllByCreator(): Observable<EventCard[]> {
-    return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/events/event-organizer');
-  }
-
-  openEventDetails(eventId: number): void {
-    if (eventId) {
-      this.router.navigate(['/event/', eventId]);
-    } else {
-      console.error('Invalid event ID:', eventId);
+    getEvents(): Observable<Event[]> {
+        return this.httpClient.get<Event[]>(
+            environment.apiHost + '/api/events/events-all'
+        );
     }
-  }
 
-  getEventById(eventId: number): Observable<Event | null> {
-    return this.httpClient.get<Event | null>(environment.apiHost + "/api/events/" + eventId);
-  }
+    getAllEvents(filters?: {
+        keyword?: string;
+        city?: string;
+        startDate?: string;
+        endDate?: string;
+        country?: string;
+        maxParticipants?: number;
+        budget?: number;
+        eventType?: string;
+        organizerFirstName?: string;
+        sortBy?: string;
+        sortDirection?: 'ASC' | 'DESC';
+        page?: number;
+        pageSize?: number;
+    }): Observable<PagedResponse<EventCard>> {
+        let params = new HttpParams();
 
-  getEventByIdForBudget(eventId: number): Observable<Event> {
-    return this.httpClient.get<Event>(environment.apiHost + "/api/events/" + eventId);
-  }
+        if (filters?.keyword) {
+            params = params.set('keyword', filters.keyword);
+        }
+        if (filters?.city) {
+            params = params.set('city', filters.city);
+        }
+        if (filters?.startDate) {
+            params = params.set('startDate', filters.startDate);
+        }
+        if (filters?.endDate) {
+            params = params.set('endDate', filters.endDate);
+        }
+        if (filters?.country) {
+            params = params.set('country', filters.country);
+        }
+        if (filters?.maxParticipants) {
+            params = params.set(
+                'maxParticipants',
+                filters.maxParticipants.toString()
+            );
+        }
+        if (filters?.budget) {
+            params = params.set('budget', filters.budget.toString());
+        }
+        if (filters?.eventType) {
+            params = params.set('eventType', filters.eventType);
+        }
+        if (filters?.organizerFirstName) {
+            params = params.set(
+                'organizerFirstName',
+                filters.organizerFirstName
+            );
+        }
+        if (filters?.sortBy) {
+            params = params.set('sortBy', filters.sortBy);
+        }
+        if (filters?.sortDirection) {
+            params = params.set('sortDirection', filters.sortDirection);
+        }
+        if (filters?.page !== undefined) {
+            params = params.set('page', filters.page.toString());
+        }
+        if (filters?.pageSize !== undefined) {
+            params = params.set('size', filters.pageSize.toString());
+        }
+        return this.httpClient.get<PagedResponse<EventCard>>(
+            `${environment.apiHost}/api/events`,
+            { params }
+        );
+    }
 
-  getEventsByOrganizerId(): Observable<EventCard[]> {
-    return this.httpClient.get<EventCard[]>(`${environment.apiHost}/api/events/events-all`);
-  }
+    getAllCards(): Observable<EventCard[]> {
+        return of(this.eventCards);
+    }
 
-  create(event: FormData): Observable<void> {
-    return this.httpClient.post<void>(environment.apiHost + '/api/events/create', event);
-  }
+    getAllByCreator(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            environment.apiHost + '/api/events/event-organizer'
+        );
+    }
 
-  update(event: FormData, id: number): Observable<void> {
-    return this.httpClient.put<void>(environment.apiHost + '/api/events/edit/' + id, event);
-  }
+    openEventDetails(eventId: number): void {
+        if (eventId) {
+            this.router.navigate(['/event/', eventId]);
+        } else {
+            console.error('Invalid event ID:', eventId);
+        }
+    }
 
-  getEventForUpdate(id: number): Observable<Event> {
-    return this.httpClient.get<Event>(environment.apiHost + '/api/events/edit/' + id);
-  }
+    getEventById(eventId: number): Observable<Event | null> {
+        return this.httpClient.get<Event | null>(
+            environment.apiHost + '/api/events/' + eventId
+        );
+    }
 
-  getFavouriteEvents(): Observable<EventCard[]> {
-    return this.httpClient.get<EventCard[]>(environment.apiHost + '/api/user-profiles/favourite-events');
-  }
+    getEventDetails(eventId: number): Observable<EventDetails | null> {
+        return this.httpClient.get<EventDetails | null>(
+            environment.apiHost + '/api/events/details/' + eventId
+        );
+    }
 
-  getAcceptedEvents(): Observable<CalendarEvent[]> {
-    return this.httpClient.get<CalendarEvent[]>(environment.apiHost + '/api/user-profiles/accepted-events');
-  }
+    getEventByIdForBudget(eventId: number): Observable<Event> {
+        return this.httpClient.get<Event>(
+            environment.apiHost + '/api/events/' + eventId
+        );
+    }
 
-  delete(id: number) {
-    return this.httpClient.delete<void>(environment.apiHost + '/api/events/delete/' + id);
-  }
+    getEventsByOrganizerId(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            `${environment.apiHost}/api/events/events-all`
+        );
+    }
 
-  downloadGuestPdf(eventId: number): Observable<Blob> {
-  return this.httpClient.get(environment.apiHost + `/api/pdf/event-guests/` + eventId, {
-    responseType: 'blob',
-    headers: new HttpHeaders({
-      'Accept': 'application/pdf'
-    })
-  });
-}
+    create(event: FormData): Observable<void> {
+        return this.httpClient.post<void>(
+            environment.apiHost + '/api/events/create',
+            event
+        );
+    }
+
+    update(event: FormData, id: number): Observable<void> {
+        return this.httpClient.put<void>(
+            environment.apiHost + '/api/events/edit/' + id,
+            event
+        );
+    }
+
+    getEventForUpdate(id: number): Observable<Event> {
+        return this.httpClient.get<Event>(
+            environment.apiHost + '/api/events/edit/' + id
+        );
+    }
+
+    getFavouriteEvents(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            environment.apiHost + '/api/user-profiles/favourite-events'
+        );
+    }
+
+    getAcceptedEvents(): Observable<CalendarEvent[]> {
+        return this.httpClient.get<CalendarEvent[]>(
+            environment.apiHost + '/api/user-profiles/accepted-events'
+        );
+    }
+
+    delete(id: number) {
+        return this.httpClient.delete<void>(
+            environment.apiHost + '/api/events/delete/' + id
+        );
+    }
+
+    downloadGuestPdf(eventId: number): Observable<Blob> {
+        return this.httpClient.get(
+            environment.apiHost + `/api/pdf/event-guests/` + eventId,
+            {
+                responseType: 'blob',
+                headers: new HttpHeaders({
+                    Accept: 'application/pdf',
+                }),
+            }
+        );
+    }
+
+    downloadReport(eventId: number): Observable<Blob> {
+        return this.httpClient.get(
+            environment.apiHost + `/api/pdf/` + eventId,
+            {
+                responseType: 'blob',
+                headers: new HttpHeaders({
+                    Accept: 'application/pdf',
+                }),
+            }
+        );
+    }
 }

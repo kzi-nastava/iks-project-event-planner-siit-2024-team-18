@@ -8,6 +8,7 @@ import { PurchaseProductDialogComponent } from './purchase-product-dialog/purcha
 import { PricelistComponent } from './pricelist/pricelist.component';
 import { EditPricelistComponent } from './edit-pricelist/edit-pricelist.component';
 import { RatingDialogComponent } from './rating/rating-dialog.component';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
@@ -18,10 +19,11 @@ import { RatingDialogComponent } from './rating/rating-dialog.component';
     RatingDialogComponent,
     PricelistComponent,
     EditPricelistComponent,
+    MapComponent,
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
   ],
   exports: [
     EventDetailsComponent,

@@ -9,7 +9,7 @@
             *ngFor="let event of events"
             class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch"
         >
-            <mat-card class="card shadow">
+            <mat-card class="card shadow" (click)="openEventDetails(event.id)">
                 <img
                     mat-card-image
                     class="mat-card-image"

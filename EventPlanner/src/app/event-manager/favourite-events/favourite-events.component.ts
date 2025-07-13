@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { EventCard } from '../../models/event-card.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-favourite-events',
@@ -12,6 +13,7 @@ export class FavouriteEventsComponent {
 
   constructor(
     private eventService: EventService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -19,5 +21,9 @@ export class FavouriteEventsComponent {
       this.events = data;
       console.log(data);
     });
+  }
+
+  openEventDetails(id: number) {
+    this.router.navigate(['/event', id])
   }
 }
