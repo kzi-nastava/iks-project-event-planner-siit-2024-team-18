@@ -85,4 +85,8 @@ export class EventsComponent {
     editEvent(id: number): void {
         this.router.navigate(['/events/edit', id]);
     }
+
+    openEventDetails(id: number) {
+        this.router.navigate(['/event', id]);
+    }
 }
