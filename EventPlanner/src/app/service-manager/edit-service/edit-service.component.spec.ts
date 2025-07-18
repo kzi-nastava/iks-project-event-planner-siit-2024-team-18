@@ -9,31 +9,30 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditServiceComponent', () => {
-  let component: EditServiceComponent;
-  let fixture: ComponentFixture<EditServiceComponent>;
+    let component: EditServiceComponent;
+    let fixture: ComponentFixture<EditServiceComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-                  RouterModule.forRoot([]),
-                  MaterialModule,
-                  BrowserAnimationsModule
-                ],
-      declarations: [EditServiceComponent],
-      providers: [
-                    ServiceManagerService,
-                    provideHttpClient(),
-                    provideHttpClientTesting(),
-                  ],
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                RouterModule.forRoot([]),
+                MaterialModule,
+                BrowserAnimationsModule,
+            ],
+            declarations: [EditServiceComponent],
+            providers: [
+                ServiceManagerService,
+                provideHttpClient(),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(EditServiceComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(EditServiceComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

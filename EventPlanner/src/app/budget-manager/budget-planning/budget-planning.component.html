@@ -1,49 +1,71 @@
 <div class="budget-planning" *ngIf="event">
-  <div class="header-container">
-      <h2>Event: <span class="highlight">{{ event.name }}</span></h2>
-      <h3>Total Budget: <span class="highlight">{{ totalBudget }} $</span></h3>
-  </div>
+    <div class="header-container">
+        <h2>
+            Event: <span class="highlight">{{ event.name }}</span>
+        </h2>
+        <h3>
+            Total Budget:
+            <span class="highlight" id="totalBudget">{{ totalBudget }} $</span>
+        </h3>
+    </div>
 
     <div class="input-data">
-        <form [formGroup]="budgetForm" style="display: flex; gap: 1em;">
-          <mat-form-field appearance="fill">
-            <mat-label>Category</mat-label>
-            <mat-select formControlName="categoryName">
-              <mat-option *ngFor="let category of categories$" [value]="category.name">
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="!this.budgetForm.value.categoryName">Category is required</mat-error>
-        </mat-form-field>
+        <form [formGroup]="budgetForm" style="display: flex; gap: 1em">
+            <mat-form-field appearance="fill" id="category">
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="categoryName">
+                    <mat-option
+                        *ngFor="let category of categories$"
+                        [value]="category.name"
+                    >
+                        {{ category.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!this.budgetForm.value.categoryName"
+                    >Category is required</mat-error
+                >
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Planned Sum</mat-label>
-            <input matInput formControlName="maxAmount" name="plannedSum" type="number" placeholder="Enter planned sum" required  required style="width: 100%;"/>
-            <mat-error *ngIf="!this.budgetForm.value.maxAmount">Max sum is required</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="fill" id="sum">
+                <mat-label>Planned Sum</mat-label>
+                <input
+                    matInput
+                    formControlName="maxAmount"
+                    name="plannedSum"
+                    type="number"
+                    placeholder="Enter planned sum"
+                    required
+                    required
+                    style="width: 100%"
+                />
+                <mat-error *ngIf="!this.budgetForm.value.maxAmount"
+                    >Max sum is required</mat-error
+                >
+            </mat-form-field>
         </form>
-    
+
         <button class="create" (click)="details()">
-          <mat-icon class="custom-info-icon"></mat-icon>
+            <mat-icon class="custom-info-icon"></mat-icon>
         </button>
-        <button class="create" (click)="addItem()"> 
+        <button class="create" id="createButton" (click)="addItem()">
             <mat-icon class="custom-add-icon"></mat-icon>
         </button>
     </div>
-  
+
     <div class="item-list-container">
-      <mat-list>
-        <mat-list-item *ngFor="let item of budgetItems">
-          <div class="item">
-            <span>{{ item.categoryName }} - {{ item.maxAmount }} $</span>
-            <div class="item-buttons">
-              <button class="edit" (click)="editItem(item)">
-                <mat-icon class="custom-edit-icon"></mat-icon>
-              </button>
-            </div>
-          </div>
-        </mat-list-item>
-      </mat-list>
+        <mat-list>
+            <mat-list-item *ngFor="let item of budgetItems">
+                <div class="item">
+                    <span
+                        >{{ item.categoryName }} - {{ item.maxAmount }} $</span
+                    >
+                    <div class="item-buttons">
+                        <button class="edit" (click)="editItem(item)">
+                            <mat-icon class="custom-edit-icon"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </mat-list-item>
+        </mat-list>
     </div>
 </div>
-  
