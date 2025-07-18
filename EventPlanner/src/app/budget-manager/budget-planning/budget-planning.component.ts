@@ -40,7 +40,6 @@ export class BudgetPlanningComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.subscribe((params) => {
             const eventId = +params['id'];
-            console.log(eventId);
             this.eventService.getEventByIdForBudget(eventId).subscribe({
                 next: (event) => {
                     this.event = event;
@@ -111,7 +110,7 @@ export class BudgetPlanningComponent implements OnInit {
                     error: (err) => {
                         console.error('Error adding budget item:', err);
                         this.snackBar.open('Error adding budget item.', 'OK', {
-                            duration: 3000,
+                            duration: 10000,
                         });
                     },
                 });

@@ -5,34 +5,53 @@ import { environment } from '../../env/environment';
 import { BudgetItem } from '../models/budget-item.model';
 import { Product } from '../models/product.model';
 import { Event } from '../models/event.model';
+import { Service } from '../models/service.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class BudgetService {
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  deleteBudgetItem(id: number): Observable<number> {
-    return this.http.delete<number>(environment.apiHost + "/api/budget/delete/" + id);
-  }
+    deleteBudgetItem(id: number): Observable<number> {
+        return this.http.delete<number>(
+            environment.apiHost + '/api/budget/delete/' + id
+        );
+    }
 
-  getBudgetItems(eventId: number): Observable<BudgetItem[]> {
-    return this.http.get<BudgetItem[]>(environment.apiHost + '/api/budget/' + eventId);
-  }
+    getBudgetItems(eventId: number): Observable<BudgetItem[]> {
+        return this.http.get<BudgetItem[]>(
+            environment.apiHost + '/api/budget/' + eventId
+        );
+    }
 
-  calculateTotalBudget(eventId: number): Observable<number> {
-    return this.http.get<number>(`${environment.apiHost}/api/budget/total/${eventId}`);
-  }
+    calculateTotalBudget(eventId: number): Observable<number> {
+        return this.http.get<number>(
+            `${environment.apiHost}/api/budget/total/${eventId}`
+        );
+    }
 
-  createBudgetItem(budgetItem: BudgetItem, eventId: number): Observable<BudgetItem> {
-    return this.http.post<BudgetItem>(`${environment.apiHost}/api/budget/create/${eventId}`, budgetItem);
-  }
+    createBudgetItem(
+        budgetItem: BudgetItem,
+        eventId: number
+    ): Observable<BudgetItem> {
+        return this.http.post<BudgetItem>(
+            `${environment.apiHost}/api/budget/create/${eventId}`,
+            budgetItem
+        );
+    }
 
-  updateBudgetItem(item: BudgetItem): Observable<void> {
-    return this.http.put<void>(`${environment.apiHost}/api/budget/edit/${item.id}`, item);
-  }
+    updateBudgetItem(item: BudgetItem): Observable<void> {
+        return this.http.put<void>(
+            `${environment.apiHost}/api/budget/edit/${item.id}`,
+            item
+        );
+    }
 
-  buyProduct(product: Product, event: Event): Observable<void> {
-    return this.http.post<void>(`${environment.apiHost}/api/budget/purchase-product/${product.id}?eventId=${event.id}`, {});
-  }
+    buyProduct(product: Product, event: Event): Observable<void> {
+        return this.http.post<void>(
+            `${environment.apiHost}/api/budget/purchase-product/${product.id}?eventId=${event.id}`,
+            {}
+        );
+    }
 }
