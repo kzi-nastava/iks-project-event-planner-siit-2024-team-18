@@ -1,36 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductServiceService } from '../../../services/product-service.service';
-import { ProductService } from '../../../models/product-service.model';
+import { SolutionService } from '../../../services/solution.service';
+import { SolutionCard } from '../../../models/solution-card.model';
 
 @Component({
   selector: 'app-top-five-products-services',
   templateUrl: './top-five-products-services.component.html',
-  styleUrls: ['./top-five-products-services.component.css']
+  styleUrls: ['./top-five-products-services.component.css'],
 })
 export class TopFiveProductsServicesComponent implements OnInit {
-  products: ProductService[] = [];
+  solutions: SolutionCard[] = [];
   currentIndex: number = 0;
   swiperOffset: number = 0;
 
-  constructor(private productServiceService: ProductServiceService) {}
+  constructor(private solutionService: SolutionService) {}
 
   ngOnInit(): void {
-    this.productServiceService.getTopFiveProductsServices().subscribe((data) => {
-      this.products = data;
+    this.fetchTopSolutions();
+  }
+
+  fetchTopSolutions(): void {
+    this.solutionService.getTopFiveSolutions().subscribe({
+      next: (result: SolutionCard[]) => {
+        this.solutions = result;
+      },
+      error: (err) => {
+        console.error('Failed to fetch top solutions:', err);
+      }
     });
   }
 
-  prevProduct(): void {
+  prevItem(): void {
     if (this.currentIndex > 0) {
       this.currentIndex--;
     } else {
-      this.currentIndex = this.products.length - 1;
+      this.currentIndex = this.solutions.length - 1;
     }
     this.updateSwiperPosition();
   }
 
-  nextProduct(): void {
-    if (this.currentIndex < this.products.length - 1) {
+  nextItem(): void {
+    if (this.currentIndex < this.solutions.length - 1) {
       this.currentIndex++;
     } else {
       this.currentIndex = 0;
@@ -38,7 +47,7 @@ export class TopFiveProductsServicesComponent implements OnInit {
     this.updateSwiperPosition();
   }
 
-  goToProduct(index: number): void {
+  goToItem(index: number): void {
     this.currentIndex = index;
     this.updateSwiperPosition();
   }
@@ -47,7 +56,7 @@ export class TopFiveProductsServicesComponent implements OnInit {
     this.swiperOffset = -this.currentIndex * 100;
   }
 
-  openProductServiceDetails(productService: ProductService): void {
-    this.productServiceService.openProductServiceDetails(productService.id);
+  openDetails(solution: SolutionCard): void {
+    this.solutionService.openSolutionDetails(solution);
   }
 }

@@ -1,16 +1,225 @@
-<div class="event-details-container" *ngIf="eventDetails">
-    <div class="event-image">
-      <img [src]="eventDetails.image" alt="{{ eventDetails.title }}">
+<div *ngIf="isBlocked" class="block-dialog">
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <h2>Content Unavailable</h2>
+            <button class="close-btn" (click)="goBack()">×</button>
+        </div>
+        <div class="dialog-content">
+            <p>
+                This event is unavailable because you have blocked the
+                organizer. If you believe this is an error, please contact
+                support
+                <a
+                    href="mailto:eventplannerteam18@gmail.com"
+                    style="color: #a29bfe"
+                    >here</a
+                >.
+            </p>
+        </div>
+        <div class="dialog-actions">
+            <button (click)="goBack()">Go Back</button>
+        </div>
+    </div>
+</div>
+
+<div class="event-details-container" *ngIf="!isBlocked && event">
+    <h2>{{ event.name }}</h2>
+    <div class="actions">
+        <button (click)="goBack()"><mat-icon>arrow_back</mat-icon> Back</button>
+        <button
+            *ngIf="
+                isLoggedIn &&
+                !isJoined &&
+                event.privacyType === 'PUBLIC' &&
+                isUpcoming() &&
+                event.creator != loggedUserEmail
+            "
+            (click)="joinEvent()"
+        >
+            <mat-icon>person_add</mat-icon> Join Event
+        </button>
+        <button
+            *ngIf="
+                isLoggedIn &&
+                isJoined &&
+                isUpcoming() &&
+                event.creator != loggedUserEmail
+            "
+            (click)="leaveEvent()"
+        >
+            <mat-icon>person_remove</mat-icon> Leave Event
+        </button>
+        <button *ngIf="isLoggedIn && !isFavorite" (click)="addToFavorites()">
+            <mat-icon>favorite_border</mat-icon> Add to Favorites
+        </button>
+        <button
+            *ngIf="isLoggedIn && isFavorite"
+            (click)="removeFromFavorites()"
+        >
+            <mat-icon>favorite</mat-icon> Remove from Favorites
+        </button>
+        <button (click)="downloadReport()">
+            <mat-icon>download</mat-icon> Download PDF Report
+        </button>
+    </div>
+    <div class="event-image-gallery">
+        <div
+            class="swiper-container"
+            [style.transform]="'translateX(' + swiperOffset + '%)'"
+        >
+            <ng-container *ngFor="let image of event.images; let i = index">
+                <div
+                    class="image-item"
+                    [ngClass]="{
+                        focused: i === currentIndex,
+                        adjacent:
+                            i === currentIndex - 1 || i === currentIndex + 1
+                    }"
+                >
+                    <img
+                        [src]="image"
+                        alt="Event Image"
+                        class="carousel-image"
+                    />
+                </div>
+            </ng-container>
+        </div>
+
+        <button class="swiper-button-prev" (click)="prevImage()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button class="swiper-button-next" (click)="nextImage()">
+            <mat-icon>arrow_forward</mat-icon>
+        </button>
+
+        <div class="bullets">
+            <span
+                *ngFor="let image of event.images; let i = index"
+                [class.active]="i === currentIndex"
+                (click)="goToImage(i)"
+            ></span>
+        </div>
     </div>
     <div class="event-info">
-      <h2>{{ eventDetails.title }}</h2>
-      <p class="event-date">{{ eventDetails.date | date:'longDate' }}</p>
-      <p class="event-description">{{ eventDetails.description }}</p>
-    </div>
-    
-    <button (click)="goBack()">Back</button>
-  </div>
+        <p class="event-item">
+            <mat-icon style="vertical-align: middle">description</mat-icon>
+            {{ event.description }}
+        </p>
 
-  <div *ngIf="!eventDetails" class="loading">
+        <p class="event-item">
+            <mat-icon style="vertical-align: middle">category</mat-icon>
+            {{ event.eventType }}
+        </p>
+
+        <p class="event-item">
+            <mat-icon style="vertical-align: middle">place</mat-icon>
+            {{ event.locationName }}, {{ event.city }}, {{ event.country }}
+        </p>
+
+        <p class="event-item">
+            <mat-icon style="vertical-align: middle">event</mat-icon>
+            {{ event.startDate | date : "medium" }} –
+            {{ event.endDate | date : "medium" }}
+        </p>
+
+        <p class="event-item">
+            <mat-icon style="vertical-align: middle">groups</mat-icon>
+            {{ event.maxParticipants }} participants max
+        </p>
+
+        <p class="event-item">
+            <mat-icon style="vertical-align: middle">lock</mat-icon>
+            {{ event.privacyType }}
+        </p>
+
+        <p class="event-item">
+            <mat-icon style="vertical-align: middle">alternate_email</mat-icon>
+            {{ event.creator }}
+        </p>
+
+        <app-map
+            *ngIf="event"
+            [latitude]="event.latitude"
+            [longitude]="event.longitude"
+        ></app-map>
+    </div>
+    <div class="event-agenda" *ngIf="activities && activities.length > 0">
+        <h3>Event Agenda</h3>
+        <div class="activity-item" *ngFor="let activity of activities">
+            <h4>{{ activity.name }}</h4>
+            <p>{{ activity.description }}</p>
+            <p>
+                <mat-icon>place</mat-icon>
+                {{ activity.location }}
+            </p>
+            <p>
+                <mat-icon>schedule</mat-icon>
+                {{ activity.startDate | date : "short" }} –
+                {{ activity.endDate | date : "short" }}
+            </p>
+        </div>
+    </div>
+    <div class="event-agenda" *ngIf="activities && activities.length === 0">
+        <p>There is no agenda for this event.</p>
+    </div>
+    <div
+        class="event-budget"
+        *ngIf="
+            budgetItems &&
+            budgetItems.length > 0 &&
+            isLoggedIn &&
+            loggedUserEmail === event.creator
+        "
+    >
+        <h3>Budget Breakdown</h3>
+        <table class="budget-table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Max Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of budgetItems">
+                    <td>{{ item.categoryName }}</td>
+                    <td>{{ item.maxAmount | currency }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="total-budget">
+            <span>Total Budget:</span>
+            <span class="amount">{{ event.budget | currency }}</span>
+        </div>
+    </div>
+    <div
+        class="event-budget"
+        *ngIf="
+            budgetItems &&
+            budgetItems.length === 0 &&
+            isLoggedIn &&
+            loggedUserEmail === event.creator
+        "
+    >
+        <p>There is no budget plan for this event.</p>
+    </div>
+    <app-chart
+        *ngIf="
+            isLoggedIn &&
+            (loggedUserEmail === event.creator || loggedUserRole === 'ADMIN')
+        "
+        [eventId]="event.id"
+    ></app-chart>
+    <button
+        *ngIf="
+            isLoggedIn &&
+            (loggedUserEmail === event.creator || loggedUserRole === 'ADMIN')
+        "
+        (click)="downloadAttendanceStatsReport()"
+    >
+        <mat-icon>download</mat-icon> Download Attendance Stats PDF Report
+    </button>
+</div>
+
+<div *ngIf="!isBlocked && !event" class="loading">
     <p>Loading event details...</p>
-  </div>
+</div>

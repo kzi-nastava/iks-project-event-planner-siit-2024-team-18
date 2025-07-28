@@ -1,87 +1,124 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-
-const USERS = [
-  {
-    _id: 1,
-    email: 'john.doe@example.com',
-    firstName: 'John',
-    lastName: 'Doe',
-    role: 'Event Organizer',
-    address: '123 Main St, Cityville',
-    phoneNumber: '1234567890',
-    companyName: '',
-    profilePhoto: 'https://t4.ftcdn.net/jpg/02/24/86/95/360_F_224869519_aRaeLneqALfPNBzg0xxMZXghtvBXkfIA.jpg',
-    description: '',
-    categories: [],
-    eventTypes: [],
-    password: 'password123',
-    confirmPassword: 'password123',
-  },
-  {
-    _id: 2,
-    email: 'jane.smith@example.com',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    role: 'Service Product Provider',
-    companyName: 'Tech Innovations Ltd.',
-    profilePhoto: 'https://media.istockphoto.com/id/1389348844/photo/studio-shot-of-a-beautiful-young-woman-smiling-while-standing-against-a-grey-background.jpg?s=612x612&w=0&k=20&c=anRTfD_CkOxRdyFtvsiPopOluzKbhBNEQdh4okZImQc=',
-    address: '456 Oak Rd, Townsville',
-    phoneNumber: '9876543210',
-    description: 'Providing top-notch tech services for businesses.',
-    categories: ['Software', 'Consulting'],
-    eventTypes: ['Tech Talks', 'Product Launches'],
-    password: 'securepass456',
-    confirmPassword: 'securepass456',
-  },
-];
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../env/environment';
+import { UpdateUser } from '../models/update-user.model';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class UserService {
-  private users: User[] = [];
+    constructor(private http: HttpClient) {}
 
-  constructor() {
-    for (let userObj of USERS) {
-      const user: User = {
-        _id: userObj._id,
-        email: userObj.email,
-        firstName: userObj.firstName,
-        lastName: userObj.lastName,
-        role: userObj.role,
-        companyName: userObj.companyName,
-        profilePhoto: userObj.profilePhoto,
-        address: userObj.address,
-        phoneNumber: userObj.phoneNumber,
-        description: userObj.description,
-        categories: userObj.categories,
-        eventTypes: userObj.eventTypes,
-        password: userObj.password,
-      };
-      this.users.push(user);
+    eventOrganizerRegistration(user: User): Observable<User> {
+        return this.http.post<User>(
+            environment.apiHost + '/api/event-organizers',
+            user
+        );
     }
-  }
 
-  getAll(): User[] {
-    return this.users;
-  }
-
-  add(user: User): void {
-    this.users.push(user);
-  }
-
-  login(email: string, password: string): User | null {
-    const user = this.users.find(u => u.email === email && u.password === password);
-    return user ? user : null;
-  }
-
-  signup(user: User): boolean {
-    const existingUser = this.users.find(u => u.email === user.email);
-    if (existingUser) {
-      return false;
+    serviceProductProviderRegistration(user: User): Observable<User> {
+        return this.http.post<User>(
+            environment.apiHost + '/api/service-product-providers',
+            user
+        );
     }
-    this.add(user);
-    return true;
-  }
+
+    getLoggedUser(): Observable<User> {
+        return this.http.get<User>(environment.apiHost + '/api/user-profiles');
+    }
+
+    getRecipient(chatId: number, loggedUserId: number): Observable<User> {
+        return this.http.get<User>(
+            environment.apiHost +
+                `/api/user-profiles/recipient/${chatId}/${loggedUserId}`
+        );
+    }
+
+    getOtherUser(otherUserId: number): Observable<User> {
+        return this.http.get<User>(
+            environment.apiHost + '/api/user-profiles/other-user/' + otherUserId
+        );
+    }
+
+    getAllUsers(): Observable<User[]> {
+        return this.http.get<User[]>(
+            environment.apiHost + '/api/user-profiles/all'
+        );
+    }
+
+    deactivate(): Observable<any> {
+        return this.http.delete(
+            environment.apiHost + '/api/user-profiles/deactivate'
+        );
+    }
+
+    update(user: UpdateUser): Observable<UpdateUser> {
+        return this.http.put<UpdateUser>(
+            environment.apiHost + '/api/user-profiles',
+            user
+        );
+    }
+
+    fastEventOrganizerRegistration(user: User): Observable<User> {
+        return this.http.post<User>(
+            environment.apiHost + '/api/event-organizers/fast-registration',
+            user
+        );
+    }
+
+    fastServiceProductProviderRegistration(user: User): Observable<User> {
+        return this.http.post<User>(
+            environment.apiHost +
+                '/api/service-product-providers/fast-registration',
+            user
+        );
+    }
+
+    isEventInFavourites(eventId: number): Observable<boolean> {
+        return this.http.get<boolean>(
+            environment.apiHost +
+                `/api/user-profiles/favourite-events/is-in/${eventId}`
+        );
+    }
+
+    addEventToFavourites(eventId: number): Observable<any> {
+        return this.http.put(
+            environment.apiHost +
+                `/api/user-profiles/favourite-events/add/${eventId}`,
+            {}
+        );
+    }
+
+    removeEventFromFavourites(eventId: number): Observable<any> {
+        return this.http.put(
+            environment.apiHost +
+                `/api/user-profiles/favourite-events/remove/${eventId}`,
+            {}
+        );
+    }
+
+    isJoinedToEvent(eventId: number): Observable<boolean> {
+        return this.http.get<boolean>(
+            environment.apiHost +
+                `/api/user-profiles/event-participation/is-joined/${eventId}`
+        );
+    }
+
+    joinToEvent(eventId: number): Observable<any> {
+        return this.http.post(
+            environment.apiHost +
+                `/api/user-profiles/event-participation/join/${eventId}`,
+            {}
+        );
+    }
+
+    leaveEvent(eventId: number): Observable<any> {
+        return this.http.delete(
+            environment.apiHost +
+                `/api/user-profiles/event-participation/leave/${eventId}`,
+            {}
+        );
+    }
 }

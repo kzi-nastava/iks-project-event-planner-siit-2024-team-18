@@ -1,0 +1,45 @@
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-image">
+            <img *ngIf="user.image != ''" src="{{ user.image }}" alt="Profile Image" />
+            <img *ngIf="user.image === ''" src="assets/images/profile_photo_placeholder.png" alt="Placeholder Image" />
+        </div>
+        <div class="profile-details">
+            <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+            <p><mat-icon class="icon">person</mat-icon> <b>Role:</b> {{ user.role }}</p>
+            <p>
+                <mat-icon class="icon">email</mat-icon> <b>E-mail:</b> {{ user.email }}
+            </p>
+            <p>
+                <mat-icon class="icon">location_on</mat-icon> <b>Address:</b> {{ user.address }}
+            </p>
+            <p>
+                <mat-icon class="icon">phone</mat-icon> <b>Phone Number:</b> {{ user.phone }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
+                <mat-icon class="icon">business</mat-icon> <b>Company Name:</b> {{ user.companyName }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
+                <mat-icon class="icon">category</mat-icon> <b>Categories:</b> {{ (user.categories ?? []).join(', ') }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'">
+                <mat-icon class="icon">event</mat-icon> <b>Event Types:</b> {{ (user.eventTypes ?? []).join(', ') }}
+            </p>
+            <p *ngIf="user.role === 'SERVICE_PRODUCT_PROVIDER'" class="description">
+                <mat-icon class="icon">description</mat-icon>
+                <b>Description:</b> {{ user.description }}
+            </p>
+        </div>
+        <div class="profile-actions">
+            <button *ngIf="isBlocked" mat-raised-button color="primary" class="block-btn" (click)="unblockUser()">
+              <mat-icon>block</mat-icon> Unblock User
+            </button>
+            <button *ngIf="!isBlocked" mat-raised-button color="warn" class="block-btn" (click)="blockUser()">
+              <mat-icon>block</mat-icon> Block User
+            </button>
+            <button mat-raised-button color="warn" class="report-btn" (click)="reportUser()">
+              <mat-icon>report</mat-icon> Report User
+            </button>
+          </div>
+    </div>
+</div>

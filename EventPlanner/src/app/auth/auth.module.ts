@@ -5,12 +5,14 @@ import { MaterialModule } from '../infrastructure/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistrationComponent } from './registration/registration.component';
 import { RouterModule } from '@angular/router';
+import { FastRegistrationComponent } from './fast-registration/fast-registration.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegistrationComponent,
+    FastRegistrationComponent,
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,8 @@ import { RouterModule } from '@angular/router';
   ],
   exports: [
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    FastRegistrationComponent
   ]
 })
 export class AuthModule { }

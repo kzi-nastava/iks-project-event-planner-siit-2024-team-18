@@ -1,181 +1,326 @@
 <div class="center-container">
-	<form [formGroup]="editServiceForm" class="service-form">
-		<div class="form-title">
-			<button type="button" class="close-button" [routerLink]="['/services']">
-				<mat-icon>close</mat-icon>
-			</button>
+    <form [formGroup]="editServiceForm" class="service-form">
+        <div class="form-title">
+            <button
+                type="button"
+                class="close-button"
+                [routerLink]="['/services']"
+            >
+                <mat-icon>close</mat-icon>
+            </button>
 
-			<h2>Edit Service</h2>
-		</div>
+            <h2>Edit Service</h2>
+        </div>
 
-		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Title</mat-label>
-			<input matInput type="text" formControlName="title" />
-			<mat-error *ngIf="editServiceForm.get('title')?.hasError('required')">
-				Title is required
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name" />
+            <mat-error
+                *ngIf="editServiceForm.get('name')?.hasError('required')"
+            >
+                Name is required
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Description</mat-label>
-			<input matInput type="text" formControlName="description" />
-			<mat-error *ngIf="editServiceForm.get('description')?.hasError('required')">
-				Description is required
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Description</mat-label>
+            <input matInput type="text" formControlName="description" />
+            <mat-error
+                *ngIf="editServiceForm.get('description')?.hasError('required')"
+            >
+                Description is required
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Specifics</mat-label>
-			<input matInput type="text" formControlName="specifics" />
-			<mat-error *ngIf="editServiceForm.get('specifics')?.hasError('required')">
-				Specifics is required
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Specifics</mat-label>
+            <input matInput type="text" formControlName="specifics" />
+            <mat-error
+                *ngIf="editServiceForm.get('specifics')?.hasError('required')"
+            >
+                Specifics is required
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field half-width">
-			<mat-label>Category</mat-label>
-			<input
-				type="text"
-				matInput
-				formControlName="category"
-				[matAutocomplete]="categoryAuto"
-				(input)="filterCategories($event)"
-			/>
-			<mat-autocomplete #categoryAuto="matAutocomplete" class="form-field">
-				<mat-option *ngFor="let option of filteredCategories" [value]="option">
-					{{ option }}
-				</mat-option>
-			</mat-autocomplete>
-			<mat-error *ngIf="editServiceForm.get('category')?.hasError('required')">
-				Category is required
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field half-width">
+            <mat-label>Category</mat-label>
+            <input
+                type="text"
+                matInput
+                formControlName="category"
+                [matAutocomplete]="categoryAuto"
+                (input)="filterCategories($event)"
+            />
+            <mat-autocomplete
+                #categoryAuto="matAutocomplete"
+                class="form-field"
+            >
+                <mat-option
+                    *ngFor="let option of filteredCategories"
+                    [value]="option"
+                >
+                    {{ option }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error
+                *ngIf="editServiceForm.get('category')?.hasError('required')"
+            >
+                Category is required
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field half-width">
-			<mat-label>Event Type</mat-label>
-			<input
-				type="text"
-				matInput
-				formControlName="eventType"
-				[matAutocomplete]="eventTypeAuto"
-				(input)="filterEventTypes($event)"
-			/>
-			<mat-autocomplete #eventTypeAuto="matAutocomplete">
-				<mat-option *ngFor="let option of filteredEventTypes" [value]="option">
-					{{ option }}
-				</mat-option>
-			</mat-autocomplete>
-			<mat-error *ngIf="editServiceForm.get('eventType')?.hasError('required')">
-				Event Type is required
-			</mat-error>
-		</mat-form-field>
-		
-		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Reservation Time</mat-label>
-			<input matInput [ngxMatTimepicker]="timePicker" formControlName="reservationTime" />
-			<ngx-mat-timepicker-toggle matSuffix [for]="timePicker"></ngx-mat-timepicker-toggle>
-			<ngx-mat-timepicker #timePicker></ngx-mat-timepicker>
-			<mat-error *ngIf="editServiceForm.get('reservationTime')?.hasError('required')">
-				Reservation Time is required
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Event Type</mat-label>
+            <mat-select formControlName="eventTypes" multiple>
+                <mat-option *ngFor="let option of eventTypes" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+            <mat-error
+                *ngIf="editServiceForm.get('eventTypes')?.hasError('required')"
+            >
+                Event Type is required
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Reservation Date</mat-label>
-			<input matInput [matDatepicker]="reservationPicker" formControlName="reservationDate" />
-			<mat-datepicker-toggle matSuffix [for]="reservationPicker"></mat-datepicker-toggle>
-			<mat-datepicker #reservationPicker></mat-datepicker>
-			<mat-error *ngIf="editServiceForm.get('reservationDate')?.hasError('required')">
-				Reservation Date is required
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Location</mat-label>
+            <input
+                type="text"
+                matInput
+                placeholder="Location"
+                formControlName="location"
+                [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="onLocationSelected($event.option.value)"
+            >
+                <mat-option
+                    *ngFor="let option of autocompleteOptions"
+                    [value]="option"
+                >
+                    {{ option.displayName }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error
+                *ngIf="
+                    editServiceForm.get('location')?.invalid &&
+                    editServiceForm.get('location')?.touched
+                "
+            >
+                Location is required.
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field">
-			<mat-label>Cantellation Date</mat-label>
-			<input matInput [matDatepicker]="cancellationPicker" formControlName="cancellationDate" />
-			<mat-datepicker-toggle matSuffix [for]="cancellationPicker"></mat-datepicker-toggle>
-			<mat-datepicker #cancellationPicker></mat-datepicker>
-			<mat-error *ngIf="editServiceForm.get('cancellationDate')?.hasError('required')">
-				Cancellation Date is required
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field half-width">
+            <mat-label>Working Hours Start</mat-label>
+            <input
+                matInput
+                [ngxMatTimepicker]="startTimePicker"
+                formControlName="workingHoursStart"
+            />
+            <ngx-mat-timepicker #startTimePicker></ngx-mat-timepicker>
+            <mat-error
+                *ngIf="
+                    editServiceForm.get('workingHoursStart')?.invalid &&
+                    editServiceForm.get('workingHoursStart')?.touched
+                "
+            >
+                Working hours start is required.
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field half-width">
-			<mat-label>Price</mat-label>
-			<input matInput type="number" formControlName="price" />
-			<mat-error *ngIf="editServiceForm.get('price')?.hasError('min')">
-				Price must be set
-			</mat-error>
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field half-width">
+            <mat-label>Working Hours End</mat-label>
+            <input
+                matInput
+                [ngxMatTimepicker]="endTimePicker"
+                formControlName="workingHoursEnd"
+            />
+            <ngx-mat-timepicker #endTimePicker></ngx-mat-timepicker>
+            <mat-error
+                *ngIf="
+                    editServiceForm.get('workingHoursEnd')?.invalid &&
+                    editServiceForm.get('workingHoursEnd')?.touched
+                "
+            >
+                Working hours end is required.
+            </mat-error>
+        </mat-form-field>
 
-		<mat-form-field appearance="fill" class="form-field half-width">
-			<mat-label>Discount</mat-label>
-			<input matInput type="number" formControlName="discount" />
-		</mat-form-field>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Reservation Deadline (Days)</mat-label>
+            <input
+                matInput
+                type="number"
+                formControlName="reservationDeadline"
+                min="1"
+                placeholder="Enter number of days"
+            />
+            <mat-error
+                *ngIf="
+                    editServiceForm
+                        .get('reservationDeadline')
+                        ?.hasError('required')
+                "
+            >
+                Reservation Deadline is required
+            </mat-error>
+            <mat-error
+                *ngIf="
+                    editServiceForm.get('reservationDeadline')?.hasError('min')
+                "
+            >
+                Reservation Deadline must be at least 1 day.
+            </mat-error>
+        </mat-form-field>
 
-		<div class="form-field images-container">
-			<div class="image-picker">
-				<label for="imageUpload" class="upload-icon">
-					<mat-icon>add_photo_alternate</mat-icon>
-				</label>
-				<input
-					formControlName="selectedImages"
-					type="file"
-					id="imageUpload"
-					(change)="onFileSelected($event)"
-					multiple
-					hidden
-				/>
-				<p>Upload Images</p>
-				<mat-error *ngIf="editServiceForm.get('selectedImages')?.hasError('minImages')">
-					At least one image is required.
-				</mat-error>
-			</div>
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Cancellation Deadline (Days)</mat-label>
+            <input
+                matInput
+                type="number"
+                formControlName="cancellationDeadline"
+                min="1"
+                placeholder="Enter number of days"
+            />
+            <mat-error
+                *ngIf="
+                    editServiceForm
+                        .get('cancellationDeadline')
+                        ?.hasError('required')
+                "
+            >
+                Cancellation Deadline is required
+            </mat-error>
+            <mat-error
+                *ngIf="
+                    editServiceForm.get('cancellationDeadline')?.hasError('min')
+                "
+            >
+                Cancellation Deadline must be at least 1 day.
+            </mat-error>
+        </mat-form-field>
 
-			<div class="image-preview" *ngIf="selectedImages.length > 0">
-				<div *ngFor="let image of selectedImages; let i = index" class="image-container">
-					<img [src]="image" alt="Preview" />
-					<button type="button" class="remove-button" (click)="removeImage(i)">
-						<mat-icon>close</mat-icon>
-					</button>
-				</div>
-			</div>
-		</div>
+        <mat-form-field appearance="fill" class="form-field half-width">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" formControlName="price" />
+            <mat-error *ngIf="editServiceForm.get('price')?.hasError('min')">
+                Price must be set
+            </mat-error>
+        </mat-form-field>
 
-		<div class="form-field full-width sliders">
-			<div class="slider-container">
-				<span class="pe-2">Duration (In minutes):</span>
-				<mat-slider min="15" max="180" step="15" tickInterval="15" discrete>
-					<input matSliderThumb formControlName="duration"/>
-				</mat-slider>
-			</div>
-			<span>OR</span>
-			<div class="slider-container">
-				<span class="pe-2">Min. Max. Engagement (In hours):</span>
-				<mat-slider min="1" max="5" step="1" tickInterval="1" discrete>
-					<input matSliderStartThumb value="1" formControlName="engagement"/>
-					<input matSliderEndThumb value="2" formControlName="engagement"/>
-				</mat-slider>
-			</div>
-		</div>
+        <mat-form-field appearance="fill" class="form-field half-width">
+            <mat-label>Discount</mat-label>
+            <input matInput type="number" formControlName="discount" />
+        </mat-form-field>
 
-		<div class="checkbox-stuff full-width form-field">
-			<div class="checkboxes">
-				<mat-checkbox formControlName="isVisible">Visible</mat-checkbox>
-				<mat-checkbox formControlName="isPublic">Public</mat-checkbox>
-			</div>
+        <div class="form-field images-container">
+            <div class="image-picker">
+                <label for="imageUpload" class="upload-icon">
+                    <mat-icon>add_photo_alternate</mat-icon>
+                </label>
+                <input
+                    type="file"
+                    id="imageUpload"
+                    (change)="onFileSelected($event)"
+                    multiple
+                    hidden
+                />
+                <p>Upload Images</p>
+                <mat-error
+                    *ngIf="
+                        editServiceForm
+                            .get('uploadedFiles')
+                            ?.hasError('minImages')
+                    "
+                >
+                    At least one image is required.
+                </mat-error>
+            </div>
 
-			<mat-radio-group formControlName="reservationType" class="form-buttons">
-				<span>Reservation Type:</span>
-				<mat-radio-button value="auto">Auto</mat-radio-button>
-				<mat-radio-button value="manual">Manual</mat-radio-button>
-			</mat-radio-group>
-		</div>
+            <div class="image-preview" *ngIf="uploadedFiles.length > 0">
+                <div
+                    *ngFor="let image of uploadedFiles; let i = index"
+                    class="image-container"
+                >
+                    <img [src]="imageToUrl(image)" alt="Preview" />
+                    <button
+                        type="button"
+                        class="remove-button"
+                        (click)="removeImage(i)"
+                    >
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-		<div class="form-buttons form-field">
-			<button [routerLink]="['/services']" mat-raised-button class="cancel">Cancel</button>
-			<button (click)="edit()" mat-raised-button class="submit">Submit</button>
-		</div>
-	</form>
+        <div class="form-field full-width sliders">
+            <div class="slider-container">
+                <span class="pe-2">Duration (In minutes):</span>
+                <mat-slider
+                    min="15"
+                    max="120"
+                    step="15"
+                    tickInterval="15"
+                    discrete
+                >
+                    <input
+                        matSliderThumb
+                        formControlName="duration"
+                        [value]="editServiceForm.get('duration')?.value"
+                    />
+                </mat-slider>
+            </div>
+            <span>OR</span>
+            <div class="slider-container">
+                <span class="pe-2">Min. Max. Engagement (In hours):</span>
+                <mat-slider min="1" max="5" step="1" tickInterval="1" discrete>
+                    <input
+                        matSliderStartThumb
+                        value="1"
+                        formControlName="minEngagement"
+                    />
+                    <input
+                        matSliderEndThumb
+                        value="2"
+                        formControlName="maxEngagement"
+                    />
+                </mat-slider>
+            </div>
+        </div>
+
+        <div class="checkbox-stuff full-width form-field">
+            <div class="checkboxes">
+                <mat-checkbox formControlName="isVisible">Visible</mat-checkbox>
+                <mat-checkbox formControlName="isAvailable"
+                    >Available</mat-checkbox
+                >
+            </div>
+
+            <mat-radio-group
+                formControlName="reservationType"
+                class="form-buttons"
+            >
+                <span>Reservation Type:</span>
+                <mat-radio-button value="AUTOMATIC">Auto</mat-radio-button>
+                <mat-radio-button value="MANUAL">Manual</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div class="form-buttons form-field">
+            <button
+                [routerLink]="['/services']"
+                mat-raised-button
+                class="cancel"
+            >
+                Cancel
+            </button>
+            <button (click)="edit()" mat-raised-button class="submit">
+                Submit
+            </button>
+        </div>
+    </form>
 </div>
-  

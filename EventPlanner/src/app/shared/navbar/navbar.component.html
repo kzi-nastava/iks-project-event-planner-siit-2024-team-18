@@ -12,6 +12,9 @@
     <a class="nav-login" routerLink="/login" *ngIf="!isLoggedIn">
       Sign in
     </a>
+    <a class="nav-login" routerLink="/fast-register" *ngIf="userRole === 'AUTHENTICATED_USER'">
+      Sign up
+    </a>
     <a class="nav-item top-border" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <mat-icon>home</mat-icon>
       Home
@@ -19,26 +22,48 @@
     <a class="nav-item" routerLink="/chat" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>chat</mat-icon>
       Chat
+      <span *ngIf="unseenMessagesCount > 0" class="notification-badge">{{ unseenMessagesCount }}</span>
     </a>
     <a class="nav-item" routerLink="/notifications" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>notifications</mat-icon>
       Notifications
+      <span *ngIf="unseenNotificationsCount > 0" class="notification-badge">{{ unseenNotificationsCount }}</span>
     </a>
-    <a class="nav-item" routerLink="/events" routerLinkActive="active" *ngIf="userRole === 'Event Organizer'">
+    <a class="nav-item" routerLink="/events" routerLinkActive="active" *ngIf="userRole === 'EVENT_ORGANIZER'">
       <mat-icon>event</mat-icon>
       Events
     </a>
-    <a class="nav-item" routerLink="/services" routerLinkActive="active" *ngIf="userRole === 'Service Product Provider'">
+    <a class="nav-item" routerLink="/services" routerLinkActive="active" *ngIf="userRole === 'SERVICE_PRODUCT_PROVIDER'">
       <mat-icon>build</mat-icon>
       Services
     </a>
-    <a class="nav-item" routerLink="/products" routerLinkActive="active" *ngIf="userRole === 'Service Product Provider'">
+    <a class="nav-item" routerLink="/products" routerLinkActive="active" *ngIf="userRole === 'SERVICE_PRODUCT_PROVIDER'">
       <mat-icon>shopping_cart</mat-icon>
       Products
     </a>
-    <a class="nav-item" routerLink="/profile" routerLinkActive="active" *ngIf="isLoggedIn">
+    <a class="nav-item" routerLink="/pricelist" routerLinkActive="active" *ngIf="userRole === 'SERVICE_PRODUCT_PROVIDER'">
+      <mat-icon>money</mat-icon>
+      Pricelist
+    </a>
+    <a class="nav-item" routerLink="/event-types" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>event</mat-icon>
+      Event Types
+    </a>
+    <a class="nav-item" routerLink="/categories" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>category</mat-icon>
+      Categories
+    </a>
+    <a class="nav-item" routerLink="/users/profile" routerLinkActive="active" *ngIf="isLoggedIn">
       <mat-icon>person</mat-icon>
       Profile
+    </a>
+    <a class="nav-item" routerLink="/reports" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>report</mat-icon>
+      Report Requests
+    </a>
+    <a class="nav-item" routerLink="/comments" routerLinkActive="active" *ngIf="userRole === 'ADMIN'">
+      <mat-icon>comments</mat-icon>
+      Comment Requests
     </a>
     <a class="nav-item" routerLink="/logout" routerLinkActive="active" *ngIf="isLoggedIn" (click)="logout()">
       <mat-icon>logout</mat-icon>

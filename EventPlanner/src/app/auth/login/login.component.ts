@@ -1,8 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
-import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { Login } from '../model/login.model';
+import { AuthResponse } from '../model/auth-response.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotificationManagerService } from '../../services/notification-manager.service';
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import { ReportService } from '../../services/report.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SuspensionDialogComponent } from '../../user-manager/suspension-dialog/suspension-dialog.component';
+import { ChatService } from './../../services/chat.service';
 
 @Component({
   selector: 'app-login',
@@ -10,15 +19,24 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  private _snackBar = inject(MatSnackBar);
   loginForm: FormGroup;
 
-  constructor(private userService: UserService, private authService: AuthService, private router: Router) {
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private reportService: ReportService,
+    private router: Router,
+    private notificationManager: NotificationManagerService,
+    private chatService: ChatService,
+    private navbar: NavbarComponent,
+    private dialog: MatDialog
+  ) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
     });
   }
-  
 
   passwordHidden = true;
 
@@ -27,18 +45,59 @@ export class LoginComponent {
   }
 
   login() {
-    const email = this.loginForm.value.email;
-    const password = this.loginForm.value.password;
-    const user = this.userService.login(email, password);
-
     if (this.loginForm.valid) {
-      if (user) {
-        this.authService.setUser(user);
-        this.router.navigate(['']);
-      } else {
-        alert('User with this credentials doesn\'t exist!');
-      }
+      const email = this.loginForm.value.email || "";
+  
+      this.reportService.getSuspensionDetails(email).subscribe({
+        next: (suspensions) => {
+          if (suspensions != null) {
+            const suspension = suspensions[0];
+            const endDate = new Date(suspension.suspensionEndDate);
+  
+            this.dialog.open(SuspensionDialogComponent, {
+              width: '400px',
+              data: { suspensionEndDate: suspension.suspensionEndDate }
+            });
+          } else {
+            this.attemptLogin();
+          }
+        },
+        error: () => {
+          this._snackBar.open('An error occurred while checking suspension details.', 'OK');
+        }
+      });
     }
+  }
+
+  private attemptLogin(): void {
+    const login: Login = {
+      email: this.loginForm.value.email || "",
+      password: this.loginForm.value.password || ""
+    };
+  
+    this.authService.login(login).subscribe({
+      next: (response: AuthResponse) => {
+        localStorage.setItem('user', response.token);
+        this.authService.setUser();
+  
+        this.userService.getLoggedUser().subscribe(user => {
+          this.notificationManager.fetchNotifications();
+          this.notificationManager.initializeWebSocketConnection(user.id);
+          this.chatService.initializeWebSocketConnection(user);
+          this.navbar.refreshNavbar();
+          this.router.navigate(['home']);
+        });
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this._snackBar.open('User with email ' + this.loginForm.value.email + ' not found.', 'OK');
+        } else if (err.status === 400) {
+          this._snackBar.open('Incorrect password. Please try again.', 'OK');
+        } else {
+          this._snackBar.open('An unexpected error occurred', 'OK');
+        }
+      }
+    });
   }
 
   submit() {

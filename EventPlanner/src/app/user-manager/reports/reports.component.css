@@ -1,0 +1,39 @@
+.reports-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(55deg, rgb(137, 132, 213), rgb(44, 62, 80));
+    min-height: 100vh;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .reports-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+  }
+  
+  .reports-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-family: 'Merriweather', serif;
+  }
+  
+  .reports-list {
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .no-reports-message {
+    text-align: center;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
+  

@@ -1,0 +1,235 @@
+<div class="center-container">
+    <form
+        [formGroup]="createEventForm"
+        class="event-type-form"
+        (ngSubmit)="create()"
+    >
+        <div class="form-title">
+            <h2>Create Event</h2>
+        </div>
+
+        <mat-form-field>
+            <mat-label>
+                <mat-icon>event</mat-icon>
+                Event Type
+            </mat-label>
+            <mat-select formControlName="eventTypes" required>
+                <mat-option
+                    *ngFor="let eventType of eventTypesList"
+                    [value]="eventType"
+                    >{{ eventType }}</mat-option
+                >
+            </mat-select>
+            <mat-error
+                *ngIf="
+                    createEventForm.get('eventTypes')?.invalid &&
+                    createEventForm.get('eventTypes')?.touched
+                "
+            >
+                Please select event type.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> Name </mat-label>
+            <input matInput required formControlName="name" />
+            <mat-error
+                *ngIf="
+                    createEventForm.get('name')?.invalid &&
+                    createEventForm.get('name')?.touched
+                "
+            >
+                Please enter name.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                <mat-icon>description</mat-icon>
+                Description
+            </mat-label>
+            <textarea
+                matInput
+                required
+                formControlName="description"
+            ></textarea>
+            <mat-error
+                *ngIf="
+                    createEventForm.get('description')?.invalid &&
+                    createEventForm.get('description')?.touched
+                "
+            >
+                Please enter description.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> Max Participants </mat-label>
+            <input matInput required formControlName="maxParticipants" />
+            <mat-error
+                *ngIf="
+                    createEventForm.get('maxParticipants')?.invalid &&
+                    createEventForm.get('maxParticipants')?.touched
+                "
+            >
+                Please enter number of max participants (valid number greater
+                than 0).
+            </mat-error>
+        </mat-form-field>
+
+        <div class="role-section">
+            <mat-label id="roleLabel"> Privacy Type </mat-label>
+            <div class="radio-group">
+                <label>
+                    <input
+                        type="radio"
+                        value="PUBLIC"
+                        name="privacyType"
+                        formControlName="privacyType"
+                    />
+                    Public
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        value="PRIVATE"
+                        name="privacyType"
+                        formControlName="privacyType"
+                    />
+                    Private
+                </label>
+            </div>
+        </div>
+
+        <mat-form-field>
+            <input
+                type="text"
+                matInput
+                placeholder="Location"
+                formControlName="location"
+                [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="onLocationSelected($event.option.value)"
+            >
+                <mat-option
+                    *ngFor="let option of autocompleteOptions"
+                    [value]="option"
+                >
+                    {{ option.displayName }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error
+                *ngIf="
+                    createEventForm.get('location')?.invalid &&
+                    createEventForm.get('location')?.touched
+                "
+            >
+                Please enter location.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label>Event Date</mat-label>
+            <input
+                matInput
+                [matDatepicker]="reservationPicker"
+                formControlName="date"
+                required
+            />
+            <mat-datepicker-toggle
+                matSuffix
+                [for]="reservationPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #reservationPicker></mat-datepicker>
+            <mat-error *ngIf="createEventForm.get('date')?.hasError('date')">
+                Please enter event date.
+            </mat-error>
+            <mat-error
+                *ngIf="
+                    createEventForm.get('date')?.errors?.['pastDate'] &&
+                    createEventForm.get('date')?.touched
+                "
+            >
+                Please enter the date from the future.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field">
+            <mat-label> Event Time </mat-label>
+            <input
+                matInput
+                [ngxMatTimepicker]="timePicker"
+                formControlName="time"
+            />
+            <ngx-mat-timepicker-toggle
+                matSuffix
+                [for]="timePicker"
+            ></ngx-mat-timepicker-toggle>
+            <ngx-mat-timepicker #timePicker></ngx-mat-timepicker>
+            <mat-error
+                *ngIf="createEventForm.get('time')?.hasError('required')"
+            >
+                Please enter event time.
+            </mat-error>
+        </mat-form-field>
+
+        <div class="form-field images-container">
+            <div class="image-picker">
+                <label for="imageUpload" class="upload-icon">
+                    <mat-icon>add_photo_alternate</mat-icon>
+                </label>
+                <input
+                    type="file"
+                    id="imageUpload"
+                    multiple
+                    (change)="onFileSelected($event)"
+                    accept="image/*"
+                    multiple
+                    hidden
+                />
+                <p>Upload Images</p>
+                <mat-error
+                    *ngIf="createEventForm.get('images')?.hasError('minImages')"
+                >
+                    At least one image is required.
+                </mat-error>
+            </div>
+
+            <div class="image-preview" *ngIf="images.length > 0">
+                <div
+                    *ngFor="let image of images; let i = index"
+                    class="image-container"
+                >
+                    <img [src]="imageToUrl(image)" alt="Preview" />
+                    <button
+                        type="button"
+                        class="remove-button"
+                        (click)="removeImage(i)"
+                    >
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button
+                [routerLink]="['/events/create/invites']"
+                mat-raised-button
+                type="button"
+                *ngIf="createEventForm.get('privacyType')?.value === 'PRIVATE'"
+            >
+                Send Invites
+            </button>
+        </div>
+
+        <div class="form-buttons form-field">
+            <button mat-raised-button class="cancel" [routerLink]="['/events']">
+                Cancel
+            </button>
+            <button mat-raised-button class="submit">Submit</button>
+        </div>
+    </form>
+</div>

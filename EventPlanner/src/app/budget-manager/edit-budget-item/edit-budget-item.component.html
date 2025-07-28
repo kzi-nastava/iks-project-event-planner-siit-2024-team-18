@@ -1,0 +1,45 @@
+<div class="modal-content">
+    <h2 class="modal-title">Edit Budget Item</h2>
+
+    <mat-form-field appearance="fill">
+        <mat-label> {{ budgetItem.categoryName }} </mat-label>
+        <mat-select disabled></mat-select>
+    </mat-form-field>
+
+    <form [formGroup]="editForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Max Amount</mat-label>
+            <input
+                id="maxAmount"
+                matInput
+                type="number"
+                placeholder="Enter amount"
+                required
+                formControlName="maxAmount"
+                style="width: 100%"
+            />
+            <mat-error
+                *ngIf="
+                    editForm.get('maxAmount')?.invalid &&
+                    editForm.get('maxAmount')?.touched
+                "
+            >
+                Max Amount is required and must be a valid number.
+            </mat-error>
+        </mat-form-field>
+    </form>
+
+    <div class="modal-actions">
+        <button mat-raised-button color="warn" type="button" (click)="delete()">
+            <mat-icon>delete</mat-icon> Delete
+        </button>
+        <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="save()"
+        >
+            <mat-icon>save</mat-icon> Save
+        </button>
+    </div>
+</div>

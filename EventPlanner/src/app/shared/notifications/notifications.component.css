@@ -1,0 +1,79 @@
+.notifications-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(55deg, rgb(137, 132, 213), rgb(44, 62, 80));
+    min-height: 100vh;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+  }
+  
+  .notifications-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-family: 'Merriweather', serif;
+  }
+  
+  .mute-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .mute-toggle input[type="checkbox"] {
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    background: #a29bfe;
+    border-radius: 20px;
+    position: relative;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .mute-toggle input[type="checkbox"]::before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: transform 0.3s ease;
+  }
+  
+  .mute-toggle input[type="checkbox"]:checked {
+    background: #7a7df0;
+  }
+  
+  .mute-toggle input[type="checkbox"]:checked::before {
+    transform: translateX(20px);
+  }
+  
+  .notifications-list {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .no-notifications-message {
+    text-align: center;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
+  

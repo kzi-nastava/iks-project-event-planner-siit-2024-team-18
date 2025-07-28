@@ -5,21 +5,26 @@ import { MaterialModule } from './../infrastructure/material/material.module';
 import { DeleteFormComponent } from './delete-form/delete-form.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterModule } from '@angular/router';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { CardsModule } from "../cards/cards.module";
 
 @NgModule({
   declarations: [
     SearchBarComponent,
     DeleteFormComponent,
-    NavbarComponent
+    NavbarComponent,
+    NotificationsComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
-    RouterModule
-  ],
+    RouterModule,
+    CardsModule
+],
   exports: [
     SearchBarComponent,
-    NavbarComponent
+    NavbarComponent,
+    NotificationsComponent
   ]
 })
 export class SharedModule {}

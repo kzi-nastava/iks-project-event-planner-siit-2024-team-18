@@ -1,4 +1,4 @@
-<div class="all-products-services-container">
+<div class="all-products-services-container"> 
   <h2>All Products/Services</h2>
 
   <div class="search-container">
@@ -18,55 +18,78 @@
         id="from-date"
         type="date"
         [(ngModel)]="fromDate"
-        (change)="applyDateFilter()"
-        placeholder="From Date"
+        (change)="applySearch()"
       />
       <label for="to-date">To</label>
       <input
         id="to-date"
         type="date"
         [(ngModel)]="toDate"
-        (change)="applyDateFilter()"
-        placeholder="To Date"
+        (change)="applySearch()"
       />
     </div>
 
     <div class="sort-container">
       <label for="sort-select">Sort by</label>
-      <select [(ngModel)]="selectedFilter" (change)="applySort()">
-        <option value="title">Title</option>
-        <option value="description">Description</option>
-        <option value="price">Price</option>
+      <select [(ngModel)]="selectedFilter" (change)="applySearch()">
+        <option *ngFor="let option of sortOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
       </select>
     </div>
 
     <div class="sort-container">
-      <label for="sort-order">Sort Order</label>
-      <select [(ngModel)]="sortOrder" (change)="applySort()">
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
+      <label for="sort-order">Order</label>
+      <select [(ngModel)]="sortOrder" (change)="applySearch()">
+        <option value="ASC">Ascending</option>
+        <option value="DESC">Descending</option>
       </select>
     </div>
   </div>
 
   <div class="radio-container">
-    <label>Select Type</label>
-    <input type="radio" id="product-type" name="type" value="product" />
-    <label for="product-type">Product</label>
-
-    <input type="radio" id="service-type" name="type" value="service" />
-    <label for="service-type">Service</label>
+    <label>
+      <input
+        type="radio"
+        name="viewToggle"
+        [checked]="showProducts"
+        (change)="toggleView(true)"
+      />
+      Products
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="viewToggle"
+        [checked]="!showProducts"
+        (change)="toggleView(false)"
+      />
+      Services
+    </label>
   </div>
 
-  <div class="products-services-grid">
-    <app-product-service-card
-      *ngFor="let product of paginatedProductsServices"
-      [productService]="product"
-      (cardClick)="openProductServiceDetails(product)"
-    ></app-product-service-card>
+  <div *ngIf="showProducts" class="products-services-grid">
+    <app-product-card
+      *ngFor="let product of solutions"
+      [product]="product"
+      (cardClick)="openSolutionDetails(product.id)"
+    ></app-product-card>
+  </div>
+  <div *ngIf="!showProducts" class="products-services-grid">
+    <app-service-card
+      *ngFor="let service of solutions"
+      [service]="service"
+      (cardClick)="openSolutionDetails(service.id)"
+    ></app-service-card>
   </div>
 
-  <div *ngIf="!filteredProductsServices?.length && !loading" class="no-products-services">
+  <ng-template #noItems>
+    <div class="no-products-services">
+      <p>No products or services available at the moment.</p>
+    </div>
+  </ng-template>
+
+  <div *ngIf="!solutions?.length && !loading" class="no-products-services">
     <p>No products or services available at the moment.</p>
   </div>
 
@@ -78,13 +101,15 @@
     <button
       class="previous"
       (click)="goToPreviousPage()"
-      [disabled]="currentPage === 1"
-    ></button>
-    <span class="current-page">{{ currentPage }}</span>
+      [disabled]="currentPage === 0"
+    >
+    </button>
+    <span class="current-page">{{ currentPage + 1 }} / {{ totalPages }}</span>
     <button
       class="next"
       (click)="goToNextPage()"
-      [disabled]="currentPage === totalPages"
-    ></button>
+      [disabled]="currentPage >= totalPages - 1"
+    >
+    </button>
   </div>
 </div>

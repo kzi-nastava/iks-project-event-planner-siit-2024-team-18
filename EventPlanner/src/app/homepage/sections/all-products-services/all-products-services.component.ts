@@ -1,116 +1,112 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ProductServiceService } from '../../../services/product-service.service';
-import { ProductService } from '../../../models/product-service.model';
+import { SolutionService } from '../../../services/solution.service';
+import { PagedResponse } from '../../../shared/model/paged-response.model';
+import { SolutionCard } from '../../../models/solution-card.model';
+import { ProductManagerService } from '../../../services/product-manager.service';
+import { ServiceManagerService } from '../../../services/service-manager.service';
 
 @Component({
   selector: 'app-all-products-services',
   templateUrl: './all-products-services.component.html',
-  styleUrls: ['./all-products-services.component.css']
+  styleUrls: ['./all-products-services.component.css'],
 })
 export class AllProductsServicesComponent implements OnInit {
-  productsServices: ProductService[] = [];
-  filteredProductsServices: ProductService[] = [];
-  paginatedProductsServices: ProductService[] = [];
-  loading: boolean = true;
+  solutions: SolutionCard[] = [];
+  loading = true;
 
-  currentPage: number = 1;
-  productsServicesPerPage: number = 5;
-  totalPages: number = 1;
+  currentPage = 0;
+  itemsPerPage = 10;
+  totalPages = 1;
 
-  searchQuery: string = '';
-  fromDate: Date | null = null;
-  toDate: Date | null = null;
-  selectedFilter: string = 'title';
-  sortOrder: string = 'asc';
+  searchQuery = '';
+  fromDate: string | undefined = undefined;
+  toDate: string | undefined = undefined;
+  selectedFilter = 'name';
+  sortOrder: 'ASC' | 'DESC' = 'ASC';
+
+  showProducts = true;
+
+  sortOptions = [
+    { value: 'name', label: 'Title' },
+    { value: 'description', label: 'Description' },
+    { value: 'city', label: 'City' },
+    { value: 'country', label: 'Country' },
+    { value: 'price', label: 'Price' },
+    { value: 'discount', label: 'Discount' },
+    { value: 'categoryName', label: 'Category' },
+    { value: 'providerFirstName', label: 'Creator Name' },
+  ];
 
   constructor(
-    private productServiceService: ProductServiceService,
-    private router: Router
+    private solutionService: SolutionService,
+    private productManager: ProductManagerService,
+    private serviceManager: ServiceManagerService
   ) {}
 
   ngOnInit(): void {
-    this.fetchProductsServices();
+    this.fetchSolutions();
   }
 
-  fetchProductsServices(): void {
-    this.productServiceService.getAllProductsServices().subscribe({
-      next: (data) => {
-        this.productsServices = data;
-        this.filteredProductsServices = [...data];
-        this.initializePagination();
+  fetchSolutions(): void {
+    this.loading = true;
+    const filters = {
+      keyword: this.searchQuery,
+      city: '',
+      startDate: this.fromDate,
+      endDate: this.toDate,
+      country: '',
+      providerFirstName: '',
+      isProductOnly: this.showProducts,
+      price: this.selectedFilter === 'price' && !isNaN(Number(this.searchQuery)) ? Number(this.searchQuery) : undefined,
+      discount: this.selectedFilter === 'discount' && !isNaN(Number(this.searchQuery)) ? Number(this.searchQuery) : undefined,
+      sortBy: this.selectedFilter === 'country' || this.selectedFilter === 'city' || this.selectedFilter === 'providerFirstName' ? undefined : this.selectedFilter,
+      sortDirection: this.sortOrder,
+      page: this.currentPage,
+      pageSize: this.itemsPerPage,
+    };
+
+    this.solutionService.getAllSolutions(filters).subscribe({
+      next: (response: PagedResponse<SolutionCard>) => {
+        this.solutions = response.content;
+        this.totalPages = response.totalPages;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error fetching products/services:', err);
+        console.error('Error fetching solutions:', err);
         this.loading = false;
-      }
+      },
     });
   }
 
-  initializePagination(): void {
-    this.totalPages = Math.ceil(this.filteredProductsServices.length / this.productsServicesPerPage);
-    this.updatePaginatedProductsServices();
-  }
-
-  updatePaginatedProductsServices(): void {
-    const startIndex = (this.currentPage - 1) * this.productsServicesPerPage;
-    this.paginatedProductsServices = this.filteredProductsServices.slice(startIndex, startIndex + this.productsServicesPerPage);
+  toggleView(showProducts: boolean): void {
+    this.showProducts = showProducts;
+    this.fetchSolutions();
   }
 
   goToPreviousPage(): void {
-    if (this.currentPage > 1) {
+    if (this.currentPage > 0) {
       this.currentPage--;
-      this.updatePaginatedProductsServices();
+      this.fetchSolutions();
     }
   }
 
   goToNextPage(): void {
-    if (this.currentPage < this.totalPages) {
+    if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
-      this.updatePaginatedProductsServices();
+      this.fetchSolutions();
     }
   }
 
-  openProductServiceDetails(productService: ProductService): void {
-    this.productServiceService.openProductServiceDetails(productService.id);
+  openSolutionDetails(solutionId: number): void {
+    if (this.showProducts) {
+      this.productManager.openProductDetails(solutionId);
+    } else {
+      this.serviceManager.openServiceDetails(solutionId);
+    }
   }
 
   applySearch(): void {
-    this.filteredProductsServices = this.productsServices.filter(productService =>
-      productService.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      productService.description.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
-    this.resetPagination();
-  }
-
-  applyDateFilter(): void {
-    // this.filteredProductsServices = this.productsServices.filter(productService => {
-    //   const productDate = new Date(productService.date);
-    //   const isWithinFromDate = !this.fromDate || productDate >= this.fromDate;
-    //   const isWithinToDate = !this.toDate || productDate <= this.toDate;
-    //   return isWithinFromDate && isWithinToDate;
-    // });
-    this.resetPagination();
-  }
-
-  applyTypeFilter(type: String): void {
-    // Only show products/services based on type 
-  }
-
-  applySort(): void {
-    this.filteredProductsServices.sort((a, b) => {
-      const compareField = this.selectedFilter === 'title' ? a.title : a.description;
-      const compareWith = this.selectedFilter === 'title' ? b.title : b.description;
-      return this.sortOrder === 'asc'
-        ? compareField.localeCompare(compareWith)
-        : compareWith.localeCompare(compareField);
-    });
-    this.resetPagination();
-  }
-
-  resetPagination(): void {
-    this.currentPage = 1;
-    this.initializePagination();
+    this.currentPage = 0;
+    this.fetchSolutions();
   }
 }

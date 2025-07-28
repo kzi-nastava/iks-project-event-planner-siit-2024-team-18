@@ -1,24 +1,27 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiceManagerService } from '../service-manager.service';
-import { Service } from '../models/service.model';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { ServiceFiltersComponent } from '../service-filters/service-filters.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ServiceManagerService } from '../../services/service-manager.service';
+import { Service } from '../../models/service.model';
+import { ServiceFiltersComponent } from '../service-filters/service-filters.component';
 import { DeleteFormComponent } from '../../shared/delete-form/delete-form.component';
+import { PagedResponse } from '../../shared/model/paged-response.model';
 
 @Component({
-  selector: 'app-create-service',
+  selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css'],
 })
 export class ServicesComponent implements OnInit {
+  combinedFilters: any = { name: '', filters: {} };
   services: Service[] = [];
-  filteredServices: Service[] = [];
-  paginatedServices: Service[] = [];
-
-  @ViewChild(MatPaginator) paginator: MatPaginator | any;
-
+  pageSize = 6;
+  currentPage = 1;
+  totalElements = 0;
+  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  
   constructor(
     private serviceManagerService: ServiceManagerService,
     private router: Router,
@@ -26,62 +29,54 @@ export class ServicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.services = this.serviceManagerService.getServices();
-    this.filteredServices = [...this.services];
-    this.paginatedServices = this.filteredServices.slice(0, 6);
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.applyCombinedFilters();
   }
 
   filterServices(searchText: string): void {
-    this.filteredServices = this.services.filter(service =>
-      service.title.toLowerCase().includes(searchText.toLowerCase())
-    );
-    this.paginatedServices = this.filteredServices.slice(0, 6);
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
-  }
-
-  onPageChange(event: PageEvent): void {
-    const startIndex = event.pageIndex * event.pageSize;
-    const endIndex = startIndex + event.pageSize;
-    this.paginatedServices = this.filteredServices.slice(startIndex, endIndex);
-  }
-
-  goToServiceDetails(serviceId: number): void {
-    this.router.navigate(['/service', serviceId]);
+    this.combinedFilters.name = searchText;
+    this.currentPage = 1;
+    this.applyCombinedFilters();
   }
 
   toggleFilters(): void {
-    const dialogRef = this.dialog.open(ServiceFiltersComponent, {
-      width: '25em',
-    });
-  
-    dialogRef.afterClosed().subscribe(filters => {
+    const dialogRef = this.dialog.open(ServiceFiltersComponent, { width: '25em' });
+
+    dialogRef.afterClosed().subscribe((filters) => {
       if (filters) {
-        this.applyFilters(filters);
+        this.combinedFilters.filters = filters;
+        this.currentPage = 1;
+        this.applyCombinedFilters();
       }
     });
   }
 
-  applyFilters(filters: any): void {
-    console.log(filters);
-    this.filteredServices = this.services.filter(service => {
-      const matchesCategory = !filters.category || service.category === filters.category;
-      const matchesEventType = !filters.eventType || service.eventType === filters.eventType;
-      const matchesPublic = !filters.public || service.isPublic === filters.public;
-      const matchesMinPrice = filters.minPrice === 0 || service.price >= filters.minPrice;
-      const matchesMaxPrice = filters.maxPrice === 0 || service.price <= filters.maxPrice;
-      return matchesCategory && matchesEventType && matchesMinPrice && matchesMaxPrice && matchesPublic;
-    });
-  
-    this.paginatedServices = this.filteredServices.slice(0, 6);
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
+  private applyCombinedFilters(): void {
+    const filters = { ...this.combinedFilters.filters, name: this.combinedFilters.name };
+    this.serviceManagerService
+      .searchAndFilter(filters, this.currentPage, this.pageSize)
+      .subscribe({
+        next: (response: PagedResponse<Service>) => {
+          this.services = response.content;
+          this.totalElements = response.totalElements;
+        },
+        error: (err) => {
+          console.error('Error fetching services:', err);
+        },
+      });
   }
 
-  createService() {
-    console.log('Create button clicked');
+  onPageChange(event: PageEvent): void {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex + 1;
+    this.applyCombinedFilters();
+  }
+
+  goToServiceDetails(serviceId: number): void {
+    this.router.navigate(['/service', serviceId]);
   }
 
   editService(event: MouseEvent, serviceId: number): void {
@@ -94,20 +89,14 @@ export class ServicesComponent implements OnInit {
 
     const dialogRef = this.dialog.open(DeleteFormComponent, {
       width: '25em',
-      data: { message: 'Are you sure you want to delete this service?' }
+      data: { message: 'Are you sure you want to delete this service?' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.serviceManagerService.deleteService(serviceId);
-
-        this.services = this.serviceManagerService.getServices();
-        this.filteredServices = [...this.services];
-        this.paginatedServices = this.filteredServices.slice(0, 6);
-  
-        if (this.paginator) {
-          this.paginator.firstPage();
-        }      
+        this.serviceManagerService.deleteService(serviceId).subscribe(() => {
+          this.applyCombinedFilters();
+        });
       }
     });
   }

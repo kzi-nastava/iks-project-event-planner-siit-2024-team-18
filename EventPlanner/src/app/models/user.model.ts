@@ -1,13 +1,14 @@
 export interface User {
-    _id: number,
+    id: number,
     email: string;
     firstName: string;
     lastName: string;
     role: string;
     companyName?: string;
-    profilePhoto?: string;
+    notificationStatus?: string;
+    image?: string;
     address: string;
-    phoneNumber: string;
+    phone: string;
     description?: string;
     categories?: string[];
     eventTypes?: string[];

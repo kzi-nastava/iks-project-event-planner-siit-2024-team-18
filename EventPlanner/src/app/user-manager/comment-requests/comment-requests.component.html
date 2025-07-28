@@ -1,0 +1,20 @@
+<div class="comments-container">
+    <div class="comments-header">
+      <h1>Comment Requests</h1>
+    </div>
+  
+    <div class="comments-list">
+      <ng-container *ngIf="comments.length > 0; else noComments">
+        <app-comment-request-card
+          *ngFor="let comment of comments"
+          [commentRequest]="comment"
+          (approve)="handleApproveComment(comment.id)"
+          (remove)="handleRemoveComment(comment.id)"
+        ></app-comment-request-card>
+      </ng-container>
+      <ng-template #noComments>
+        <p class="no-comments-message">There are no pending comments currently.</p>
+      </ng-template>
+    </div>
+  </div>
+  

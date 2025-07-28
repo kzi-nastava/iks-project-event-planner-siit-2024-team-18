@@ -1,0 +1,165 @@
+<div *ngIf="isBlocked" class="block-dialog">
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <h2>Content Unavailable</h2>
+            <button class="close-btn" (click)="goBack()">×</button>
+        </div>
+        <div class="dialog-content">
+            <p>
+                This service is unavailable because you have blocked the
+                provider. If you believe this is an error, please contact
+                support
+                <a
+                    href="mailto:eventplannerteam18@gmail.com"
+                    style="color: #a29bfe"
+                    >here</a
+                >.
+            </p>
+        </div>
+        <div class="dialog-actions">
+            <button (click)="goBack()">Go Back</button>
+        </div>
+    </div>
+</div>
+
+<div class="service-details-container" *ngIf="!isBlocked && service">
+    <div class="service-image-gallery">
+        <div
+            class="swiper-container"
+            [style.transform]="'translateX(' + swiperOffset + '%)'"
+        >
+            <ng-container *ngFor="let image of service.images; let i = index">
+                <div
+                    class="image-item"
+                    [ngClass]="{
+                        focused: i === currentIndex,
+                        adjacent:
+                            i === currentIndex - 1 || i === currentIndex + 1
+                    }"
+                >
+                    <img
+                        [src]="image"
+                        alt="service Image"
+                        class="carousel-image"
+                    />
+                </div>
+            </ng-container>
+        </div>
+
+        <button class="swiper-button-prev" (click)="prevImage()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button class="swiper-button-next" (click)="nextImage()">
+            <mat-icon>arrow_forward</mat-icon>
+        </button>
+
+        <div class="bullets">
+            <span
+                *ngFor="let image of service.images; let i = index"
+                [class.active]="i === currentIndex"
+                (click)="goToImage(i)"
+            ></span>
+        </div>
+    </div>
+
+    <div class="service-info">
+        <div class="header">
+            <div class="header-words">
+                <h3 class="m-0">{{ service.name }}</h3>
+                <span *ngIf="service.isAvailable" class="pt-2"
+                    >(Available)</span
+                >
+                <span *ngIf="!service.isAvailable">(Unavailable)</span>
+            </div>
+            <button mat-fab class="favourite">
+                <mat-icon>favorite</mat-icon>
+            </button>
+        </div>
+        <div class="rating">
+            <span>{{ calculateRating() }}</span>
+            <span class="reviews">({{ reviews }} reviews)</span>
+            <button mat-button class="contact-btn">
+                <mat-icon>chat</mat-icon>
+            </button>
+        </div>
+
+        <p class="service-item">
+            <span>Description: </span> {{ service.description }}
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Specifics: </span> {{ service.specifics }}
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Category: </span> {{ service.category }}
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Event Types: </span> {{ getEventTypes() }}
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Location: </span> {{ service.location }}
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Engagement: </span> {{ service.minEngagement }} -
+            {{ service.maxEngagement }} hours
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Reservation Deadline: </span>
+            {{ service.reservationDeadline }} days
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Cancellation Deadline: </span>
+            {{ service.cancellationDeadline }} days
+        </p>
+        <hr />
+
+        <p class="service-item">
+            <span>Working Hours: </span> {{ service.workingHoursStart }} -
+            {{ service.workingHoursEnd }}
+        </p>
+        <hr />
+
+        <div class="service-price">
+            <span>Price: </span>
+            <span class="price" *ngIf="service.discount > 0">
+                <del>{{ service.price | currency }}</del>
+                {{ service.price - service.discount | currency }}
+            </span>
+            <span class="price" *ngIf="service.discount === 0">
+                {{ service.price | currency }}
+            </span>
+        </div>
+
+        <div class="actions">
+            <p class="chat" (click)="chat()">
+                You need more info? <br />
+                Chat with us
+            </p>
+            <button
+                mat-button
+                class="buy-btn"
+                (click)="bookService(service.id)"
+            >
+                Book a service
+                <mat-icon> shopping_cart </mat-icon>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!isBlocked && !service" class="loading">
+    <p>Loading service details...</p>
+</div>

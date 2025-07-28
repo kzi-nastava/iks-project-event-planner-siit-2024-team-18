@@ -1,0 +1,11 @@
+<h3>Calendar</h3>
+<full-calendar
+    *ngIf="calendarOptions.initialView"
+    [options]="calendarOptions"
+    [events]="calendarEvents"
+>
+    <ng-template #eventContent let-arg>
+        <b class="margin">{{ arg.timeText }}</b>
+        <span>{{ arg.event.title }}</span>
+    </ng-template>
+</full-calendar>

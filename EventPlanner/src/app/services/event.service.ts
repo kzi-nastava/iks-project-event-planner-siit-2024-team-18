@@ -2,51 +2,221 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Event } from '../models/event.model';
 import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from '../../env/environment';
+import { EventCard } from '../models/event-card.model';
+import { PagedResponse } from '../shared/model/paged-response.model';
+import { CalendarEvent } from '../models/calendar-event.model';
+import { EventDetails } from '../models/event-details.model';
+import { AttendanceStat } from '../models/attendance-stat.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class EventService {
-  private topFiveEvents: Event[] = [
-    { id: 1, title: 'City Food Festival', description: 'Explore the best local food vendors.', image: 'assets/event_placeholder.png', date: new Date('2024-11-20'), location: 'Downtown' },
-    { id: 2, title: 'Music Night', description: 'Live music from local artists.', image: 'assets/event_placeholder2.png', date: new Date('2024-11-25'), location: 'City Park' },
-    { id: 3, title: 'Art Exhibition', description: 'Display of artwork from renowned artists.', image: 'assets/event_placeholder.png', date: new Date('2024-12-01'), location: 'Art Gallery' },
-    { id: 4, title: 'Winter Market', description: 'Seasonal market with crafts and goods.', image: 'assets/event_placeholder3.png', date: new Date('2024-12-10'), location: 'Main Square' },
-    { id: 5, title: 'Outdoor Movie Night', description: 'Enjoy classic films under the stars.', image: 'assets/event_placeholder3.png', date: new Date('2024-12-15'), location: 'Open Air Theatre' }
-  ];
+    private eventCards: EventCard[] = [];
 
-  private allEvents: Event[] = [
-    { id: 1, title: 'City Food Festival', description: 'Explore the best local food vendors.', image: 'assets/event_placeholder.png', date: new Date('2024-11-20'), location: 'Downtown' },
-  { id: 2, title: 'Music Night', description: 'Live music from local artists.', image: 'assets/event_placeholder2.png', date: new Date('2024-11-25'), location: 'City Park' },
-  { id: 3, title: 'Art Exhibition', description: 'Display of artwork from renowned artists.', image: 'assets/event_placeholder.png', date: new Date('2024-12-01'), location: 'Art Gallery' },
-  { id: 4, title: 'Winter Market', description: 'Seasonal market with crafts and goods.', image: 'assets/event_placeholder3.png', date: new Date('2024-12-10'), location: 'Main Square' },
-  { id: 5, title: 'Outdoor Movie Night', description: 'Enjoy classic films under the stars.', image: 'assets/event_placeholder3.png', date: new Date('2024-12-15'), location: 'Open Air Theatre' },
-  { id: 6, title: 'Charity Run', description: 'Join us for a 5K run for charity.', image: 'assets/event_placeholder4.png', date: new Date('2024-11-18'), location: 'Central Park' },
-  { id: 7, title: 'Science Fair', description: 'Showcase of science projects.', image: 'assets/event_placeholder.png', date: new Date('2024-11-22'), location: 'Community Hall' },
-  { id: 8, title: 'Book Signing', description: 'Meet your favorite authors.', image: 'assets/event_placeholder4.png', date: new Date('2024-11-26'), location: 'Bookstore' },
-  { id: 9, title: 'Comedy Night', description: 'Stand-up comedy from local talent.', image: 'assets/event_placeholder.png', date: new Date('2024-11-28'), location: 'Comedy Club' },
-  { id: 10, title: 'Tech Expo', description: 'Latest in technology and innovation.', image: 'assets/event_placeholder.png', date: new Date('2024-12-05'), location: 'Convention Center' }
-  ];
+    constructor(private router: Router, private httpClient: HttpClient) {}
 
-  constructor(private router: Router) {}
-
-  getTopFiveEvents(): Observable<Event[]> {
-    return of(this.topFiveEvents);
-  }
-
-  getAllEvents(): Observable<Event[]> {
-    return of(this.allEvents);
-  }
-
-  openEventDetails(eventId: number): void {
-    if (eventId) {
-      this.router.navigate(['/event-details', eventId]);
-    } else {
-      console.error('Invalid event ID:', eventId);
+    getTopFiveEvents(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            environment.apiHost + '/api/events/top-events'
+        );
     }
-  }
 
-  getEventById(eventId: number): Event | undefined {
-    return this.allEvents.find(event => event.id === eventId);
-  }
+    getEvents(): Observable<Event[]> {
+        return this.httpClient.get<Event[]>(
+            environment.apiHost + '/api/events/events-all'
+        );
+    }
+
+    getAllEvents(filters?: {
+        keyword?: string;
+        city?: string;
+        startDate?: string;
+        endDate?: string;
+        country?: string;
+        maxParticipants?: number;
+        budget?: number;
+        eventType?: string;
+        organizerFirstName?: string;
+        sortBy?: string;
+        sortDirection?: 'ASC' | 'DESC';
+        page?: number;
+        pageSize?: number;
+    }): Observable<PagedResponse<EventCard>> {
+        let params = new HttpParams();
+
+        if (filters?.keyword) {
+            params = params.set('keyword', filters.keyword);
+        }
+        if (filters?.city) {
+            params = params.set('city', filters.city);
+        }
+        if (filters?.startDate) {
+            params = params.set('startDate', filters.startDate);
+        }
+        if (filters?.endDate) {
+            params = params.set('endDate', filters.endDate);
+        }
+        if (filters?.country) {
+            params = params.set('country', filters.country);
+        }
+        if (filters?.maxParticipants) {
+            params = params.set(
+                'maxParticipants',
+                filters.maxParticipants.toString()
+            );
+        }
+        if (filters?.budget) {
+            params = params.set('budget', filters.budget.toString());
+        }
+        if (filters?.eventType) {
+            params = params.set('eventType', filters.eventType);
+        }
+        if (filters?.organizerFirstName) {
+            params = params.set(
+                'organizerFirstName',
+                filters.organizerFirstName
+            );
+        }
+        if (filters?.sortBy) {
+            params = params.set('sortBy', filters.sortBy);
+        }
+        if (filters?.sortDirection) {
+            params = params.set('sortDirection', filters.sortDirection);
+        }
+        if (filters?.page !== undefined) {
+            params = params.set('page', filters.page.toString());
+        }
+        if (filters?.pageSize !== undefined) {
+            params = params.set('size', filters.pageSize.toString());
+        }
+        return this.httpClient.get<PagedResponse<EventCard>>(
+            `${environment.apiHost}/api/events`,
+            { params }
+        );
+    }
+
+    getAllCards(): Observable<EventCard[]> {
+        return of(this.eventCards);
+    }
+
+    getAllByCreator(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            environment.apiHost + '/api/events/event-organizer'
+        );
+    }
+
+    openEventDetails(eventId: number): void {
+        if (eventId) {
+            this.router.navigate(['/event/', eventId]);
+        } else {
+            console.error('Invalid event ID:', eventId);
+        }
+    }
+
+    getEventById(eventId: number): Observable<Event | null> {
+        return this.httpClient.get<Event | null>(
+            environment.apiHost + '/api/events/' + eventId
+        );
+    }
+
+    getEventDetails(eventId: number): Observable<EventDetails | null> {
+        return this.httpClient.get<EventDetails | null>(
+            environment.apiHost + '/api/events/details/' + eventId
+        );
+    }
+
+    getEventByIdForBudget(eventId: number): Observable<Event> {
+        return this.httpClient.get<Event>(
+            environment.apiHost + '/api/events/' + eventId
+        );
+    }
+
+    getEventsByOrganizerId(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            `${environment.apiHost}/api/events/events-all`
+        );
+    }
+
+    create(event: FormData): Observable<void> {
+        return this.httpClient.post<void>(
+            environment.apiHost + '/api/events/create',
+            event
+        );
+    }
+
+    update(event: FormData, id: number): Observable<void> {
+        return this.httpClient.put<void>(
+            environment.apiHost + '/api/events/edit/' + id,
+            event
+        );
+    }
+
+    getEventForUpdate(id: number): Observable<Event> {
+        return this.httpClient.get<Event>(
+            environment.apiHost + '/api/events/edit/' + id
+        );
+    }
+
+    getFavouriteEvents(): Observable<EventCard[]> {
+        return this.httpClient.get<EventCard[]>(
+            environment.apiHost + '/api/user-profiles/favourite-events'
+        );
+    }
+
+    getAcceptedEvents(): Observable<CalendarEvent[]> {
+        return this.httpClient.get<CalendarEvent[]>(
+            environment.apiHost + '/api/user-profiles/accepted-events'
+        );
+    }
+
+    delete(id: number) {
+        return this.httpClient.delete<void>(
+            environment.apiHost + '/api/events/delete/' + id
+        );
+    }
+
+    downloadGuestPdf(eventId: number): Observable<Blob> {
+        return this.httpClient.get(
+            environment.apiHost + `/api/pdf/event-guests/` + eventId,
+            {
+                responseType: 'blob',
+                headers: new HttpHeaders({
+                    Accept: 'application/pdf',
+                }),
+            }
+        );
+    }
+
+    downloadReport(eventId: number): Observable<Blob> {
+        return this.httpClient.get(
+            environment.apiHost + `/api/pdf/` + eventId,
+            {
+                responseType: 'blob',
+                headers: new HttpHeaders({
+                    Accept: 'application/pdf',
+                }),
+            }
+        );
+    }
+
+    downloadAttendanceStatsReport(eventId: number): Observable<Blob> {
+        return this.httpClient.get(
+            environment.apiHost + `/api/pdf/attendance/` + eventId,
+            {
+                responseType: 'blob',
+                headers: new HttpHeaders({
+                    Accept: 'application/pdf',
+                }),
+            }
+        );
+    }
+
+    getAttendanceStats(eventId: number): Observable<AttendanceStat[]> {
+        return this.httpClient.get<AttendanceStat[]>(
+            `${environment.apiHost}/api/events/attendance-stats/${eventId}`
+        );
+    }
 }

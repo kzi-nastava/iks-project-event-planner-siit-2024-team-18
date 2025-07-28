@@ -1,0 +1,64 @@
+<div class="chat-container">
+  <div class="chat-list">
+    <div class="messages-logo">Messages</div>
+    <div class="search-input">
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchQuery" (input)="filterChats()" placeholder="Search" />
+      </mat-form-field>
+    </div>
+    <ul>
+      <li
+        *ngFor="let chat of filteredChats"
+        [class.selected]="chat.id === selectedChatId"
+        (click)="loadMessages(chat.id)"
+        class="chat"
+      >
+        <div class="chat-item">
+          <div class="user-field">
+            <img class="user-image" [src]="getUserPicture(loggedUser!.id !== chat.user1 ? chat.user1 : chat.user2) || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
+            <div class="user-info">
+              <p class="user-name m-0"> {{ getUserFullName(loggedUser!.id !== chat.user1 ? chat.user1 : chat.user2) }}
+                <span *ngIf="getUnseenMessageCount(chat.id) > 0" class="notification-badge">{{ getUnseenMessageCount(chat.id) }} </span>
+              </p>
+              <p class="last-message m-0">{{ lastMessages[chat.id]?.content || 'No messages yet...' }}</p>
+            </div>
+          </div>
+          <p class="date"> {{ lastMessages[chat.id]?.content === 'Start chatting!' ? '' : (lastMessages[chat.id]?.date ? formatDateOrTime(lastMessages[chat.id]!.date) : '') }} </p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="chat-window" *ngIf="selectedChatId">
+    <div class="user-chat" (click)="goToUserProfile(selectedChatId)">
+      <img class="user-image" [src]="getUserPictureInChat(selectedChatId) || '../../assets/images/profile_photo_placeholder.png'" alt="User Image" />
+      <p class="user-chat-name m-0">{{ getUserInChat(selectedChatId) }}</p>
+    </div>
+
+    <div class="messages">
+      <div
+        *ngFor="let message of messages"
+        [ngClass]="{
+          'sent': isOwnMessage(message),
+          'received': !isOwnMessage(message)
+        }"
+      >
+        <p class="message-content">{{ message.content }}</p>
+        <span class="message-time">{{ formatDateOrTime(message.date) }}</span>
+      </div>
+    </div>
+
+    <div class="message-input">
+      <input
+        [(ngModel)]="newMessage"
+        placeholder="Start typing..."
+        (keyup.enter)="sendMessage()"
+      />
+      <button mat-icon-button color="primary" (click)="sendMessage()">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

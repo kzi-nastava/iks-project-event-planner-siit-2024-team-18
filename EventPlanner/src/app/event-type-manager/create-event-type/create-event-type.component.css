@@ -1,0 +1,90 @@
+mat-form-field {
+    width: 100%;
+    margin-bottom: 0.625rem;
+}
+
+mat-form-field, mat-label, input {
+    font-family: 'Raleway';
+    font-size: 1.25rem;
+}
+
+mat-form-field mat-label mat-icon {
+    margin-right: 0.5rem;
+}
+
+mat-error {
+    font-family: 'Raleway';
+    font-size: 1rem;
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #e9ecef;
+    padding: 20px;
+    overflow: hidden;
+}
+  
+.event-type-form {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 80em;
+    width: 100%;
+}
+  
+.form-title {
+    flex: 1 1 100%;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+  
+.form-field {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 300px;
+}
+  
+.full-width {
+    flex: 1 1 100%;
+}
+  
+.form-buttons {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2em;
+    padding-top: 1em;
+}
+  
+button.submit {
+    background-color: #A29BFE;
+    color: white;
+    transition: background-color 0.3s, transform 0.2s;
+}
+  
+button.cancel {
+    background-color: #de4e3ed0;
+    color: white;
+    transition: background-color 0.3s, transform 0.2s;
+}
+  
+button.submit:hover {
+    background-color: #8880ff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+  
+button.cancel:hover {
+    background-color: #de4e3e;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+  

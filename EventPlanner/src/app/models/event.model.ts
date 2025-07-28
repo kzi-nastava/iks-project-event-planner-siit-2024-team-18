@@ -1,8 +1,15 @@
 export interface Event {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  date: Date;
-  location: string;
+  id: number,
+  eventType: string,
+  name: string,
+  description: string,
+  maxParticipants: number,
+  privacyType: string,
+  locationName: string,
+  city: string,
+  country: string,
+  latitude: number,
+  longitude: number,
+  startDate: Date,
+  images: string[];
 }

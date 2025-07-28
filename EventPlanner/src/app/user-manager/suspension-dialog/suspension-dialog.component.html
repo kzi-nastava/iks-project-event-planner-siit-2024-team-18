@@ -1,0 +1,22 @@
+<div class="suspension-dialog">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <h2>Account Suspended</h2>
+        <button class="close-btn" (click)="onClose()">×</button>
+      </div>
+      <div class="dialog-content">
+        <p>
+          Your account has been temporarily suspended due to unprofessional behavior.
+          You have <strong>{{ remainingTime }}</strong> remaining until your account is reactivated.
+        </p>
+        <p>
+          Please review our Community Guidelines to avoid future suspensions. For further assistance, contact support
+          <a href="mailto:eventplannerteam18@gmail.com" style="color: #a29bfe;">here</a>.
+        </p>
+      </div>
+      <div class="dialog-actions">
+        <button (click)="onClose()">Ok</button>
+      </div>
+    </div>
+  </div>
+  

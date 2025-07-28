@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ServiceManagerService } from '../service-manager.service';
+import { ServiceManagerService } from '../../services/service-manager.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Service } from './../models/service.model';
+import { Service } from '../../models/service.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { LocationService } from '../../services/location.service';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { EventTypeService } from '../../services/event-type.service';
+import { CategoryService } from '../../services/category-service.service';
 
 @Component({
   selector: 'app-edit-service',
@@ -12,119 +16,187 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
 })
 export class EditServiceComponent implements OnInit {
   serviceId: number = 0;
-  editServiceForm: FormGroup;
 
-  selectedImages: string[] = [];
-  categories: string[] = ['Photography', 'Catering', 'Decorations', 'DJ Services', 'Lighting Setup', 'Flower Arrangements', 'Videography'];
+  uploadedFiles: File[] = [];
+  eventTypes: string[] = [];
+  categories: string[] = [];
   filteredCategories: string[] = this.categories.slice();
-  eventTypes: string[] = ['Wedding', 'Birthday', 'Corporate', 'Party', 'Festival'];
   filteredEventTypes: string[] = this.eventTypes.slice();
+  selectedLocationDetails: any = null;
+  autocompleteOptions: any[] = [];
+  fileUrlCache = new Map<File, string>();
 
   constructor(
     private serviceManagerService: ServiceManagerService,
     private router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.editServiceForm = new FormGroup({
-      title: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
-      specifics: new FormControl('', [Validators.required]),
-      category: new FormControl('', [Validators.required]),
-      eventType: new FormControl('', [Validators.required]),
-      reservationDate: new FormControl('', [Validators.required]),
-      reservationTime: new FormControl('', [Validators.required]),
-      cancellationDate: new FormControl('', [Validators.required]),
-      price: new FormControl(0, [Validators.required, Validators.min(1)]),
-      discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
-      isPublic: new FormControl(false),
-      isVisible: new FormControl(false),
-      duration: new FormControl(15, [Validators.required]),
-      engagement: new FormControl([1, 2], null), // TODO: fix this
-      reservationType: new FormControl('auto', [Validators.required]),
-      selectedImages: new FormControl([], this.minImagesValidator()),
-    });
-  }
+    private route: ActivatedRoute,
+    private locationService: LocationService,
+    private eventTypeService: EventTypeService,
+    private categoryService: CategoryService,
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.serviceId = +params['id'];
       this.loadServiceData();
     });
+
+    this.loadCategories();
+    this.loadEventTypes();
+    this.editServiceForm.get('category')?.disable();
+
+    this.editServiceForm.get('location')?.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter((value: string | null): value is string => !!value),
+      switchMap((value: string) => this.locationService.getAutocompleteLocations(value))
+    ).subscribe({
+      next: (results) => {
+        this.autocompleteOptions = results || [];
+      },
+      error: (err) => console.error('Error fetching locations:', err),
+    });
   }
 
-  loadServiceData(): void {
-    const service = this.serviceManagerService.getServiceById(this.serviceId);
-    if (service) {
-      this.editServiceForm.patchValue({
-        title: service.title,
-        description: service.description,
-        specifics: service.description,
-        category: service.category,
-        eventType: service.eventType,
-        reservationDate: service.reservationDate.toISOString().split('T')[0],
-        reservationTime: service.reservationTime,
-        cancellationDate: service.cancellationDate.toISOString().split('T')[0],
-        price: service.price,
-        discount: service.discount,
-        isPublic: service.isPublic,
-        isVisible: service.isVisible,
-        duration: service.duration,
-        engagement: service.engagement,
-        reservationType: service.reservationType,
-      });
+  editServiceForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required]),
+    price: new FormControl(0, [Validators.required, Validators.min(1)]),
+    discount: new FormControl(0, [Validators.min(0), Validators.max(100)]),
+    uploadedFiles: new FormControl<File[]>([], this.minImagesValidator()),
+    isVisible: new FormControl(false),
+    isAvailable: new FormControl(false),
+    category: new FormControl('', [Validators.required]),
+    eventTypes: new FormControl<string[]>([], [Validators.required]),
+    reservationType: new FormControl('AUTOMATIC', [Validators.required]),
+    location: new FormControl('', [Validators.required]),
 
-      this.selectedImages = service.images;
-    }
+    specifics: new FormControl('', [Validators.required]),
+    duration: new FormControl(15, [Validators.min(15), Validators.max(120)]),
+    minEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+    maxEngagement: new FormControl(1, [Validators.min(1), Validators.max(5)]),
+    reservationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
+    cancellationDeadline: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(100)]),
+    workingHoursStart: new FormControl('', [Validators.required]),
+    workingHoursEnd: new FormControl('', [Validators.required]),
+  });
+
+  loadServiceData(): void {
+    this.serviceManagerService.getServiceById(this.serviceId).subscribe({
+      next: (data: Service) => {
+        const service = data;
+        if (service) {
+          this.editServiceForm.patchValue({
+            name: service.name,
+            description: service.description,
+            price: service.price,
+            discount: service.discount,
+            isVisible: service.isVisible,
+            isAvailable: service.isAvailable,
+            category: service.category,
+            eventTypes: service.eventTypes,
+            location: service.location,
+            reservationType: service.reservationType,
+
+            specifics: service.specifics!,
+            duration: service.duration!,
+            minEngagement: service.minEngagement!,
+            maxEngagement: service.maxEngagement!,
+            reservationDeadline: service.reservationDeadline!,
+            cancellationDeadline: service.cancellationDeadline!,
+            workingHoursStart: this.timeFormat(service.workingHoursStart!),
+            workingHoursEnd: this.timeFormat(service.workingHoursEnd!),
+          });
+
+          service.images.map((img) => img).forEach((image, index) => {
+            const byteString = atob(image.split(',')[1]);
+            const mimeString = image.split(',')[0].split(':')[1].split(';')[0];
+            const byteArray = new Uint8Array(byteString.length);
+            for (let i = 0; i < byteString.length; i++) {
+              byteArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([byteArray], { type: mimeString });
+            const file = new File([blob], `image_${index}.jpg`, { type: mimeString });
+            this.uploadedFiles.push(file);
+          });
+
+          this.editServiceForm.get('uploadedFiles')?.setValue(this.uploadedFiles);
+          this.editServiceForm.get('uploadedFiles')?.updateValueAndValidity();
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch service details:', err);
+        this.router.navigate(['']);
+      }
+    });
   }
 
   minImagesValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
-      return (control.value && control.value.length > 0) ? null : { minImages: true };
+      const files = control.value as File[];
+      return (files && files.length > 0) ? null : { minImages: true };
     };
   }
 
   edit(): void {
     if (this.editServiceForm.valid) {
-      const service: Service = {
-        _id: this.serviceId,
-        title: this.editServiceForm.value.title!,
-        description: this.editServiceForm.value.description!,
-        specifics: this.editServiceForm.value.specifics || '',
-        images: this.selectedImages,
-        category: this.editServiceForm.value.category!,
-        eventType: this.editServiceForm.value.eventType!,
-        reservationDate: new Date(this.editServiceForm.value.reservationDate!),
-        reservationTime: this.editServiceForm.value.reservationTime!,
-        cancellationDate: new Date(this.editServiceForm.value.cancellationDate!),
-        price: this.editServiceForm.value.price!,
-        discount: this.editServiceForm.value.discount || 0,
-        isPublic: this.editServiceForm.value.isPublic!,
-        isVisible: this.editServiceForm.value.isVisible!,
-        duration: this.editServiceForm.value.duration!,
-        engagement: this.editServiceForm.value.engagement!,
-        reservationType: this.editServiceForm.value.reservationType as 'auto' | 'manual',
-      };
-      this.serviceManagerService.createService(service);
-      this.router.navigate(['/services']);
+      const formValues = this.editServiceForm.value;
+      const formData = new FormData();
+  
+      formData.append('name', formValues.name!);
+      formData.append('description', formValues.description!);
+      formData.append('price', formValues.price!.toString());
+      formData.append('discount', (formValues.discount || 0).toString());
+      formData.append('isVisible', formValues.isVisible!.toString());
+      formData.append('isAvailable', formValues.isAvailable!.toString());
+      formData.append('category', formValues.category!);
+      formData.append('creator', "Mare");
+      formData.append('location', formValues.location!);
+      formData.append('status', "PENDING");
+  
+      formData.append('specifics', formValues.specifics!);
+      formData.append('duration', formValues.duration!.toString());
+      formData.append('minEngagement', formValues.minEngagement!.toString());
+      formData.append('maxEngagement', formValues.maxEngagement!.toString());
+      formData.append('reservationDeadline', formValues.reservationDeadline!.toString());
+      formData.append('cancellationDeadline', formValues.cancellationDeadline!.toString());
+      formData.append('reservationType', formValues.reservationType!);
+      formData.append('workingHoursStart', this.formatTime(formValues.workingHoursStart!));
+      formData.append('workingHoursEnd', this.formatTime(formValues.workingHoursEnd!));
+  
+      formData.append('city', this.selectedLocationDetails?.city || '');
+      formData.append('country', this.selectedLocationDetails?.country || '');
+      formData.append('longitude', this.selectedLocationDetails?.longitude || 0);
+      formData.append('latitude', this.selectedLocationDetails?.latitude || 0);
+  
+      this.editServiceForm.value.eventTypes!.forEach((eventType: string | Blob) => {
+        formData.append('eventTypes', eventType);
+      });
+  
+      this.uploadedFiles.forEach((file) => {
+        formData.append('images', file, file.name);
+      });
+
+      this.serviceManagerService.updateService(formData, this.serviceId).subscribe({
+        next: () => this.router.navigate(['/services']),
+        error: (err) => console.error('Error creating service:', err),
+      });
     }
   }
 
-  onFileSelected(event: any): void {
-    if (event.target.files) {
-      for (let file of event.target.files) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.result) {
-            this.selectedImages.push(reader.result as string);
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    Array.from(input.files || []).forEach(file => {
+      this.uploadedFiles.push(file);
+    });
+    this.editServiceForm.get('uploadedFiles')?.setValue(this.uploadedFiles);
+    this.editServiceForm.get('uploadedFiles')?.updateValueAndValidity();
   }
 
   removeImage(index: number): void {
-    this.selectedImages.splice(index, 1);
+    this.uploadedFiles.splice(index, 1);
+    this.editServiceForm.get('uploadedFiles')?.setValue(this.uploadedFiles);
+    this.editServiceForm.get('uploadedFiles')?.updateValueAndValidity();
   }
 
   filterCategories(event: any): void {
@@ -139,5 +211,80 @@ export class EditServiceComponent implements OnInit {
     this.filteredEventTypes = this.eventTypes.filter(option =>
       option.toLowerCase().includes(value)
     );
+  }
+
+  formatTime(time: string): string {
+    let hours: number, minutes: number;
+  
+    if (time.includes('AM') || time.includes('PM')) {
+      const [timePart, modifier] = time.split(' ');
+      [hours, minutes] = timePart.split(':').map(Number);
+  
+      if (modifier === 'PM' && hours < 12) {
+        hours += 12;
+      }
+      if (modifier === 'AM' && hours === 12) {
+        hours = 0;
+      }
+    } else {
+      [hours, minutes] = time.split(':').map(Number);
+    }
+  
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+  
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  timeFormat(time: string): string {
+    let [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+  
+    hours = hours % 12 || 12;
+  
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+  
+    return `${formattedHours}:${formattedMinutes} ${period}`;
+  }
+
+  onLocationSelected(selectedLocation: any): void {
+    this.editServiceForm.get('location')?.setValue(selectedLocation.displayName);
+
+    this.locationService
+      .getLocationDetails(selectedLocation.displayName)
+      .subscribe((details) => {
+        this.selectedLocationDetails = details;
+      });
+  }
+
+  loadEventTypes(): void {
+    this.eventTypeService.getAll().subscribe({
+      next: (data) => {
+        this.eventTypes = data.map((eventType) => eventType.name);
+      },
+      error: (err) => console.error('Error fetching event types:', err),
+    });
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data.map((category) => category.name);
+      },
+      error: (err) => console.error('Error fetching categories:', err),
+    });
+  }
+
+  imageToUrl(file: File): string {
+    if (!this.fileUrlCache.has(file)) {
+      const url = URL.createObjectURL(file);
+      this.fileUrlCache.set(file, url);
+    }
+    return this.fileUrlCache.get(file) as string;
+  }
+  
+  ngOnDestroy(): void {
+    this.fileUrlCache.forEach((url) => URL.revokeObjectURL(url));
   }
 }
