@@ -8,67 +8,73 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrl: './user-profile.component.css'
+    selector: 'app-user-profile',
+    templateUrl: './user-profile.component.html',
+    styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent {
-  activeMenu: string = 'calendar';
-  user: User = {
-    id: 0,
-    email: '',
-    firstName: '',
-    lastName: '',
-    role: '',
-    companyName: '',
-    image: '',
-    address: '',
-    phone: '',
-    description: '',
-    categories: [],
-    eventTypes: [],
-    password: '',
-  }
+    activeMenu: string = 'calendar';
+    user: User = {
+        id: 0,
+        email: '',
+        firstName: '',
+        lastName: '',
+        role: '',
+        companyName: '',
+        image: '',
+        address: '',
+        phone: '',
+        description: '',
+        categories: [],
+        eventTypes: [],
+        password: '',
+    };
 
-  constructor(
-    private userService: UserService,
-    private dialog: MatDialog,
-    private authService: AuthService,
-    private router: Router,
-    private snackBar: MatSnackBar
-  ) {}
+    constructor(
+        private userService: UserService,
+        private dialog: MatDialog,
+        private authService: AuthService,
+        private router: Router,
+        private snackBar: MatSnackBar
+    ) {}
 
-  ngOnInit(): void {
-    this.userService.getLoggedUser().subscribe((user) => {
-      this.user = user!;
-    });
-  }
+    ngOnInit(): void {
+        this.userService.getLoggedUser().subscribe((user) => {
+            this.user = user!;
+        });
+    }
 
-  private logout(): void {
-    localStorage.removeItem('user');
-    this.authService.setUser();
-    this.router.navigate(['']);
-  }
+    private logout(): void {
+        localStorage.removeItem('user');
+        this.authService.setUser();
+        this.router.navigate(['']);
+    }
 
-  deactivate(event: MouseEvent): void {
-    event.stopPropagation();
+    deactivate(event: MouseEvent): void {
+  event.stopPropagation();
 
-    const dialogRef = this.dialog.open(DeleteFormComponent, {
-      width: '27em',
-      data: { message: 'Are you sure you want to deactivate your profile?' }
-    });
+  const dialogRef = this.dialog.open(DeleteFormComponent, {
+    width: '27em',
+    data: { message: 'Are you sure you want to deactivate your profile?' }
+  });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.logout();
-        // this.userService.deactivate(this.user.email).subscribe(
-        //   () => {
-        //     this.snackBar.open('Successfully deactivated account', 'OK', {
-        //       duration: 3000,
-        //     });
-        //   }
-        // );
-      }
-    });
-  }
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.userService.deactivate().subscribe(
+        () => {
+          this.snackBar.open('Successfully deactivated account', 'OK', {
+            duration: 3000,
+          });
+          this.logout();
+        },
+        error => {
+          console.log(error)
+          this.snackBar.open('Error deactivating account', 'OK', {
+            duration: 3000,
+          });
+        }
+      );
+    }
+  });
+}
 }

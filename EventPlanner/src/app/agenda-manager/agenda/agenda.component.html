@@ -155,9 +155,9 @@
                             {{ activity.description }}
                         </div>
                         <div>
-                            <strong>Start:</strong> {{ activity.startDate }}
+                            <strong>Start:</strong> {{ activity.startDate | date : "short" }}
                         </div>
-                        <div><strong>End:</strong> {{ activity.endDate }}</div>
+                        <div><strong>End:</strong> {{ activity.endDate | date : "short" }}</div>
                         <div>
                             <strong>Location:</strong> {{ activity.location }}
                         </div>

@@ -48,9 +48,9 @@ export class UserService {
         );
     }
 
-    deactivate(email: string): Observable<any> {
+    deactivate(): Observable<any> {
         return this.http.delete(
-            environment.apiHost + '/api/user-profiles/deactivate/' + email
+            environment.apiHost + '/api/user-profiles/deactivate'
         );
     }
 
