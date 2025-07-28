@@ -43,8 +43,6 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         data: { role: ['EVENT_ORGANIZER'] },
     },
-    { path: 'service/:id', component: ServiceDetailsComponent },
-    { path: 'product/:id', component: ProductDetailsComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegistrationComponent },
     { path: 'fast-register', component: FastRegistrationComponent },
@@ -92,6 +90,8 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         data: { role: ['SERVICE_PRODUCT_PROVIDER'] },
     },
+    { path: 'service/:id', component: ServiceDetailsComponent },
+    { path: 'product/:id', component: ProductDetailsComponent },
     {
         path: 'pricelist',
         component: PricelistComponent,
