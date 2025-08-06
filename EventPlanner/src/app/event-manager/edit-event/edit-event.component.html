@@ -143,7 +143,12 @@
                 [for]="reservationPicker"
             ></mat-datepicker-toggle>
             <mat-datepicker #reservationPicker></mat-datepicker>
-            <mat-error *ngIf="editEventForm.get('date')?.hasError('date')">
+            <mat-error
+                *ngIf="
+                    editEventForm.get('date')?.hasError('required') &&
+                    editEventForm.get('date')?.touched
+                "
+            >
                 Please enter event date.
             </mat-error>
             <mat-error
@@ -168,7 +173,12 @@
                 [for]="timePicker"
             ></ngx-mat-timepicker-toggle>
             <ngx-mat-timepicker #timePicker></ngx-mat-timepicker>
-            <mat-error *ngIf="editEventForm.get('time')?.hasError('required')">
+            <mat-error
+                *ngIf="
+                    editEventForm.get('time')?.hasError('required') &&
+                    editEventForm.get('time')?.touched
+                "
+            >
                 Please enter event time.
             </mat-error>
         </mat-form-field>
@@ -214,6 +224,7 @@
 
         <div class="buttons">
             <button
+                id="agendaButton"
                 [routerLink]="['/events/edit/agenda/' + id]"
                 mat-raised-button
                 type="button"
@@ -236,6 +247,7 @@
                 Send Invites
             </button>
             <button
+                id="pdfButton"
                 mat-raised-button
                 type="button"
                 (click)="downloadGuestList()"

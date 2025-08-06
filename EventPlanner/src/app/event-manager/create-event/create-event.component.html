@@ -143,7 +143,12 @@
                 [for]="reservationPicker"
             ></mat-datepicker-toggle>
             <mat-datepicker #reservationPicker></mat-datepicker>
-            <mat-error *ngIf="createEventForm.get('date')?.hasError('date')">
+            <mat-error
+                *ngIf="
+                    createEventForm.get('date')?.hasError('required') &&
+                    createEventForm.get('date')?.touched
+                "
+            >
                 Please enter event date.
             </mat-error>
             <mat-error

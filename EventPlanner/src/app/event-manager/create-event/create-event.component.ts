@@ -146,6 +146,10 @@ export class CreateEventComponent implements OnInit {
     }
 
     create(): void {
+        if (this.createEventForm.invalid) {
+            this.createEventForm.markAllAsTouched();
+            return;
+        }
         if (this.createEventForm.valid) {
             const formValues = this.createEventForm.value;
 
@@ -175,15 +179,29 @@ export class CreateEventComponent implements OnInit {
             formData.append('maxParticipants', formValues.maxParticipants);
             formData.append('privacyType', formValues.privacyType);
 
-            const formattedDate = selectedDate.toLocaleString('sv-SE').replace(' ', 'T');
+            const formattedDate = selectedDate
+                .toLocaleString('sv-SE')
+                .replace(' ', 'T');
             formData.append('startDate', formattedDate);
-            
+
             formData.append('eventType', formValues.eventTypes);
-            formData.append('locationName', this.selectedLocationDetails?.name || '');
+            formData.append(
+                'locationName',
+                this.selectedLocationDetails?.name || ''
+            );
             formData.append('city', this.selectedLocationDetails?.city || '');
-            formData.append('country', this.selectedLocationDetails?.country || '');
-            formData.append('latitude', (this.selectedLocationDetails?.latitude || 0).toString());
-            formData.append('longitude', (this.selectedLocationDetails?.longitude || 0).toString());
+            formData.append(
+                'country',
+                this.selectedLocationDetails?.country || ''
+            );
+            formData.append(
+                'latitude',
+                (this.selectedLocationDetails?.latitude || 0).toString()
+            );
+            formData.append(
+                'longitude',
+                (this.selectedLocationDetails?.longitude || 0).toString()
+            );
 
             this.images.forEach((file) => {
                 formData.append('images', file, file.name);

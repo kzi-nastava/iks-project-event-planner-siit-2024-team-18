@@ -212,6 +212,10 @@ export class EditEventComponent implements OnInit {
     }
 
     update(): void {
+        if (this.editEventForm.invalid) {
+            this.editEventForm.markAllAsTouched();
+            return;
+        }
         if (this.editEventForm.valid) {
             const formValues = this.editEventForm.value;
 
