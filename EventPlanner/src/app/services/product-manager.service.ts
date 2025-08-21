@@ -6,12 +6,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { Grade } from '../models/grade.model';
 import { PagedResponse } from '../shared/model/paged-response.model';
+import { Comment } from '../models/comment.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ProductManagerService {
-    constructor(private router: Router, private httpClient: HttpClient) {}
+    constructor(private router: Router, private httpClient: HttpClient) { }
 
     getProductById(id: number): Observable<Product> {
         return this.httpClient.get<Product>(
@@ -32,6 +33,12 @@ export class ProductManagerService {
     getProductGrade(productId: number): Observable<Grade> {
         return this.httpClient.get<Grade>(
             environment.apiHost + '/api/products/grade/' + productId
+        );
+    }
+
+    getComments(productId: number): Observable<Comment[]> {
+        return this.httpClient.get<Comment[]>(
+            environment.apiHost + '/api/products/comments/' + productId
         );
     }
 

@@ -5,6 +5,7 @@ import { Service } from '../../models/service.model';
 import { ChatService } from '../../services/chat.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Grade } from '../../models/grade.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-service-details',
@@ -27,8 +28,9 @@ export class ServiceDetailsComponent implements OnInit {
         private serviceManager: ServiceManagerService,
         private chatService: ChatService,
         private router: Router,
-        private snackBar: MatSnackBar
-    ) {}
+        private snackBar: MatSnackBar,
+        private userService: UserService,
+    ) { }
 
     ngOnInit(): void {
         this.route.params.subscribe((params) => {
@@ -63,6 +65,19 @@ export class ServiceDetailsComponent implements OnInit {
         });
 
         this.fetchRating(serviceId);
+        this.fetchIsLiked();
+    }
+
+    fetchIsLiked() {
+        this.userService.isLiked(this.service.id).subscribe({
+            next: (data: Boolean) => {
+                if (data) {
+                    this.isFavorite = true;
+                } else {
+                    this.isFavorite = false;
+                }
+            }
+        });
     }
 
     fetchRating(serviceId: number) {
@@ -126,8 +141,44 @@ export class ServiceDetailsComponent implements OnInit {
         this.swiperOffset = -this.currentIndex * 100;
     }
 
+
     toggleFavorite(): void {
-        this.isFavorite = !this.isFavorite;
+        if (this.isFavorite) {
+            this.removeFromFavourites();
+            return;
+        }
+
+        this.userService.addSolutionToFavourites(this.service.id).subscribe({
+            next: () => {
+                this.isFavorite = true;
+                this.snackBar.open('Solution added to favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+            error: (err) => {
+                console.error('Error adding solution to favourites:', err);
+                this.snackBar.open('Solution not added to favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+        });
+    }
+
+    removeFromFavourites() {
+        this.userService.removeSolutionFromFavourites(this.service.id).subscribe({
+            next: () => {
+                this.isFavorite = false;
+                this.snackBar.open('Solution removed from favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+            error: (err) => {
+                console.error('Error removing solution from favourites:', err);
+                this.snackBar.open('Solution not removed from favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+        });
     }
 
     bookService(serviceId: number): void {
@@ -150,7 +201,7 @@ export class ServiceDetailsComponent implements OnInit {
     }
 
     comments() {
-        // open comments
+        this.router.navigate(['comments/' + this.service.id]);
     }
 
     chat() {
