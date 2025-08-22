@@ -22,6 +22,7 @@ import { DetailsModule } from './details/details.module';
 import { ChatModule } from './chat/chat.module';
 import { ProductManagerModule } from './product-manager/product-manager.module';
 import { AgendaManagerModule } from './agenda-manager/agenda-manager.module';
+import { CommentsModule } from './comments/comments.module';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { AgendaManagerModule } from './agenda-manager/agenda-manager.module';
     UserManagerModule,
     FullCalendarModule,
     ChatModule,
+    CommentsModule,
   ],
   providers: [
     provideAnimationsAsync(),

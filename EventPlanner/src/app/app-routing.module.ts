@@ -33,6 +33,7 @@ import { EditProductComponent } from './product-manager/edit-product/edit-produc
 import { CreateProductComponent } from './product-manager/create-product/create-product.component';
 import { ProductsComponent } from './product-manager/products/products.component';
 import { AgendaComponent } from './agenda-manager/agenda/agenda.component';
+import { CommentsComponent } from './comments/comments/comments.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -65,6 +66,7 @@ const routes: Routes = [
         data: { role: ['EVENT_ORGANIZER'] },
     },
     { path: 'services', component: ServicesComponent },
+    { path: 'comments/:id', component: CommentsComponent },
     {
         path: 'service/create',
         component: CreateServiceComponent,

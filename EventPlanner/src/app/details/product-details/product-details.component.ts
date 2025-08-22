@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChatService } from '../../services/chat.service';
 import { Grade } from '../../models/grade.model';
 import { RatingDialogComponent } from '../rating/rating-dialog.component';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-product-details',
@@ -33,8 +34,9 @@ export class ProductDetailsComponent implements OnInit {
         private budgetService: BudgetService,
         private chatService: ChatService,
         private dialog: MatDialog,
-        private snackBar: MatSnackBar
-    ) {}
+        private snackBar: MatSnackBar,
+        private userService: UserService,
+    ) { }
 
     ngOnInit(): void {
         this.route.params.subscribe((params) => {
@@ -145,6 +147,19 @@ export class ProductDetailsComponent implements OnInit {
         });
 
         this.fetchRating(productId);
+        this.fetchIsLiked();
+    }
+
+    fetchIsLiked() {
+        this.userService.isLiked(this.product.id).subscribe({
+            next: (data: Boolean) => {
+                if (data) {
+                    this.isFavorite = true;
+                } else {
+                    this.isFavorite = false;
+                }
+            }
+        });
     }
 
     fetchRating(productId: number) {
@@ -176,7 +191,42 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     toggleFavorite(): void {
-        this.isFavorite = !this.isFavorite;
+        if (this.isFavorite) {
+            this.removeFromFavourites();
+            return;
+        }
+
+        this.userService.addSolutionToFavourites(this.product.id).subscribe({
+            next: () => {
+                this.isFavorite = true;
+                this.snackBar.open('Solution added to favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+            error: (err) => {
+                console.error('Error adding solution to favourites:', err);
+                this.snackBar.open('Solution not added to favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+        });
+    }
+
+    removeFromFavourites() {
+        this.userService.removeSolutionFromFavourites(this.product.id).subscribe({
+            next: () => {
+                this.isFavorite = false;
+                this.snackBar.open('Solution removed from favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+            error: (err) => {
+                console.error('Error removing solution from favourites:', err);
+                this.snackBar.open('Solution not removed from favourites.', 'OK', {
+                    duration: 3000,
+                });
+            },
+        });
     }
 
     calculateRating(): string {
@@ -188,7 +238,7 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     comments() {
-        // open comments
+        this.router.navigate(['comments/' + this.product.id]);
     }
 
     chat() {

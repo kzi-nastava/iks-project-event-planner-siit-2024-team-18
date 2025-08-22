@@ -71,14 +71,15 @@
                 >
                 <span *ngIf="!service.isAvailable">(Unavailable)</span>
             </div>
-            <button mat-fab class="favourite">
-                <mat-icon>favorite</mat-icon>
+            <button mat-fab class="favourite" (click)="toggleFavorite()">
+                <mat-icon *ngIf="isFavorite" style="color: red;">favorite</mat-icon>
+                <mat-icon *ngIf="!isFavorite">favorite</mat-icon>
             </button>
         </div>
         <div class="rating">
             <span>{{ calculateRating() }}</span>
             <span class="reviews">({{ reviews }} reviews)</span>
-            <button mat-button class="contact-btn">
+            <button mat-button class="contact-btn" (click)="comments()">
                 <mat-icon>chat</mat-icon>
             </button>
         </div>

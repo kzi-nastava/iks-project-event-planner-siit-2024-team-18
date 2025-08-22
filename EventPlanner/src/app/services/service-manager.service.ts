@@ -6,12 +6,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../env/environment';
 import { PagedResponse } from '../shared/model/paged-response.model';
 import { Grade } from '../models/grade.model';
+import { Comment } from '../models/comment.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ServiceManagerService {
-    constructor(private router: Router, private http: HttpClient) {}
+    constructor(private router: Router, private http: HttpClient) { }
 
     getServices(): Observable<Service[]> {
         return this.http.get<Service[]>(environment.apiHost + '/api/services');
@@ -20,6 +21,12 @@ export class ServiceManagerService {
     getServicesByCreator(): Observable<Service[]> {
         return this.http.get<Service[]>(
             environment.apiHost + '/api/services/creator'
+        );
+    }
+
+    getComments(serviceId: number): Observable<Comment[]> {
+        return this.http.get<Comment[]>(
+            environment.apiHost + '/api/services/comments/' + serviceId
         );
     }
 

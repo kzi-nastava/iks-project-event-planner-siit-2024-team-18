@@ -9,7 +9,7 @@ import { UpdateUser } from '../models/update-user.model';
     providedIn: 'root',
 })
 export class UserService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     eventOrganizerRegistration(user: User): Observable<User> {
         return this.http.post<User>(
@@ -32,7 +32,7 @@ export class UserService {
     getRecipient(chatId: number, loggedUserId: number): Observable<User> {
         return this.http.get<User>(
             environment.apiHost +
-                `/api/user-profiles/recipient/${chatId}/${loggedUserId}`
+            `/api/user-profiles/recipient/${chatId}/${loggedUserId}`
         );
     }
 
@@ -71,7 +71,7 @@ export class UserService {
     fastServiceProductProviderRegistration(user: User): Observable<User> {
         return this.http.post<User>(
             environment.apiHost +
-                '/api/service-product-providers/fast-registration',
+            '/api/service-product-providers/fast-registration',
             user
         );
     }
@@ -79,22 +79,45 @@ export class UserService {
     isEventInFavourites(eventId: number): Observable<boolean> {
         return this.http.get<boolean>(
             environment.apiHost +
-                `/api/user-profiles/favourite-events/is-in/${eventId}`
+            `/api/user-profiles/favourite-events/is-in/${eventId}`
         );
     }
 
     addEventToFavourites(eventId: number): Observable<any> {
         return this.http.put(
             environment.apiHost +
-                `/api/user-profiles/favourite-events/add/${eventId}`,
+            `/api/user-profiles/favourite-events/add/${eventId}`,
             {}
+        );
+    }
+
+    addSolutionToFavourites(solutionId: number): Observable<any> {
+        return this.http.put(
+            environment.apiHost +
+            `/api/user-profiles/favourite-solutions/add/${solutionId}`,
+            {}
+        );
+    }
+
+    removeSolutionFromFavourites(solutionId: number): Observable<any> {
+        return this.http.put(
+            environment.apiHost +
+            `/api/user-profiles/favourite-solutions/remove/${solutionId}`,
+            {}
+        );
+    }
+
+    isLiked(solutionId: number): Observable<Boolean> {
+        return this.http.get<Boolean>(
+            environment.apiHost +
+            `/api/user-profiles/favourite-solutions/liked/${solutionId}`
         );
     }
 
     removeEventFromFavourites(eventId: number): Observable<any> {
         return this.http.put(
             environment.apiHost +
-                `/api/user-profiles/favourite-events/remove/${eventId}`,
+            `/api/user-profiles/favourite-events/remove/${eventId}`,
             {}
         );
     }
@@ -102,14 +125,14 @@ export class UserService {
     isJoinedToEvent(eventId: number): Observable<boolean> {
         return this.http.get<boolean>(
             environment.apiHost +
-                `/api/user-profiles/event-participation/is-joined/${eventId}`
+            `/api/user-profiles/event-participation/is-joined/${eventId}`
         );
     }
 
     joinToEvent(eventId: number): Observable<any> {
         return this.http.post(
             environment.apiHost +
-                `/api/user-profiles/event-participation/join/${eventId}`,
+            `/api/user-profiles/event-participation/join/${eventId}`,
             {}
         );
     }
@@ -117,7 +140,7 @@ export class UserService {
     leaveEvent(eventId: number): Observable<any> {
         return this.http.delete(
             environment.apiHost +
-                `/api/user-profiles/event-participation/leave/${eventId}`,
+            `/api/user-profiles/event-participation/leave/${eventId}`,
             {}
         );
     }
